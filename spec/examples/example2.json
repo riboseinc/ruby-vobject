@@ -1,0 +1,92 @@
+{
+  "VCALENDAR": [
+    {
+      "VERSION": {
+        "value": "2.0"
+      }
+    },{
+      "PRODID": {
+        "value": "-//ABC Corporation//NONSGML My Product//EN"
+      }
+    },
+    {
+      "VTODO": [
+        {
+          "DTSTAMP": {
+            "value": "19980130T134500Z"
+          }
+        },
+        {
+          "SEQUENCE": {
+            "value": "2"
+          }
+        },
+        {
+          "UID": {
+            "value": "uid4@example.com"
+          }
+        },
+        {
+          "ORGANIZER": {
+            "value": "mailto:unclesam@example.com"
+          }
+        },
+        {
+          "ATTENDEE": {
+            "params": {
+              "PARTSTAT": "ACCEPTED"
+            },
+            "value": "mailto:jqpublic@example.com"
+          }
+        },
+        {
+          "DUE": {
+            "value": "19980415T000000"
+          }
+        },
+        {
+          "STATUS": {
+            "value": "NEEDS-ACTION"
+          }
+        },
+        {
+          "SUMMARY": {
+            "value": "Submit Income Taxes"
+          }
+        },
+        {
+          "VALARM": [
+            {
+              "ACTION": {
+                "value": "AUDIO"
+              }
+            },
+            {
+              "TRIGGER": {
+                "value": "19980403T120000Z"
+              }
+            },
+            {
+              "ATTACH": {
+                "params": {
+                  "FMTTYPE": "audio/basic"
+                },
+                "value": "http://example.com/pub/audio-files/ssbanner.aud"
+              }
+            },
+            {
+              "REPEAT": {
+                "value": "4"
+              }
+            },
+            {
+              "DURATION": {
+                "value": "PT1H"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "VCARD": [
+    {
+      "VERSION": {
+        "value": "4.0"
+      }
+    },
+    {
+      "UID": {
+        "value": "urn:uuid:4fbe8971-0bc3-424c-9c26-36c3e1eff6b1"
+      }
+    },
+    {
+      "FN": {
+        "value": "J. Doe"
+      }
+    },
+    {
+      "N": {
+        "value": "Doe;J.;;;"
+      }
+    },
+    {
+      "PROFILE": [
+        {
+          "EMAIL": {
+            "params": {
+              "PID": "1.1"
+            },
+            "value": "jdoe@example.com"
+          }
+        },
+        {
+          "EMAIL": {
+            "params": {
+              "PID": "2.1"
+            },
+            "value": "boss@example.com"
+          }
+        }
+      ]
+    },
+    {
+      "EMAIL": {
+        "params": {
+          "PID": "2.2"
+        },
+        "value": "ceo@example.com"
+      }
+    },
+    {
+      "TEL": {
+        "params": {
+          "PID": "1.1",
+          "VALUE": "uri"
+        },
+        "value": "tel:+1-555-555-5555"
+      }
+    },
+    {
+      "TEL": {
+        "params": {
+          "PID": "2.1,2.2",
+          "VALUE": "uri"
+        },
+        "value": "tel:+1-666-666-6666"
+      }
+    },
+    {
+      "CLIENTPIDMAP": {
+        "value": "1;urn:uuid:53e374d9-337e-4727-8803-a1e9c14e0556"
+      }
+    },
+    {
+      "CLIENTPIDMAP": {
+        "value": "2;urn:uuid:1f762d2b-03c4-4a83-9a03-75ff658a6eee"
+      }
+    }
+  ]
+}
