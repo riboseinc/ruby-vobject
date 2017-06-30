@@ -56,7 +56,8 @@ class Vobject::Component
 
   def child_class key, val
     base_class = val.is_a?(Array) ? component_base_class : property_base_class
-    base_class.const_get(key.to_s.downcase.camelize) rescue base_class
+    camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
+    base_class.const_get(camelized_key) rescue base_class
   end
 
   def property_base_class
