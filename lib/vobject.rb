@@ -31,14 +31,18 @@ module Vobject
       Pid          = '\d+(\.\d+)*'
       PidList      = "(?<head>#{Pid})(?<tail>(,#{Pid})*)"
       Param        = "(?<pname>#{ParamName})=(?<pvalue>#{PValueList})"
+      ParamX        = /\A#{Param}\Z/
       Params       = "(;(?<phead>#{Param}))(?<ptail>(;#{Param})*)"
+      ParamsX        = /\A#{Params}\Z/
       Value        = "#{ValueChar}*?"
       LineGroup    = "((?<group>#{Group})" + '\.' + ")?"
       Contentline  = "#{LineGroup}(?<key>#{Name})(?<params>(#{Params})?):(?<value>#{Value})#{Crlf}"
+      ContentlineX        = /\A#{Contentline}\Z/
       BeginLine    = "BEGIN:#{IANAToken}#{Crlf}"
       VersionLine  = "VERSION:#{Value}#{Crlf}"
       EndLine      = "END:#{IANAToken}#{Crlf}"
       Vobject      = "#{BeginLine}#{VersionLine}(#{Contentline})+#{EndLine}"
+      VobjectX      = /\A#{Vobject}\Z/
     end
 
   end
@@ -48,9 +52,9 @@ module Vobject
     def parse(vobject)
       vobject = unfold(vobject)
       lines   = []
-      rule    = "(?<line>#{Rules::ABNF::Contentline})(?<remainder>(#{Rules::ABNF::Contentline})*)"
+      rule    = /\A(?<line>#{Rules::ABNF::Contentline})(?<remainder>(#{Rules::ABNF::Contentline})*)\Z/
 
-      parse_for_rule(Rules::ABNF::Vobject, vobject) do |parsed|
+      parse_for_rule(Rules::ABNF::VobjectX, vobject) do |parsed|
 
         remainder = vobject
 
@@ -106,7 +110,7 @@ module Vobject
     end
 
     def parse_line(line)
-      parse_for_rule(Rules::ABNF::Contentline, unfold(line)) do |parsed|
+      parse_for_rule(Rules::ABNF::ContentlineX, unfold(line)) do |parsed|
         key = parsed[:key].to_sym
 
         group = parsed[:group]
@@ -126,9 +130,9 @@ module Vobject
       params = {}
 
       while !params_str.empty?
-        parse_for_rule(Rules::ABNF::Params, params_str) do |parsed|
+        parse_for_rule(Rules::ABNF::ParamsX, params_str) do |parsed|
 
-          parse_for_rule(Rules::ABNF::Param, parsed[:phead]) do |param_parsed|
+          parse_for_rule(Rules::ABNF::ParamX, parsed[:phead]) do |param_parsed|
             pname  = param_parsed[:pname].to_sym
             pvalue = param_parsed[:pvalue].sub(
               Regexp.new("^#{Rules::ABNF::QuotedString}$"),
@@ -156,7 +160,8 @@ module Vobject
     #and optional block to indicate whether to yield the resulting hash
     #Return: a hash with keys indicating their regex names
     def parse_for_rule(rule, str, &block)
-      matched = /\A#{rule}\Z/.match(str)
+      #matched = /\A#{rule}\Z/.match(str)
+      matched = rule.match(str)
 
       raise_invalid_parsing unless matched
 
