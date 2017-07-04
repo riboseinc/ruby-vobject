@@ -64,18 +64,17 @@ require 'vobject'
 ics = File.read "spec/examples/example2.ics"
 Vobject.parse(ics)
 
-=> {:VCALENDAR=>[{:VERSION=>{:value=>"2.0"}}, {:PRODID=>{:value=>"-//ABC Corporation//NONSGML My Product//EN"}}, {:VTODO=>[{:DTSTAMP=>{:value=>"19980130T134500Z"}}, {:SEQUENCE=>{:value=>"2"}}, {:UID=>{:value=>"uid4@example.com"}}, {:ORGANIZER=>{:value=>"mailto:unclesam@example.com"}}, {:ATTENDEE=>{:params=>{:PARTSTAT=>"ACCEPTED"}, :value=>"mailto:jqpublic@example.com"}}, {:DUE=>{:value=>"19980415T000000"}}, {:STATUS=>{:value=>"NEEDS-ACTION"}}, {:SUMMARY=>{:value=>"Submit Income Taxes"}}, {:VALARM=>[{:ACTION=>{:value=>"AUDIO"}}, {:TRIGGER=>{:value=>"19980403T120000Z"}}, {:ATTACH=>{:params=>{:FMTTYPE=>"audio/basic"}, :value=>"http://example.com/pub/audio-files/ssbanner.aud"}}, {:REPEAT=>{:value=>"4"}}, {:DURATION=>{:value=>"PT1H"}}]}]}]}
+=> {:VCALENDAR=>{:VERSION=>{:value=>"2.0"}, :PRODID=>{:value=>"-//ABC Corporation//NONSGML My Product//EN"}, :VTODO=>{:DTSTAMP=>{:value=>"19980130T134500Z"}, :SEQUENCE=>{:value=>"2"}, :UID=>{:value=>"uid4@example.com"}, :ORGANIZER=>{:value=>"mailto:unclesam@example.com"}, :ATTENDEE=>{:value=>"mailto:jqpublic@example.com", :params=>{:PARTSTAT=>"ACCEPTED"}}, :DUE=>{:value=>"19980415T000000"}, :STATUS=>{:value=>"NEEDS-ACTION"}, :SUMMARY=>{:value=>"Submit Income Taxes"}, :VALARM=>{:ACTION=>{:value=>"AUDIO"}, :TRIGGER=>{:value=>"19980403T120000Z"}, :ATTACH=>{:value=>"http://example.com/pub/audio-files/ssbanner.aud", :params=>{:FMTTYPE=>"audio/basic"}}, :REPEAT=>{:value=>"4"}, :DURATION=>{:value=>"PT1H"}}}}}
 ```
 
 Running spec:
 bundle exec rspec
 
+## Implementation
+
+This gem is implemented using (Rsec)[https://github.com/luikore/rsec], a very fast PEG grammar based on StringScanner.
 
 ## Development
-
-Currently the parser is written by regular expression. However, it is
-hard to maintain. A better approach will be using some grammar parser
-library, such as treetop (https://rubygems.org/gems/treetop/versions/1.6.8).
 
 Some really simple specs have been written. Please make sure they still
 pass after migrating into the grammar parser approach. Also, some other
