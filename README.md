@@ -27,6 +27,15 @@ Or install it yourself as:
 
 Vobject.parse("<ics/vcf file>")
 
+* Properties are hash keys; each property maps to a hash of a value (key `:value`),
+and one or more parameters (key `:params`).
+* The parameters of a property are themselves represented as a hash. Its keys are 
+the parameter names; its values are the parameter values. If there are multiple values for
+a parameter, the values are given as an array.
+* If a property has multiple values, given on separate lines, they are represented
+as an array of value hashes. Each value hash may have its own parameters.
+* Components are themselves represented as hashes, from the component name to its properties.
+
 Example:
 
 A sample ics file (in spec/examples/example2.ics):
@@ -41,6 +50,8 @@ SEQUENCE:2
 UID:uid4@example.com
 ORGANIZER:mailto:unclesam@example.com
 ATTENDEE;PARTSTAT=ACCEPTED:mailto:jqpublic@example.com
+ATTENDEE;DELEGATED-TO="mailto:jdoe@example.com","mailto:j
+ qpublic@example.com":mailto:jsmith@example.com
 DUE:19980415T000000
 STATUS:NEEDS-ACTION
 SUMMARY:Submit Income Taxes
@@ -64,7 +75,7 @@ require 'vobject'
 ics = File.read "spec/examples/example2.ics"
 Vobject.parse(ics)
 
-=> {:VCALENDAR=>{:VERSION=>{:value=>"2.0"}, :PRODID=>{:value=>"-//ABC Corporation//NONSGML My Product//EN"}, :VTODO=>{:DTSTAMP=>{:value=>"19980130T134500Z"}, :SEQUENCE=>{:value=>"2"}, :UID=>{:value=>"uid4@example.com"}, :ORGANIZER=>{:value=>"mailto:unclesam@example.com"}, :ATTENDEE=>{:value=>"mailto:jqpublic@example.com", :params=>{:PARTSTAT=>"ACCEPTED"}}, :DUE=>{:value=>"19980415T000000"}, :STATUS=>{:value=>"NEEDS-ACTION"}, :SUMMARY=>{:value=>"Submit Income Taxes"}, :VALARM=>{:ACTION=>{:value=>"AUDIO"}, :TRIGGER=>{:value=>"19980403T120000Z"}, :ATTACH=>{:value=>"http://example.com/pub/audio-files/ssbanner.aud", :params=>{:FMTTYPE=>"audio/basic"}}, :REPEAT=>{:value=>"4"}, :DURATION=>{:value=>"PT1H"}}}}}
+=> {:VCALENDAR=>{:VERSION=>{:value=>"2.0"}, :PRODID=>{:value=>"-//ABC Corporation//NONSGML My Product//EN"}, :VTODO=>{:DTSTAMP=>{:value=>"19980130T134500Z"}, :SEQUENCE=>{:value=>"2"}, :UID=>{:value=>"uid4@example.com"}, :ORGANIZER=>{:value=>"mailto:unclesam@example.com"}, :ATTENDEE=>[{:value=>"mailto:jqpublic@example.com", :params=>{:PARTSTAT=>"ACCEPTED"}}, {:value=>"mailto:jsmith@example.com", :params=>{:"DELEGATED-TO"=>["mailto:jqpublic@example.com", "mailto:jdoe@example.com"]}}], :DUE=>{:value=>"19980415T000000"}, :STATUS=>{:value=>"NEEDS-ACTION"}, :SUMMARY=>{:value=>"Submit Income Taxes"}, :VALARM=>{:ACTION=>{:value=>"AUDIO"}, :TRIGGER=>{:value=>"19980403T120000Z"}, :ATTACH=>{:value=>"http://example.com/pub/audio-files/ssbanner.aud", :params=>{:FMTTYPE=>"audio/basic"}}, :REPEAT=>{:value=>"4"}, :DURATION=>{:value=>"PT1H"}}}}}
 ```
 
 Running spec:
