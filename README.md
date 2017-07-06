@@ -83,7 +83,7 @@ bundle exec rspec
 
 ## Implementation
 
-This gem is implemented using (Rsec)[https://github.com/luikore/rsec], a very fast PEG grammar based on StringScanner.
+This gem is implemented using [Rsec](https://github.com/luikore/rsec), a very fast PEG grammar based on StringScanner.
 
 ## Development
 
