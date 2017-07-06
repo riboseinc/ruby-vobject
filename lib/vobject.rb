@@ -1,4 +1,5 @@
 require "rsec"
+require "set"
 include Rsec::Helpers
 
 module Vobject
@@ -6,6 +7,8 @@ module Vobject
  class << self
 
   def vobjectGrammar
+# properties with value cardinality 1
+    @cardinality1 = Set.new [:KIND, :N, :BDAY, :ANNIVERSARY, :GENDER, :PRODID, :REV, :UID, :VERSION]
     ianaToken 	= /[a-zA-Z\d\-]+/.r {|s| s }
     utf8_tail 	= /[\u0080-\u00bf]/.r
     utf8_2 	= /[\u00c2-\u00df]/.r  | utf8_tail
@@ -67,6 +70,13 @@ module Vobject
 	    		e
 		} | seq(contentline, lazy{rest}) {|(c, rest)|
 			c.merge( rest ) { | key, old, new|
+				if @cardinality1.include?(key)
+					if !(old.key?(:params) and old[:params].key?(:ALTID) and 
+					     		new.key?(:params) and new[:params].key?(:ALTID) and 
+							old[:params][:ALTID] == new[:params][:ALTID])
+						parse_err("Violated cardinality of property #{key}")
+					end
+				end
 				[old,  new].flatten
 				# deal with duplicate properties
 			}
