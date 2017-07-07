@@ -1,5 +1,6 @@
 require "rsec"
 require "set"
+require "uri"
 include Rsec::Helpers
 
 module Vobject
@@ -7,6 +8,7 @@ module Vobject
  class << self
 
   def vobjectGrammar
+
 # properties with value cardinality 1
     @cardinality1 = Set.new [:KIND, :N, :BDAY, :ANNIVERSARY, :GENDER, :PRODID, :REV, :UID, :VERSION]
     ianaToken 	= /[a-zA-Z\d\-]+/.r {|s| s }
@@ -22,6 +24,7 @@ module Vobject
     vChar 	= /[\u0021-\u007e]/.r
     valueChar 	= wsp | vChar | nonASCII
     dQuote 	= /"/.r
+
     beginLine 	= seq(/BEGIN:/i.r , ianaToken , /[\r\n]/)  {|_, token, _|
 			{ :BEGIN => token.to_sym }
 		}
@@ -34,6 +37,95 @@ module Vobject
     linegroup 	= group <<  '.' 
     beginend 	= /BEGIN/i.r | /END/i.r
     name  	= xname | seq(''.r ^ beginend , ianaToken )[1]
+
+# value types
+    boolean 	= /TRUE/i.r | /FALSE/i.r
+    b_end	= /[a-zA-Z0-9+\/]{2}==/i.r | /[a-zA-Z0-9+\/]{3}=/i.r
+    b_chars	= /[a-zA-Z0-9+\/]{4}/i.r
+    binary	= seq(b_chars.star , b_end._?) {|a, b| 
+	    (a.flatten + b.flatten).join('') 
+    		}
+    uri 	= /[^\s]+/.r.map {|s|
+	    		if not s =~ URI::regexp
+				parse_err("Invalid URI: #{s}")
+			end
+			s
+    		}
+    cal_address = uri
+    date 	= /[0-9]{4}[0-9]{2}[0-9]{2}/.r
+    time_hour 	=/[0-9]{2}/.r
+    time_minute =/[0-9]{2}/.r
+    time_second =/[0-9]{2}/.r
+    time_utc	= /Z/i.r
+    time 	= seq(time_hour, time_minute, time_second, time_utc._?)
+    date_time 	= seq(date, 'T', time)
+    sign	= /[+-]/i.r
+    durday	= seq(/[0-9]+/.r, 'D')
+    dursecond	= seq(/[0-9]+/.r, 'S')
+    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
+    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
+    durweek	= seq(/[0-9]+/.r, 'W')
+    durtime1	= durhour | durminute | dursecond
+    durtime	= seq('T', durtime1)
+    durdate	= seq(durday, durtime._?)
+    duration1	= durdate | durtime | durweek
+    duration 	= seq(sign._?, 'P', duration1)
+    float 	= prim(:double)
+    # TODO confirm that Rsec can do signs!
+    integer 	= prim(:int32)
+    period_explicit = seq(date_time, "/", date_time)
+    period_start = seq(date_time, "/", duration)
+    period 	= period_explicit | period_start
+    freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
+	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
+    enddate 	= date | date_time
+    seconds 	= /[0-9]{1,2}/.r
+    byseclist 	= seconds | seq(seconds, ',', lazy{byseclist})
+    minutes 	= /[0-9]{1,2}/.r
+    byminlist 	= minutes | seq(minutes, ',', lazy{byminlist})
+    hours 	= /[0-9]{1,2}/.r
+    byhrlist 	= hours | seq(hours, ',', lazy{byhrlist})
+    ordwk 	= /[0-9]{1,2}/.r
+    weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
+    weekdaynum1	= seq(sign._?, ordwk)
+    weekdaynum 	= seq(weekdaynum1._?, weekday)
+    bywdaylist 	= weekdaynum | seq(weekdaynum, ',', lazy{bywdaylist})
+    ordmoday 	= /[0-9]{1,2}/.r
+    monthdaynum = seq(sign._?, ordmoday)
+    bymodaylist = monthdaynum | seq(monthdaynum, ',', lazy{bymodaylist})
+    ordyrday 	= /[0-9]{1,3}/.r
+    yeardaynum	= seq(sign._?, ordyrday)
+    byyrdaylist = yeardaynum | seq(yeardaynum, ',', lazy{byyrdaylist})
+    weeknum 	= seq(sign._?, ordwk)
+    bywknolist 	= weeknum | seq(weeknum, ',', lazy{bywknolist})
+    monthnum 	= /[0-9]{1,2}/.r
+    bymolist 	= monthnum | seq(monthnum, ',', lazy{bymolist})
+    setposday	= yeardaynum
+    bysplist 	= setposday | seq(setposday, ',', lazy{bysplist})
+    recur_rule_part = 	seq(/FREQ/i.r, '=', freq) |
+	    seq(/UNTIL/i.r, '=', enddate) |
+	    seq(/COUNT/i.r, '=', /[0-9]+/i.r) |
+	    seq(/INTERVAL/i.r, '=', /[0-9]+/i.r) |
+	    seq(/BYSECOND/i.r, '=', byseclist) |
+	    seq(/BYMINUTE/i.r, '=', byminlist) |
+	    seq(/BYHOUR/i.r, '=', byhrlist) |
+	    seq(/BYDAY/i.r, '=', bywdaylist) |
+	    seq(/BYMONTHDAY/i.r, '=', bymodaylist) |
+	    seq(/BYYEARDAY/i.r, '=', byyrdaylist) |
+	    seq(/BYWEEKNO/i.r, '=', bywknolist) |
+	    seq(/BYMONTH/i.r, '=', bymolist) |
+	    seq(/BYSETPOS/i.r, '=', bysplist) |
+	    seq(/WKST/i.r, '=', weekday) 
+    recur 	= recur_rule_part | seq(recur_rule_part, ';', lazy{recur})
+    escaped_char = /\\[";,Nn]/.r
+    tsafe_char 	= wsp | /[\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e]/  | nonASCII
+    text1	= tsafe_char | ':'.r |dQuote | escaped_char 
+    text	= ''.r | seq(text1, lazy{text}) {|a, b|
+	    		[a, b].flatten.join('')
+	    	}
+    utc_offset 	= seq(sign, time_hour, time_minute, time_second._?)
+
+# parameters and parameter types
     paramname 	= /ALTREP/i.r | /CN/i.r | /CUTYPE/i.r | /DELEGATED-FROM/i.r | /DELEGATED-TO/i.r |
 	    		/DIR/i.r | /ENCODING/i.r | /FMTTYPE/i.r | /FBTYPE/i.r | /LANGUAGE/i.r |
 			/MEMBER/i.r | /PARTSTAT/i.r | /RANGE/i.r | /RELATED/i.r | /RELTYPE/i.r |
@@ -58,7 +150,6 @@ module Vobject
     rangevalue 	= /THISANDFUTURE/i.r
     relatedvalue = /START/i.r | /END/i.r
     reltypevalue = /PARENT/i.r | /CHILD/i.r | /SIBLING/i.r | xname | ianaToken
-    boolean 	= /TRUE/i.r | /FALSE/i.r
     tzidvalue 	= seq("/".r._?, pText).map {|_, val| val}
     rolevalue 	= /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r | 
 	    		xname | ianaToken
@@ -74,6 +165,7 @@ module Vobject
                          ret = list << e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")
                          ret
                 }
+
     rfc4288regname 	= /[A-Za-z!#$&.+^+-]{1,127}/.r
     rfc4288typename 	= rfc4288regname
     rfc4288subtypename 	= rfc4288regname
@@ -100,6 +192,7 @@ module Vobject
 	    			[a, b, c, d, e, f].flatten.join('')
     			}
     rfc5646langvalue 	= rfc5646langtag | rfc5646privateuse | rfc5646grandfathered
+
     param 	= seq(/ALTREP/i.r, '=', quotedString) {|name, _, val|
 			{name.upcase.to_sym => val}
     		} | seq(/CN/i.r, '=', paramvalue) {|name, _, val|
@@ -147,12 +240,14 @@ module Vobject
 		} | seq(paramname, '=', pvalueList) {|name, _, val|
 			parse_err("Violated format of parameter value #{name} = #{val}")
 		}
+
     #params	= seq(';'.r >> param & ':'.r).map {|e|
     params	= seq(';'.r >> param ).map {|e|
 			e[0]
     		} | seq(';'.r >> param, lazy{params} ) {|p, ps|
 			p.merge(ps) 
 		}
+
     value 	= valueChar.star.map(&:join)
     contentline = seq(linegroup._?, name, params._?, ':', 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
@@ -163,6 +258,7 @@ module Vobject
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 		}
+
     rest 	= endLine.map {|e| 
 	    		e
 		} | seq(contentline, lazy{rest}) {|(c, rest)|
@@ -187,6 +283,7 @@ module Vobject
 			rest0.delete(:END)
 			{ b[:BEGIN] => rest0 }.merge(rest1)
 		}
+
     versionLine = seq( /VERSION:/i.r , value , /[\r\n]/) {|_, version, _|
 			hash = { :VERSION => {} }
 			hash[:VERSION][:value] = version
