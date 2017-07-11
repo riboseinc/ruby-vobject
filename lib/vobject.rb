@@ -1,6 +1,8 @@
 require "rsec"
 require "set"
 require "uri"
+require "date"
+require "tzinfo"
 include Rsec::Helpers
 
 module Vobject
@@ -8,44 +10,8 @@ module Vobject
  class << self
 
   # property value types, each defining their own parser
-  def valuetype
+  def recur
 # value types
-    boolean 	= /TRUE/i.r | /FALSE/i.r
-    b_end	= /[a-zA-Z0-9+\/]{2}==/i.r | /[a-zA-Z0-9+\/]{3}=/i.r
-    b_chars	= /[a-zA-Z0-9+\/]{4}/i.r
-    binary	= seq(b_chars.star , b_end._?) {|a, b| 
-	    (a.flatten + b.flatten).join('') 
-    		}
-    uri 	= /[^\s]+/.r.map {|s|
-	    		if not s =~ URI::regexp
-				parse_err("Invalid URI: #{s}")
-			end
-			s
-    		}
-    cal_address = uri
-    date 	= /[0-9]{4}[0-9]{2}[0-9]{2}/.r
-    time_hour 	=/[0-9]{2}/.r
-    time_minute =/[0-9]{2}/.r
-    time_second =/[0-9]{2}/.r
-    time_utc	= /Z/i.r
-    time 	= seq(time_hour, time_minute, time_second, time_utc._?)
-    date_time 	= seq(date, 'T', time)
-    sign	= /[+-]/i.r
-    durday	= seq(/[0-9]+/.r, 'D')
-    dursecond	= seq(/[0-9]+/.r, 'S')
-    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
-    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
-    durweek	= seq(/[0-9]+/.r, 'W')
-    durtime1	= durhour | durminute | dursecond
-    durtime	= seq('T', durtime1)
-    durdate	= seq(durday, durtime._?)
-    duration1	= durdate | durtime | durweek
-    duration 	= seq(sign._?, 'P', duration1)
-    float 	= prim(:double)
-    # TODO confirm that Rsec can do signs!
-    period_explicit = seq(date_time, "/", date_time)
-    period_start = seq(date_time, "/", duration)
-    period 	= period_explicit | period_start
     freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
     enddate 	= date | date_time
@@ -87,13 +53,7 @@ module Vobject
 	    seq(/BYSETPOS/i.r, '=', bysplist) |
 	    seq(/WKST/i.r, '=', weekday) 
     recur 	= recur_rule_part | seq(recur_rule_part, ';', lazy{recur})
-    escaped_char = /\\[";,Nn]/.r
-    tsafe_char 	= wsp | /[\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e]/  | nonASCII
-    text1	= tsafe_char | ':'.r |dQuote | escaped_char 
-    text	= ''.r | seq(text1, lazy{text}) {|a, b|
-	    		[a, b].flatten.join('')
-	    	}
-    utc_offset 	= seq(sign, time_hour, time_minute, time_second._?)
+    recur.eof
   end
 
   def integer  
@@ -101,12 +61,234 @@ module Vobject
     integer.eof
   end
   
+  def percent_complete  
+    integer 	= prim(:int32) {|a|
+	    		(a >= 0 and a <= 100) ? a :  {:error => 'Percentage outside of range 0..100'}
+	    	}
+    integer.eof
+  end
+  
+  def priority  
+    integer 	= prim(:int32) {|a|
+	    		(a >= 0 and a <= 9) ? a :  {:error => 'Percentage outside of range 0..100'}
+	    	}
+    integer.eof
+  end
+  
   def geovalue
     float 	    = prim(:double)
     # TODO confirm that Rsec can do signs!
-    geovalue	= seq(float, ';', float)
+    geovalue	= seq(float, ';', float) {|a, _, b|
+	     ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? [a, b] :
+			{:error => 'Latitude/Longitude outside of range -180..180'}
+    }
     geovalue.eof
   end
+
+  def calscalevalue
+    calscalevalue = /GREGORIAN/i.r
+    calscalevalue.eof
+  end
+
+  def ianaToken
+    ianaToken 	= /[a-zA-Z\d\-]+/.r 
+    ianaToken.eof
+  end 
+
+  def versionvalue
+     versionvalue = '2.0'.r | prim(:double) | seq(prim(:double),';',prim(:double)) {|x, _, y| [x, y] }
+     versionvalue.eof
+  end
+
+  def binary
+	binary	= seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) {|b, q|
+				( (b.length + q.length) % 4 == 0 ) ? b + q : {:error => 'Malformed binary coding'}
+		}
+	binary.eof
+  end
+
+  def uri
+	uri         = /\S+/.r.map {|s|
+	                  	s =~ URI::regexp ? s : {:error => 'Invalid URI'}
+			 }
+	uri.eof
+  end
+
+  def text
+    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
+    text.eof
+  end
+
+  def textlist
+    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
+    textlist	= text.map {|t| [t]} | 
+	    	seq(text, ',', lazy{textlist}) { |a, b| [a, b].flatten }
+    textlist.eof
+  end
+
+  def request_statusvalue
+    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
+    extdata = seq(';'.r, text) {|_, t| t}
+    request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';', text, extdata._?) {|n, t1, t2|
+                            hash = {:statcode => n, :statdesc => t1}
+                            hash[:extdata] = t2[0] unless t2.empty?
+                            hash
+                        }
+    request_statusvalue.eof
+  end
+
+  def classvalue
+    	ianaToken 	= /[a-zA-Z\d\-]+/.r 
+    	vendorid	= /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
+    	xname 	= seq( '[xX]-', vendorid, '-', ianaToken)
+	classvalue = /PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r |
+		  	xname | ianaToken
+	classvalue.eof
+  end
+
+  def eventstatus
+	  eventstatus	= /TENTATIVE/i.r | /CONFIRMED/i.r | /CANCELLED/i.r
+	  eventstatus.eof
+  end
+
+  def todostatus
+	  todostatus	= /NEEDS-ACTION/i.r | /COMPLETED/i.r | /IN-PROCESS/i.r | /CANCELLED/i.r
+	  todostatus.eof
+  end
+
+  def journalstatus
+	  journalstatus	= /DRAFT/i.r | /FINAL/i.r | /CANCELLED/i.r
+	  journalstatus.eof
+  end
+
+  def date
+     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
+	     		Time.utc(yy, mm, dd)
+	     	}
+     date.eof
+  end
+
+  def datelist
+     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
+	     		Time.utc(yy, mm, dd)
+	     	}
+	 datelist   = date.map {|d| 
+	                [d] 
+	            } | seq(date, ",", lazy{datelist}) {|d, _, l|
+	                [d, l].flatten
+	            }
+     datelist.eof
+  end
+
+  def date_time
+     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+	     	}
+     date_time.eof
+  end
+
+  def date_timelist
+     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+	     	}
+	 date_timelist   = date_time.map {|d| 
+	                [d] 
+	            } | seq(date_time, ",", lazy{date_timelist}) {|d, _, l|
+	                [d, l].flatten
+	            }
+     date_timelist.eof
+  end
+
+  def date_time_utc
+     date_time_utc	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		Time.utc(yy, mm, dd, h, m, s)
+	     	}
+     date_time_utc.eof
+  end
+  
+  def date_time_utclist
+     date_time_utc	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+	     	}
+	 date_time_utclist   = date_time_utc.map {|d| 
+	                [d] 
+	            } | seq(date_time_utc, ",", lazy{date_time_utclist}) {|d, _, l|
+	                [d, l].flatten
+	            }
+     date_time_utclist.eof
+  end
+
+  def duration
+    sign	= /[+-]/i.r
+    durday	= seq(/[0-9]+/.r, 'D')
+    dursecond	= seq(/[0-9]+/.r, 'S')
+    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
+    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
+    durweek	= seq(/[0-9]+/.r, 'W')
+    durtime1	= durhour | durminute | dursecond
+    durtime	= seq('T', durtime1)
+    durdate	= seq(durday, durtime._?)
+    duration1	= durdate | durtime | durweek
+    duration 	= seq(sign._?, 'P', duration1)
+    duration.eof
+  end
+  
+  def periodlist
+    date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+	     	}
+    sign	= /[+-]/i.r
+    durday	= seq(/[0-9]+/.r, 'D')
+    dursecond	= seq(/[0-9]+/.r, 'S')
+    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
+    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
+    durweek	= seq(/[0-9]+/.r, 'W')
+    durtime1	= durhour | durminute | dursecond
+    durtime	= seq('T', durtime1)
+    durdate	= seq(durday, durtime._?)
+    duration1	= durdate | durtime | durweek
+    duration 	= seq(sign._?, 'P', duration1)
+
+
+    period_explicit = seq(date_time, "/", date_time) {|s, _, e|
+                        {:start => s, :end => e}
+                    }
+    period_start    = seq(date_time, "/", duration) {|s, _, d|
+                        {:start => s, :duration => d}
+                    }
+    period 	        = period_explicit | period_start
+    periodlist      = period {|p| 
+                        [p] 
+                    } | seq(period, ",", lazy{periodlist}) {|p, _, l|
+                        [p, l].flatten
+                    }
+    periodlist.eof
+  end
+  
+  def transpvalue
+	  transpvalue	= /OPAQUE/i.r | /TRANSPARENT/i.r
+	  transpvalue.eof
+  end
+
+  def utc_offset
+    sign	    = /[+-]/i.r
+    utc_offset 	= seq(sign, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?)
+    utc_offset.eof
+  end
+
+  def actionvalue
+    	ianaToken 	= /[a-zA-Z\d\-]+/.r 
+    	vendorid	= /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
+    	xname 	= seq( '[xX]-', vendorid, '-', ianaToken)
+	  actionvalue	= /ADIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | ianaToken | xname
+	  actionvalue.eof
+  end
+
 
   def vobjectGrammar
 
@@ -122,7 +304,10 @@ module Vobject
     @cardinality1[:TIMEZONE] = Set.new [:TZID, :LAST_MOD, :TZURL]
     @cardinality1[:TZ] = Set.new [:DTSTART, :TZOFFSETTTO, :TZOFFSETFROM]
     @cardinality1[:ALARM] = Set.new [:ACTION, :TRIGGER, :DURATION, :REPEAT, :DESCRIPTION, :SUMMARY]
-    ianaToken 	= /[a-zA-Z\d\-]+/.r {|s| s }
+    @cardinality1[:PARAM] = Set.new [:FMTTYPE, :LANGUAGE, :ALTREP, :FBTYPE, :TRANSP, :CUTYPE, :MEMBER, :ROLE, :PARTSTAT, :RSVP, :DELEGATED_TO, 
+    :DELEGATED_FROM, :SENT_BY, :CN, :DIR, :RANGE, :RELTYPE, :RELATED]
+
+    ianaToken 	= /[a-zA-Z\d\-]+/.r 
     utf8_tail 	= /[\u0080-\u00bf]/.r
     utf8_2 	= /[\u00c2-\u00df]/.r  | utf8_tail
     utf8_3 	= /[\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef]/.r  | 
@@ -178,6 +363,9 @@ module Vobject
     relatedvalue = /START/i.r | /END/i.r
     reltypevalue = /PARENT/i.r | /CHILD/i.r | /SIBLING/i.r | xname | ianaToken
     tzidvalue 	= seq("/".r._?, pText).map {|_, val| val}
+    valuetype 	= /BINARY/i.r | /BOOLEAN/i.r | /CAL-ADDRESS/i.r | /DATE-TIME/i.r | /DATE/i.r |
+	    	/DURATION/i.r | /FLOAT/i.r | /INTEGER/i.r | /PERIOD/i.r | /RECUR/i.r | /TEXT/i.r |
+		/TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | xname | ianaToken
     rolevalue 	= /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r | 
 	    		xname | ianaToken
     pvalueList 	= (paramvalue & /[;:]/.r).map {|e| 
@@ -221,49 +409,51 @@ module Vobject
     rfc5646langvalue 	= rfc5646langtag | rfc5646privateuse | rfc5646grandfathered
 
     param 	= seq(/ALTREP/i.r, '=', quotedString) {|name, _, val|
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/CN/i.r, '=', paramvalue) {|name, _, val|
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/CUTYPE/i.r, '=', cutypevalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/DELEGATED-FROM/i.r, '=', quotedStringList) {|name, _, val|
 	    		val = val[0] if val.length == 1
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/DELEGATED-TO/i.r, '=', quotedStringList) {|name, _, val|
 	    		val = val[0] if val.length == 1
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/DIR/i.r, '=', quotedString) {|name, _, val|
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/ENCODING/i.r, '=', encodingvalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/FMTTYPE/i.r, '=', fmttypevalue) {|name, _, val|
-			{name.upcase.to_sym => val.downcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.downcase}
     		} | seq(/FBTYPE/i.r, '=', fbtypevalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/LANGUAGE/i.r, '=', rfc5646langvalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/MEMBER/i.r, '=', quotedStringList) {|name, _, val|
 	    		val = val[0] if val.length == 1
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/PARTSTAT/i.r, '=', partstatvalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RANGE/i.r, '=', rangevalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RELATED/i.r, '=', relatedvalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RELTYPE/i.r, '=', reltypevalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/ROLE/i.r, '=', rolevalue) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RSVP/i.r, '=', boolean) {|name, _, val|
-			{name.upcase.to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
 		} | seq(/SENT-BY/i.r, '=', quotedString) {|name, _, val|
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/TZID/i.r, '=', tzidvalue) {|name, _, val|
-			{name.upcase.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
+		} | seq(/VALUE/i.r, '=', valuetype) {|name, _, val|
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(otherparamname, '=', pvalueList) {|name, _, val|
 	    		val = val[0] if val.length == 1
-			{name.to_sym => val}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(paramname, '=', pvalueList) {|name, _, val|
 			parse_err("Violated format of parameter value #{name} = #{val}")
 		}
@@ -272,7 +462,13 @@ module Vobject
     params	= seq(';'.r >> param ).map {|e|
 			e[0]
     		} | seq(';'.r >> param, lazy{params} ) {|p, ps|
-			p.merge(ps) 
+			p.merge(ps) {|key, old, new|
+				if @cardinality1[:PARAM].include?(key)
+						parse_err("Violated cardinality of parameter #{key}")
+				end
+				[old,  new].flatten
+				# deal with duplicate properties
+			}
 		}
 
     value 	= valueChar.star.map(&:join)
@@ -280,8 +476,7 @@ module Vobject
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :GENERIC, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -324,8 +519,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :EVENT, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -334,8 +528,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :TODO, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -344,8 +537,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :JOURNAL, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -354,8 +546,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :FREEBUSY, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -364,8 +555,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :TIMEZONE, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -374,8 +564,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :TZ, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -384,8 +573,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			parse_err("Type mismatch for property #{name}, value #{value}") if !typematch(key, value)
-			hash[key][:value] = value
+			hash[key][:value] = typematch(key, params[0], :ALARM, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -458,10 +646,16 @@ APPLIES TO VCARD ONLY
 			}
 			}
 	standardc	= seq(/BEGIN:STANDARD[\r\n]/i.r, tzprops, /END:STANDARD[\r\n]/i.r) {|_, e, _|
+				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
+				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
+				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
 				hash = { :STANDARD => e }
 				hash
 			}
 	daylightc	= seq(/BEGIN:DAYLIGHT[\r\n]/i.r, tzprops, /END:DAYLIGHT[\r\n]/i.r) {|_, e, _|
+				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
+				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
+				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
 				hash = { :DAYLIGHT => e }
 				hash
 			}
@@ -523,12 +717,15 @@ APPLIES TO VCARD ONLY
 	freebusyc	= seq(/BEGIN:VFREEBUSY[\r\n]/i.r, fbprops, /END:VFREEBUSY[\r\n]/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
+				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
+					e[:DTEND] < e[:DTSTART]
 				hash = { :VJOURNAL => e }
 				hash
 			}
 	journalc	= seq(/BEGIN:VJOURNAL[\r\n]/i.r, journalprops, /END:VJOURNAL[\r\n]/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
+				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
 				hash = { :VJOURNAL => e }
 				hash
 			}
@@ -542,6 +739,12 @@ APPLIES TO VCARD ONLY
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DUE and DURATION properties") if e.has_key?(:DUE) and e.has_key?(:DURATION)
 				parse_err("Missing DTSTART property with DURATION property") if e.has_key?(:DURATION) and !e.has_key?(:DTSTART)
+				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
+				parse_err("DUE before DTSTART") if e.has_key?(:DUE) and e.has_key?(:DTSTART) and 
+					e[:DUE] < e[:DTSTART]
+				# TODO not doing constraint that due and dtstart are both or neither local time
+				# TODO not doing constraint that recurrence-id and dtstart are both or neither local time
+				# TODO not doing constraint that recurrence-id and dtstart are both or neither date
 				hash = { :VTODO => e }
 				hash = hash.merge(a[0]) unless a.empty?
 				hash
@@ -550,6 +753,10 @@ APPLIES TO VCARD ONLY
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
+				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
+				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
+					e[:DTEND] < e[:DTSTART]
+				# TODO not doing constraint that dtend and dtstart are both or neither local time
 				hash = { :VEVENT => e }
 				hash = hash.merge(a[0]) unless a.empty?
 				hash
@@ -578,9 +785,9 @@ APPLIES TO VCARD ONLY
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
 	                xname | ianaToken
 	calprop     = seq(calpropname, params._?, ':', value, 	/[\r\n]/) {|key, params, _, value, _|
-	    	key = key.upcase.gsub(/-/,"_").to_sym
-	    	hash = { key => {} }
-			hash[key][:value] = value
+	    		key = key.upcase.gsub(/-/,"_").to_sym
+	    		hash = { key => {} }
+			hash[key][:value] = typematch(key, params[0], :CALENDAR, value)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 	}
@@ -605,19 +812,145 @@ APPLIES TO VCARD ONLY
     vobject.eof 
   end 
 
-  # enforce type restrictions on values of particular properties.
-  # Values of type TEXT are ignored
-  def typematch(key, value)
+  # Enforce type restrictions on values of particular properties.
+  # If successful, return typed interpretation of string
+  def typematch(key, params, component, value)
+    ctx1 = Rsec::ParseContext.new value, 'source'
     case key
+    when :CALSCALE
+	    ret = calscalevalue._parse ctx1
+    when :METHOD
+	    ret = ianaToken._parse ctx1
+    when :PRODID
+	    ret = text._parse ctx1
+    when :VERSION
+	    ret = versionvalue._parse ctx1
+    when :ATTACH
+	    if params[:VALUE] == 'BINARY'
+		    ret = binary._parse ctx1
+	    else
+		    ret = uri._parse ctx1
+	    end
+    when :CATEGORIES, :RESOURCES
+	    ret = textlist._parse ctx1
+    when :CLASS
+	    ret = classvalue._parse ctx1
+    when :COMMENT, :DESCRIPTION, :LOCATION, :SUMMARY, :TZID, :TZNAME, :CONTACT, :RELATED_TO, :UID
+	    ret = text._parse ctx1
     when :GEO
-	    ret = geovalue.parse value
+	    ret = geovalue._parse ctx1
     when :PERCENT_COMPLETE
-	    ret = integer.parse value
+	    ret = percent_complete._parse ctx1
+    when :PRIORITY
+	    ret = priority._parse ctx1
+    when :STATUS
+	    case component 
+	    when :EVENT
+		    ret = eventstatus._parse ctx1
+	    when :TODO
+		    ret = todostatus._parse ctx1
+	    when :JOURNAL
+		    ret = journalstatus._parse ctx1
+	    else
+		    ret = text._parse ctx1
+	    end
+    when :COMPLETED, :CREATED, :DTSTAMP, :LAST_MODIFIED
+	    ret = date_time_utc._parse ctx1
+    when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
+	    if params and params[:VALUE] == 'DATE'
+	    	ret = date._parse ctx1
+	    else
+		if component == :FREEBUSY
+	    		ret = date_time_utc._parse ctx1
+		else
+			if params and params[:TZID]
+			    puts "TZID"
+				if component == :STANDARD or component == :DAYLIGHT
+					STDERR.puts "Specified TZID within property #{key} in #{component}"
+					raise ctx1.generate_error 'source'
+				end
+				tz = TZInfo::Timezone.get(params[:TZID])
+	    			ret = date_time_utc._parse ctx1
+				ret = tz.utc_to_local(ret)
+			else 
+	    			ret = date_time._parse ctx1
+			end
+		end
+	    end
+    when :EXDATE
+	    if params and params[:VALUE] == 'DATE'
+	    	ret = datelist._parse ctx1
+	    else
+			if params and params[:TZID]
+			    puts "TZID"
+				if component == :STANDARD or component == :DAYLIGHT
+					STDERR.puts "Specified TZID within property #{key} in #{component}"
+					raise ctx1.generate_error 'source'
+				end
+				tz = TZInfo::Timezone.get(params[:TZID])
+	    			ret = date_time_utclist._parse ctx1
+				ret = ret.map {|x| tz.utc_to_local(x) }
+			else 
+	    			ret = date_timelist._parse ctx1
+			end
+		end
+    when :RDATE
+	    if params and params[:VALUE] == 'DATE'
+	    	ret = datelist._parse ctx1
+	    elsif params and params[:VALUE] == 'PERIOD'
+	    	ret = periodlist._parse ctx1
+	    else
+			if params and params[:TZID]
+			    puts "TZID"
+				if component == :STANDARD or component == :DAYLIGHT
+					STDERR.puts "Specified TZID within property #{key} in #{component}"
+					raise ctx1.generate_error 'source'
+				end
+				tz = TZInfo::Timezone.get(params[:TZID])
+	    			ret = date_time_utclist._parse ctx1
+				ret = ret.map {|x| tz.utc_to_local(x) }
+			else 
+	    			ret = date_timelist._parse ctx1
+			end
+		end
+    when :TRIGGER
+	    if params and params[:VALUE] == 'DATE-TIME' or /^\d{8}T/.match(value)
+	        if params and params[:RELATED]
+                STDERR.puts "Specified RELATED within property #{key} as date-time"
+				raise ctx1.generate_error 'source'	        
+			end
+	    	ret = date_time_utc._parse ctx1
+	    else
+	    	ret = duration._parse ctx1
+		end
+    when :FREEBUSY
+	    ret = periodlist._parse ctx1
+    when :TRANSP
+	    ret = transpvalue._parse ctx1
+    when :TZOFFSETFROM, :TZOFFSETTO
+	    ret = utc_offset._parse ctx1
+	when :TZURI, :URL
+	    ret = uri._parse ctx1
+	when :ATTENDEE, :ORGANIZER
+	    ret = uri._parse ctx1
+	when :RRULE
+	    ret = recur._parse ctx1
+	when :ACTION
+	    ret = actionvalue._parse ctx1
+	when :REPEAT, :SEQUENCE
+	    ret = integer._parse ctx1
+	when :REQUEST_STATUS
+	    ret = request_statusvalue._parse ctx1
     else
-        ret = true
+	    ret = value
     end
-    if Rsec::INVALID[ret]
-        ret = false
+    if ret.kind_of?(Hash) and ret[:error]
+	STDERR.puts "#{ret[:error]} for property #{key}, value #{value}"
+        raise ctx1.generate_error 'source'
+    end
+    if Rsec::INVALID[ret] 
+	STDERR.puts "Type mismatch for property #{key}, value #{value}"
+        raise ctx1.generate_error 'source'
     end
     return ret
   end
