@@ -11,7 +11,14 @@ module Vobject
 
   # property value types, each defining their own parser
   def recur
-# value types
+     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
+	     		Time.utc(yy, mm, dd)
+	     	}
+     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
+		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
+	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+	     	}
+    sign	= /[+-]/i.r
     freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
     enddate 	= date | date_time
@@ -79,7 +86,7 @@ module Vobject
     float 	    = prim(:double)
     # TODO confirm that Rsec can do signs!
     geovalue	= seq(float, ';', float) {|a, _, b|
-	     ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? [a, b] :
+	     ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? {:lat => a, :long => b} :
 			{:error => 'Latitude/Longitude outside of range -180..180'}
     }
     geovalue.eof
@@ -96,7 +103,8 @@ module Vobject
   end 
 
   def versionvalue
-     versionvalue = '2.0'.r | prim(:double) | seq(prim(:double),';',prim(:double)) {|x, _, y| [x, y] }
+     versionvalue = '2.0'.r | prim(:double) | 
+                    seq(prim(:double), ';', prim(:double)) {|x, _, y| [x, y] }
      versionvalue.eof
   end
 
@@ -458,7 +466,6 @@ module Vobject
 			parse_err("Violated format of parameter value #{name} = #{val}")
 		}
 
-    #params	= seq(';'.r >> param & ':'.r).map {|e|
     params	= seq(';'.r >> param ).map {|e|
 			e[0]
     		} | seq(';'.r >> param, lazy{params} ) {|p, ps|

@@ -27,12 +27,17 @@ class Vobject::Component
 
     raise_invalid_initialization if key != name
 
-    self.children = cs.map do |c|
-      key = c.keys.first
-      val = c[key]
+    self.children = []
+    cs.each_key do |key|
+      #key = c.keys.first
+      #val = c[key]
+      val = cs[key]
+      # iteration of array or hash values is making the value a key!
+      next if key.class == Array
+      next if key.class == Hash 
 
-      cc = child_class(key, val)
-      cc.new key, val
+        cc = child_class(key, val)
+        self.children << cc.new(key, val)
     end
   end
 
@@ -55,7 +60,7 @@ class Vobject::Component
   end
 
   def child_class key, val
-    base_class = val.is_a?(Array) ? component_base_class : property_base_class
+    base_class = (val.is_a?(Hash) and !val.has_key?(:value) ) ? component_base_class : property_base_class
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end

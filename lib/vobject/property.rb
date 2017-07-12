@@ -4,13 +4,21 @@ module Vobject
 
     MAX_LINE_WIDTH = 75
 
-    attr_accessor :group, :prop_name, :params, :value
+    attr_accessor :group, :prop_name, :params, :value, :multiple
 
     def initialize key, options
-      self.group = options[:group]
-      self.prop_name = key
-      self.params = options[:params]
-      self.value = parse_value(options[:value])
+      if options.class == Array 
+	self.multiple = []
+	options.each {|v|
+          self.multiple << Vobject::Property.new(key, v)
+          self.prop_name = key
+	}
+      else
+        self.group = options[:group]
+        self.prop_name = key
+        self.params = options[:params]
+        self.value = parse_value(options[:value])
+     end
 
       raise_invalid_initialization if key != name
     end
