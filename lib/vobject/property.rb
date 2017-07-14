@@ -12,7 +12,7 @@ require 'vobject/parameter'
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
-          self.multiple << Vobject::Property.new(key, v)
+          self.multiple << initialize(key, v)
           self.prop_name = key
 	}
       else
@@ -21,7 +21,7 @@ require 'vobject/parameter'
 	unless options[:params].nil? or options[:params].empty?
 		self.params = []
 		options[:params].each {|k, v|
-			self.params << Vobject::Parameter.new(k, v)
+			self.params << parameter_base_class.new(k, v)
 		}
 	end
         #self.params = options[:params]
@@ -72,6 +72,11 @@ require 'vobject/parameter'
     def default_value_type
       "text"
     end
+
+      def parameter_base_class
+	                Vobject::Parameter
+      end
+
 
     def raise_invalid_initialization
       raise "vObject property initialization failed"

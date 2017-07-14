@@ -73,6 +73,10 @@ class Vobject::Component
     Vobject::Component
   end
 
+  def parameter_base_class
+	  Vobject::Parameter
+  end
+
   def raise_invalid_initialization
     raise "vObject component initialization failed"
   end

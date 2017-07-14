@@ -9,7 +9,7 @@
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
-          self.multiple << Vobject::Parameter.new(key, v)
+          self.multiple << initialize(key, v)
           self.param_name = key
 	}
       else
