@@ -4,9 +4,10 @@ require "uri"
 require "date"
 require "tzinfo"
 include Rsec::Helpers
-include 'vobject/typegrammars'
 
- class Vobject::Grammar
+module Vobject
+ class Grammar
+	 class << self
 
   def vobjectGrammar
 
@@ -193,7 +194,7 @@ include 'vobject/typegrammars'
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :GENERIC, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :GENERIC, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -236,7 +237,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :EVENT, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :EVENT, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -245,7 +246,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :TODO, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :TODO, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -254,7 +255,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :JOURNAL, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :JOURNAL, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -263,7 +264,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :FREEBUSY, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :FREEBUSY, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -272,7 +273,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :TIMEZONE, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :TIMEZONE, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -281,7 +282,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :TZ, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :TZ, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -290,7 +291,7 @@ NOT using named properties per component, since ianaToken allows any component, 
 		      value, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :ALARM, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :ALARM, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -504,7 +505,7 @@ APPLIES TO VCARD ONLY
 	calprop     = seq(calpropname, params._?, ':', value, 	/[\r\n]/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {} }
-			hash[key][:value] = typematch(key, params[0], :CALENDAR, value)
+			hash[key][:value] = Vobject::Typegrammars.typematch(key, params[0], :CALENDAR, value)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 	}
@@ -552,4 +553,5 @@ private
    end
 
   end
+end
 end

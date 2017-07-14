@@ -4,9 +4,11 @@ require "uri"
 require "date"
 require "tzinfo"
 include Rsec::Helpers
+require 'vobject'
 
-
- class Vobject::Typegrammars
+module Vobject
+ class Typegrammars
+	 class << self
 
   # property value types, each defining their own parser
   def recur
@@ -449,3 +451,5 @@ private
    end
 
   end
+end
+end

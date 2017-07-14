@@ -1,5 +1,6 @@
 require 'vobject'
 require 'vobject/property'
+require 'vobject/grammar'
 
 class Vobject::Component
 
@@ -8,7 +9,7 @@ class Vobject::Component
   class << self
 
     def parse(vcf)
-      hash = Vobject.parse(vcf)
+      hash = Vobject::Grammar.parse(vcf)
       comp_name = hash.keys.first
 
       self.new comp_name, hash[comp_name]
