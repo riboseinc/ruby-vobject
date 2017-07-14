@@ -293,7 +293,7 @@ module Vobject
     	ianaToken 	= /[a-zA-Z\d\-]+/.r 
     	vendorid	= /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
     	xname 	= seq( '[xX]-', vendorid, '-', ianaToken)
-	  actionvalue	= /ADIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | ianaToken | xname
+	  actionvalue	= /AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | ianaToken | xname
 	  actionvalue.eof
   end
 
@@ -389,7 +389,7 @@ module Vobject
                          ret
                 }
 
-    rfc4288regname 	= /[A-Za-z!#$&.+^+-]{1,127}/.r
+    rfc4288regname 	= /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
     rfc4288typename 	= rfc4288regname
     rfc4288subtypename 	= rfc4288regname
     fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)

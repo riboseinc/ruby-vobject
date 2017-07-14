@@ -1,31 +1,20 @@
-require 'vobject/parameter'
 
-
-
-  class Vobject::Property
+  class Vobject::Parameter
 
     MAX_LINE_WIDTH = 75
 
-    attr_accessor :group, :prop_name, :params, :value, :multiple
+    attr_accessor :param_name, :value, :multiple
 
     def initialize key, options
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
-          self.multiple << Vobject::Property.new(key, v)
-          self.prop_name = key
+          self.multiple << Vobject::Parameter.new(key, v)
+          self.param_name = key
 	}
       else
-        self.group = options[:group]
-        self.prop_name = key
-	unless options[:params].nil? or options[:params].empty?
-		self.params = []
-		options[:params].each {|k, v|
-			self.params << Vobject::Parameter.new(k, v)
-		}
-	end
-        #self.params = options[:params]
-        self.value = parse_value(options[:value])
+        self.param_name = key
+        self.value = options
      end
 
       raise_invalid_initialization if key != name
@@ -51,7 +40,7 @@ require 'vobject/parameter'
     private
 
     def name
-      prop_name
+      param_name
     end
 
     def parse_value value
@@ -65,8 +54,7 @@ require 'vobject/parameter'
     end
 
     def value_type
-      #(params || {})[:VALUE] || default_value_type
-	params ? params[0].value : default_value_type
+      (params || {})[:VALUE] || default_value_type
     end
 
     def default_value_type
