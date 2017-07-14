@@ -9,7 +9,7 @@
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
-          self.multiple << initialize(key, v)
+          self.multiple << parameter_base_class.new(key, v)
           self.param_name = key
 	}
       else
@@ -60,6 +60,11 @@
     def default_value_type
       "text"
     end
+
+          def parameter_base_class
+		                Vobject::Parameter
+	  end
+
 
     def raise_invalid_initialization
       raise "vObject property initialization failed"

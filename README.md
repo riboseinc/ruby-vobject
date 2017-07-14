@@ -73,126 +73,95 @@ require 'vobject'
 ics = File.read "spec/examples/example2.ics"
 Vobject.parse(ics)
 
-#<Vobject::Component:0x007f9af283bc08
+#<Vobject::Component:0x007fa5711e7468
  @children=
-  [#<Vobject::Property:0x007f9af283b758
+  [#<Vobject::Property:0x007fa5711dfab0
     @group=nil,
     @prop_name=:VERSION,
     @value="2.0">,
-   #<Vobject::Property:0x007f9af283b348
+   #<Vobject::Property:0x007fa5711df588
     @group=nil,
     @prop_name=:PRODID,
-    @value="a">,
-   #<Vobject::Property:0x007f9af283afb0
-    @multiple=
-     [#<Vobject::Property:0x007f9af283af60
-       @group=nil,
-       @params=
-        [#<Vobject::Parameter:0x007f9af283af10
-          @param_name=:ALTID,
-          @value="3">],
-       @prop_name=:KIND,
-       @value="individual">,
-      #<Vobject::Property:0x007f9af283ac90
-       @group=nil,
-       @params=
-        [#<Vobject::Parameter:0x007f9af283ac40
-          @param_name=:ALTID,
-          @value="3">],
-       @prop_name=:KIND,
-       @value="group">,
-      #<Vobject::Property:0x007f9af283aa60
-       @group=nil,
-       @params=
-        [#<Vobject::Parameter:0x007f9af283aa10
-          @param_name=:ALTID,
-          @value="3">],
-       @prop_name=:KIND,
-       @value="nec">],
-    @prop_name=:KIND>,
-   #<Vobject::Component:0x007f9af283a5b0
+    @value="-//ABC Corporation//NONSGML My Product//EN">,
+   #<Vobject::Component:0x007fa5711defe8
     @children=
-     [#<Vobject::Property:0x007f9af283a308
+     [#<Vobject::Property:0x007fa5711dea48
        @group=nil,
        @prop_name=:DTSTAMP,
        @value=1998-01-30 13:45:00 UTC>,
-      #<Vobject::Property:0x007f9af2839f70
+      #<Vobject::Property:0x007fa5711de390
+       @group=nil,
+       @prop_name=:SEQUENCE,
+       @value=2>,
+      #<Vobject::Property:0x007fa5711dde40
        @group=nil,
        @prop_name=:UID,
        @value="uid4@example.com">,
-      #<Vobject::Property:0x007f9af2839bd8
-       @group=nil,
-       @prop_name=:GEO,
-       @value={:lat=>1.0, :long=>2.0}>,
-      #<Vobject::Property:0x007f9af28397a0
-       @group=nil,
-       @prop_name=:PERCENT_COMPLETE,
-       @value=1>,
-      #<Vobject::Property:0x007f9af28393e0
+      #<Vobject::Property:0x007fa5711dda30
        @group=nil,
        @prop_name=:ORGANIZER,
        @value="mailto:unclesam@example.com">,
-      #<Vobject::Property:0x007f9af2838fd0
+      #<Vobject::Property:0x007fa5711dd6c0
        @multiple=
-        [#<Vobject::Property:0x007f9af2838f58
+        [#<Vobject::Property:0x007fa5711dd670
           @group=nil,
           @params=
-           [#<Vobject::Parameter:0x007f9af2838f08
-             @param_name=:ALTREP,
+           [#<Vobject::Parameter:0x007fa5711dd620
+             @param_name=:PARTSTAT,
              @value="ACCEPTED">],
           @prop_name=:ATTENDEE,
           @value="mailto:jqpublic@example.com">,
-         #<Vobject::Property:0x007f9af2838cd8
+         #<Vobject::Property:0x007fa5711dd580
           @group=nil,
           @params=
-           [#<Vobject::Parameter:0x007f9af2838c88
+           [#<Vobject::Parameter:0x007fa5711dd530
              @multiple=
-              [#<Vobject::Parameter:0x007f9af2838c38
+              [#<Vobject::Parameter:0x007fa5711dd4b8
                 @param_name=:DELEGATED_TO,
                 @value="mailto:jqpublic@example.com">,
-               #<Vobject::Parameter:0x007f9af2838be8
+               #<Vobject::Parameter:0x007fa5711dd490
                 @param_name=:DELEGATED_TO,
                 @value="mailto:jdoe@example.com">],
              @param_name=:DELEGATED_TO>],
           @prop_name=:ATTENDEE,
           @value="mailto:jsmith@example.com">],
        @prop_name=:ATTENDEE>,
-      #<Vobject::Property:0x007f9af28385a8
+      #<Vobject::Property:0x007fa5711dd120
        @group=nil,
        @prop_name=:DUE,
        @value=1998-04-15 00:00:00 +1000>,
-      #<Vobject::Property:0x007f9af28381e8
+      #<Vobject::Property:0x007fa5711dce50
        @group=nil,
        @prop_name=:STATUS,
        @value="NEEDS-ACTION">,
-      #<Vobject::Property:0x007f9af214bec0
+      #<Vobject::Property:0x007fa5711dcb80
        @group=nil,
        @prop_name=:SUMMARY,
        @value="Submit Income Taxes">],
     @comp_name=:VTODO>,
-   #<Vobject::Component:0x007f9af214b7e0
+   #<Vobject::Component:0x007fa5711dc8d8
     @children=
-     [#<Vobject::Property:0x007f9af214b268
+     [#<Vobject::Property:0x007fa5711dc630
        @group=nil,
        @prop_name=:ACTION,
        @value="AUDIO">,
-      #<Vobject::Property:0x007f9af214abb0
+      #<Vobject::Property:0x007fa5711dc310
        @group=nil,
        @prop_name=:TRIGGER,
        @value=1998-04-03 12:00:00 UTC>,
-      #<Vobject::Property:0x007f9af214a818
+      #<Vobject::Property:0x007fa5711dc040
        @group=nil,
        @params=
-        [#<Vobject::Parameter:0x007f9af214a7c8
+        [#<Vobject::Parameter:0x007fa5711dd968
           @param_name=:FMTTYPE,
           @value="audio/basic">],
        @prop_name=:ATTACH,
        @value="http://example.com/pub/audio-files/ssbanner.aud">,
-      #<Vobject::Property:0x007f9af214a2f0
+      #<Vobject::Property:0x007fa5711d7c70
        @group=nil,
        @prop_name=:REPEAT,
        @value=4>,
-      #<Vobject::Property:0x007f9af2149f08
+      #<Vobject::Property:0x007fa5711d77c0
        @group=nil,
        @prop_name=:DURATION,
        @value="PT1H">],
