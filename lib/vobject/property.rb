@@ -12,7 +12,7 @@ require 'vobject/parameter'
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
-          self.multiple << initialize(key, v)
+          self.multiple << property_base_class.new(key, v)
           self.prop_name = key
 	}
       else
@@ -73,8 +73,12 @@ require 'vobject/parameter'
       "text"
     end
 
+      def property_base_class
+	      Vobject::Property
+      end
+
       def parameter_base_class
-	                Vobject::Parameter
+	      Vobject::Parameter
       end
 
 
