@@ -27,7 +27,8 @@ Or install it yourself as:
 
 Vobject.parse("<ics/vcf file>")
 
-* Components, properties, and parameters are each objects.
+* Components, properties, and parameters are all objects.
+  * Each type of component is a distinct object.
 * The parameters of a property are represented as an array of parameter objects.
 * If a property has multiple values, given on separate lines, they are represented
 as an array of value properties. Each value hash may have its own parameters.
@@ -73,95 +74,95 @@ require 'vobject'
 ics = File.read "spec/examples/example2.ics"
 Vobject.parse(ics)
 
-#<Vobject::Component:0x007fa5711e7468
+#<Vobject::Component:0x007ffc760602f0
  @children=
-  [#<Vobject::Property:0x007fa5711dfab0
+  [#<Vobject::Property:0x007ffc7605bb60
     @group=nil,
     @prop_name=:VERSION,
     @value="2.0">,
-   #<Vobject::Property:0x007fa5711df588
+   #<Vobject::Property:0x007ffc7605b660
     @group=nil,
     @prop_name=:PRODID,
     @value="-//ABC Corporation//NONSGML My Product//EN">,
-   #<Vobject::Component:0x007fa5711defe8
+   #<Vobject::Component::ToDo:0x007ffc7605b340
     @children=
-     [#<Vobject::Property:0x007fa5711dea48
+     [#<Vobject::Property:0x007ffc7605b020
        @group=nil,
        @prop_name=:DTSTAMP,
        @value=1998-01-30 13:45:00 UTC>,
-      #<Vobject::Property:0x007fa5711de390
+      #<Vobject::Property:0x007ffc7605ac60
        @group=nil,
        @prop_name=:SEQUENCE,
        @value=2>,
-      #<Vobject::Property:0x007fa5711dde40
+      #<Vobject::Property:0x007ffc7605a6e8
        @group=nil,
        @prop_name=:UID,
        @value="uid4@example.com">,
-      #<Vobject::Property:0x007fa5711dda30
+      #<Vobject::Property:0x007ffc7605a170
        @group=nil,
        @prop_name=:ORGANIZER,
        @value="mailto:unclesam@example.com">,
-      #<Vobject::Property:0x007fa5711dd6c0
+      #<Vobject::Property:0x007ffc76059ab8
        @multiple=
-        [#<Vobject::Property:0x007fa5711dd670
+        [#<Vobject::Property:0x007ffc76059888
           @group=nil,
           @params=
-           [#<Vobject::Parameter:0x007fa5711dd620
+           [#<Vobject::Parameter:0x007ffc76059518
              @param_name=:PARTSTAT,
              @value="ACCEPTED">],
           @prop_name=:ATTENDEE,
           @value="mailto:jqpublic@example.com">,
-         #<Vobject::Property:0x007fa5711dd580
+         #<Vobject::Property:0x007ffc76058618
           @group=nil,
           @params=
-           [#<Vobject::Parameter:0x007fa5711dd530
+           [#<Vobject::Parameter:0x007ffc760585a0
              @multiple=
-              [#<Vobject::Parameter:0x007fa5711dd4b8
+              [#<Vobject::Parameter:0x007ffc76058500
                 @param_name=:DELEGATED_TO,
                 @value="mailto:jqpublic@example.com">,
-               #<Vobject::Parameter:0x007fa5711dd490
+               #<Vobject::Parameter:0x007ffc76058280
                 @param_name=:DELEGATED_TO,
                 @value="mailto:jdoe@example.com">],
              @param_name=:DELEGATED_TO>],
           @prop_name=:ATTENDEE,
           @value="mailto:jsmith@example.com">],
        @prop_name=:ATTENDEE>,
-      #<Vobject::Property:0x007fa5711dd120
+      #<Vobject::Property:0x007ffc76053c58
        @group=nil,
        @prop_name=:DUE,
        @value=1998-04-15 00:00:00 +1000>,
-      #<Vobject::Property:0x007fa5711dce50
+      #<Vobject::Property:0x007ffc760537f8
        @group=nil,
        @prop_name=:STATUS,
        @value="NEEDS-ACTION">,
-      #<Vobject::Property:0x007fa5711dcb80
+      #<Vobject::Property:0x007ffc760532a8
        @group=nil,
        @prop_name=:SUMMARY,
        @value="Submit Income Taxes">],
     @comp_name=:VTODO>,
-   #<Vobject::Component:0x007fa5711dc8d8
+   #<Vobject::Component::Alarm:0x007ffc76052e98
     @children=
-     [#<Vobject::Property:0x007fa5711dc630
+     [#<Vobject::Property:0x007ffc76052b00
        @group=nil,
        @prop_name=:ACTION,
        @value="AUDIO">,
-      #<Vobject::Property:0x007fa5711dc310
+      #<Vobject::Property:0x007ffc76052808
        @group=nil,
        @prop_name=:TRIGGER,
        @value=1998-04-03 12:00:00 UTC>,
-      #<Vobject::Property:0x007fa5711dc040
+      #<Vobject::Property:0x007ffc760524e8
        @group=nil,
        @params=
-        [#<Vobject::Parameter:0x007fa5711dd968
+        [#<Vobject::Parameter:0x007ffc76052498
           @param_name=:FMTTYPE,
           @value="audio/basic">],
        @prop_name=:ATTACH,
        @value="http://example.com/pub/audio-files/ssbanner.aud">,
-      #<Vobject::Property:0x007fa5711d7c70
+      #<Vobject::Property:0x007ffc76052010
        @group=nil,
        @prop_name=:REPEAT,
        @value=4>,
-      #<Vobject::Property:0x007fa5711d77c0
+      #<Vobject::Property:0x007ffc76051c78
        @group=nil,
        @prop_name=:DURATION,
        @value="PT1H">],

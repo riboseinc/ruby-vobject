@@ -30,8 +30,6 @@ class Vobject::Component
 
     self.children = []
     cs.each_key do |key|
-      #key = c.keys.first
-      #val = c[key]
       val = cs[key]
       # iteration of array or hash values is making the value a key!
       next if key.class == Array
@@ -61,7 +59,28 @@ class Vobject::Component
   end
 
   def child_class key, val
-    base_class = (val.is_a?(Hash) and !val.has_key?(:value) ) ? component_base_class : property_base_class
+    if !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+	    base_class = property_base_class
+    elsif key == :VTODO
+	    base_class = Vobject::Component::ToDo
+    elsif key == :VFREEBUSY
+	    base_class = Vobject::Component::FreeBusy
+    elsif key == :JOURNAL
+	    base_class = Vobject::Component::Journal
+    elsif key == :STANDARD
+	    base_class = Vobject::Component::Timezone::Standard
+    elsif key == :DAYLIGHT
+	    base_class = Vobject::Component::Timezone::Daylight
+    elsif key == :VTIMEZONE
+	    base_class = Vobject::Component::Timezone
+    elsif key == :VEVENT
+	    base_class = Vobject::Component::Event
+    elsif key == :VALARM
+	    base_class = Vobject::Component::Alarm
+    else
+	    base_class = Vobject::Component
+    end
+    #base_class = (val.is_a?(Hash) and !val.has_key?(:value) ) ? component_base_class : property_base_class
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end
@@ -83,3 +102,21 @@ class Vobject::Component
   end
 
 end
+
+class Vobject::Component::ToDo < Vobject::Component
+end
+class Vobject::Component::Freebusy < Vobject::Component
+end
+class Vobject::Component::Journal < Vobject::Component
+end
+class Vobject::Component::Timezone < Vobject::Component
+end
+class Vobject::Component::Timezone::Standard < Vobject::Component::Timezone
+end
+class Vobject::Component::Timezone::Daylight < Vobject::Component::Timezone
+end
+class Vobject::Component::Event < Vobject::Component
+end
+class Vobject::Component::Alarm < Vobject::Component
+end
+
