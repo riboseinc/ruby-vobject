@@ -4,25 +4,20 @@ require "uri"
 require "date"
 require "tzinfo"
 include Rsec::Helpers
+require_relative "../c"
 require 'vobject'
 
 module Vobject
  class Typegrammars
-	 class << self
+
+    class << self
+
 
   # property value types, each defining their own parser
   def recur
-     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
-	     		Time.utc(yy, mm, dd)
-	     	}
-     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
-	     	}
-    sign	= /[+-]/i.r
     freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
-    enddate 	= date | date_time
+    enddate 	= C::DATE | C::DATE_TIME
     seconds 	= /[0-9]{1,2}/.r
     byseclist 	= seconds | seq(seconds, ',', lazy{byseclist})
     minutes 	= /[0-9]{1,2}/.r
@@ -31,16 +26,16 @@ module Vobject
     byhrlist 	= hours | seq(hours, ',', lazy{byhrlist})
     ordwk 	= /[0-9]{1,2}/.r
     weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
-    weekdaynum1	= seq(sign._?, ordwk)
+    weekdaynum1	= seq(C::SIGN._?, ordwk)
     weekdaynum 	= seq(weekdaynum1._?, weekday)
     bywdaylist 	= weekdaynum | seq(weekdaynum, ',', lazy{bywdaylist})
     ordmoday 	= /[0-9]{1,2}/.r
-    monthdaynum = seq(sign._?, ordmoday)
+    monthdaynum = seq(C::SIGN._?, ordmoday)
     bymodaylist = monthdaynum | seq(monthdaynum, ',', lazy{bymodaylist})
     ordyrday 	= /[0-9]{1,3}/.r
-    yeardaynum	= seq(sign._?, ordyrday)
+    yeardaynum	= seq(C::SIGN._?, ordyrday)
     byyrdaylist = yeardaynum | seq(yeardaynum, ',', lazy{byyrdaylist})
-    weeknum 	= seq(sign._?, ordwk)
+    weeknum 	= seq(C::SIGN._?, ordwk)
     bywknolist 	= weeknum | seq(weeknum, ',', lazy{bywknolist})
     monthnum 	= /[0-9]{1,2}/.r
     bymolist 	= monthnum | seq(monthnum, ',', lazy{bymolist})
@@ -99,7 +94,7 @@ module Vobject
   end
 
   def ianaToken
-    ianaToken 	= /[a-zA-Z\d\-]+/.r 
+    ianaToken 	= C::IANATOKEN 
     ianaToken.eof
   end 
 
@@ -123,22 +118,20 @@ module Vobject
 	uri.eof
   end
 
-  def text
-    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
+  def textT
+    text	= C::TEXT
     text.eof
   end
 
   def textlist
-    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
-    textlist	= text.map {|t| [t]} | 
+    textlist	= C::TEXT.map {|t| [t]} | 
 	    	seq(text, ',', lazy{textlist}) { |a, b| [a, b].flatten }
     textlist.eof
   end
 
   def request_statusvalue
-    text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r
-    extdata = seq(';'.r, text) {|_, t| t}
-    request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';', text, extdata._?) {|n, t1, t2|
+    extdata = seq(';'.r, C::TEXT) {|_, t| t}
+    request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';', C::TEXT, extdata._?) {|n, t1, t2|
                             hash = {:statcode => n, :statdesc => t1}
                             hash[:extdata] = t2[0] unless t2.empty?
                             hash
@@ -147,11 +140,7 @@ module Vobject
   end
 
   def classvalue
-    	ianaToken 	= /[a-zA-Z\d\-]+/.r 
-    	vendorid	= /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-    	xname 	= seq( '[xX]-', vendorid, '-', ianaToken)
-	classvalue = /PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r |
-		  	xname | ianaToken
+	classvalue = /PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | C::XNAME | C::IANATOKEN
 	classvalue.eof
   end
 
@@ -170,18 +159,13 @@ module Vobject
 	  journalstatus.eof
   end
 
-  def date
-     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
-	     		Time.utc(yy, mm, dd)
-	     	}
+  def dateT
+     date = C::DATE
      date.eof
   end
 
   def datelist
-     date	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
-	     		Time.utc(yy, mm, dd)
-	     	}
-	 datelist   = date.map {|d| 
+	 datelist   = C::DATE.map {|d| 
 	                [d] 
 	            } | seq(date, ",", lazy{datelist}) {|d, _, l|
 	                [d, l].flatten
@@ -189,85 +173,43 @@ module Vobject
      datelist.eof
   end
 
-  def date_time
-     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
-	     	}
-     date_time.eof
+  def date_timeT
+     C::DATE_TIME.eof
   end
 
   def date_timelist
-     date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
-	     	}
-	 date_timelist   = date_time.map {|d| 
+	 date_timelist   = C::DATE_TIME.map {|d| 
 	                [d] 
-	            } | seq(date_time, ",", lazy{date_timelist}) {|d, _, l|
+	            } | seq(C::DATE_TIME, ",", lazy{date_timelist}) {|d, _, l|
 	                [d, l].flatten
 	            }
      date_timelist.eof
   end
 
-  def date_time_utc
-     date_time_utc	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		Time.utc(yy, mm, dd, h, m, s)
-	     	}
+  def date_time_utcT
+     date_time_utc	= C::DATE_TIME_UTC
      date_time_utc.eof
   end
   
   def date_time_utclist
-     date_time_utc	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
-	     	}
-	 date_time_utclist   = date_time_utc.map {|d| 
+	 date_time_utclist   = C::DATE_TIME_UTC.map {|d| 
 	                [d] 
-	            } | seq(date_time_utc, ",", lazy{date_time_utclist}) {|d, _, l|
+	            } | seq(C::DATE_TIME_UTC, ",", lazy{date_time_utclist}) {|d, _, l|
 	                [d, l].flatten
 	            }
      date_time_utclist.eof
   end
 
-  def duration
-    sign	= /[+-]/i.r
-    durday	= seq(/[0-9]+/.r, 'D')
-    dursecond	= seq(/[0-9]+/.r, 'S')
-    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
-    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
-    durweek	= seq(/[0-9]+/.r, 'W')
-    durtime1	= durhour | durminute | dursecond
-    durtime	= seq('T', durtime1)
-    durdate	= seq(durday, durtime._?)
-    duration1	= durdate | durtime | durweek
-    duration 	= seq(sign._?, 'P', duration1)
+  def durationT
+    duration = C::DURATION
     duration.eof
   end
   
   def periodlist
-    date_time	= seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T', 
-		  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-	     		z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
-	     	}
-    sign	= /[+-]/i.r
-    durday	= seq(/[0-9]+/.r, 'D')
-    dursecond	= seq(/[0-9]+/.r, 'S')
-    durminute	= seq(/[0-9]+/.r, 'M', dursecond._?)
-    durhour	= seq(/[0-9]+/.r, 'H', durminute._?)
-    durweek	= seq(/[0-9]+/.r, 'W')
-    durtime1	= durhour | durminute | dursecond
-    durtime	= seq('T', durtime1)
-    durdate	= seq(durday, durtime._?)
-    duration1	= durdate | durtime | durweek
-    duration 	= seq(sign._?, 'P', duration1)
-
-
-    period_explicit = seq(date_time, "/", date_time) {|s, _, e|
+    period_explicit = seq(C::DATE_TIME, "/", C::DATE_TIME) {|s, _, e|
                         {:start => s, :end => e}
                     }
-    period_start    = seq(date_time, "/", duration) {|s, _, d|
+    period_start    = seq(C::DATE_TIME, "/", C::DURATION) {|s, _, d|
                         {:start => s, :duration => d}
                     }
     period 	        = period_explicit | period_start
@@ -285,16 +227,12 @@ module Vobject
   end
 
   def utc_offset
-    sign	    = /[+-]/i.r
-    utc_offset 	= seq(sign, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?)
+    utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?)
     utc_offset.eof
   end
 
   def actionvalue
-    	ianaToken 	= /[a-zA-Z\d\-]+/.r 
-    	vendorid	= /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-    	xname 	= seq( '[xX]-', vendorid, '-', ianaToken)
-	  actionvalue	= /AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | ianaToken | xname
+	  actionvalue	= /AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | C::IANATOKEN | C::XNAME
 	  actionvalue.eof
   end
 
@@ -310,7 +248,7 @@ module Vobject
     when :METHOD
 	    ret = ianaToken._parse ctx1
     when :PRODID
-	    ret = text._parse ctx1
+	    ret = textT._parse ctx1
     when :VERSION
 	    ret = versionvalue._parse ctx1
     when :ATTACH
@@ -324,7 +262,7 @@ module Vobject
     when :CLASS
 	    ret = classvalue._parse ctx1
     when :COMMENT, :DESCRIPTION, :LOCATION, :SUMMARY, :TZID, :TZNAME, :CONTACT, :RELATED_TO, :UID
-	    ret = text._parse ctx1
+	    ret = textT._parse ctx1
     when :GEO
 	    ret = geovalue._parse ctx1
     when :PERCENT_COMPLETE
@@ -340,16 +278,16 @@ module Vobject
 	    when :JOURNAL
 		    ret = journalstatus._parse ctx1
 	    else
-		    ret = text._parse ctx1
+		    ret = textT._parse ctx1
 	    end
     when :COMPLETED, :CREATED, :DTSTAMP, :LAST_MODIFIED
-	    ret = date_time_utc._parse ctx1
+	    ret = date_time_utcT._parse ctx1
     when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
 	    if params and params[:VALUE] == 'DATE'
-	    	ret = date._parse ctx1
+	    	ret = dateT._parse ctx1
 	    else
 		if component == :FREEBUSY
-	    		ret = date_time_utc._parse ctx1
+	    		ret = date_time_utcT._parse ctx1
 		else
 			if params and params[:TZID]
 			    puts "TZID"
@@ -358,10 +296,10 @@ module Vobject
 					raise ctx1.generate_error 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
-	    			ret = date_time_utc._parse ctx1
+	    			ret = date_time_utcT._parse ctx1
 				ret = tz.utc_to_local(ret)
 			else 
-	    			ret = date_time._parse ctx1
+	    			ret = date_timeT._parse ctx1
 			end
 		end
 	    end
@@ -407,9 +345,9 @@ module Vobject
                 STDERR.puts "Specified RELATED within property #{key} as date-time"
 				raise ctx1.generate_error 'source'	        
 			end
-	    	ret = date_time_utc._parse ctx1
+	    	ret = date_time_utcT._parse ctx1
 	    else
-	    	ret = duration._parse ctx1
+	    	ret = durationT._parse ctx1
 		end
     when :FREEBUSY
 	    ret = periodlist._parse ctx1

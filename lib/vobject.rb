@@ -8,8 +8,7 @@ require 'vobject/grammar'
 
 module Vobject
 
- #class << self
+
 #	 include Vobject::Typegrammars
 #	 include Vobject::Grammar
-#  end
 end
