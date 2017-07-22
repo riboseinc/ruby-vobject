@@ -124,14 +124,14 @@ module Vobject
   end
 
   def textlist
-    textlist	= C::TEXT.map {|t| [t]} | 
-	    	seq(text, ',', lazy{textlist}) { |a, b| [a, b].flatten }
+    textlist	= seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [a, b].flatten } |
+	    	C::TEXT.map {|t| [t]} 
     textlist.eof
   end
 
   def request_statusvalue
     extdata = seq(';'.r, C::TEXT) {|_, t| t}
-    request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';', C::TEXT, extdata._?) {|n, t1, t2|
+    request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';'.r, C::TEXT, extdata._?) {|n, _, t1, t2|
                             hash = {:statcode => n, :statdesc => t1}
                             hash[:extdata] = t2[0] unless t2.empty?
                             hash
@@ -165,12 +165,12 @@ module Vobject
   end
 
   def datelist
-	 datelist   = C::DATE.map {|d| 
-	                [d] 
-	            } | seq(date, ",", lazy{datelist}) {|d, _, l|
+	 datelist   = 
+		 C::DATE.map {|d| [d] } | 
+		 seq(C::DATE, ",".r, lazy{datelist}) {|d, _, l|
 	                [d, l].flatten
-	            }
-     datelist.eof
+	            } 
+     	datelist.eof
   end
 
   def date_timeT
@@ -178,11 +178,12 @@ module Vobject
   end
 
   def date_timelist
-	 date_timelist   = C::DATE_TIME.map {|d| 
-	                [d] 
-	            } | seq(C::DATE_TIME, ",", lazy{date_timelist}) {|d, _, l|
+	 date_timelist   = 
+		 	C::DATE_TIME.map {|d| [d] } 
+			seq(C::DATE_TIME, ",".r, lazy{date_timelist}) {|d, _, l|
 	                [d, l].flatten
-	            }
+	            } |
+		 	C::DATE_TIME.map {|d| [d] }  
      date_timelist.eof
   end
 
@@ -192,11 +193,10 @@ module Vobject
   end
   
   def date_time_utclist
-	 date_time_utclist   = C::DATE_TIME_UTC.map {|d| 
-	                [d] 
-	            } | seq(C::DATE_TIME_UTC, ",", lazy{date_time_utclist}) {|d, _, l|
+	 date_time_utclist   = seq(C::DATE_TIME_UTC, ",".r, lazy{date_time_utclist}) {|d, _, l|
 	                [d, l].flatten
-	            }
+	            } |
+		 C::DATE_TIME_UTC.map {|d| [d] } 
      date_time_utclist.eof
   end
 
@@ -206,18 +206,17 @@ module Vobject
   end
   
   def periodlist
-    period_explicit = seq(C::DATE_TIME, "/", C::DATE_TIME) {|s, _, e|
+    period_explicit = seq(C::DATE_TIME, "/".r, C::DATE_TIME) {|s, _, e|
                         {:start => s, :end => e}
                     }
-    period_start    = seq(C::DATE_TIME, "/", C::DURATION) {|s, _, d|
+    period_start    = seq(C::DATE_TIME, "/".r, C::DURATION) {|s, _, d|
                         {:start => s, :duration => d}
                     }
     period 	        = period_explicit | period_start
-    periodlist      = period {|p| 
-                        [p] 
-                    } | seq(period, ",", lazy{periodlist}) {|p, _, l|
+    periodlist      = seq(period, ",".r, lazy{periodlist}) {|p, _, l|
                         [p, l].flatten
-                    }
+                    } |
+	    		period {|p| [p] } 
     periodlist.eof
   end
   
@@ -227,7 +226,11 @@ module Vobject
   end
 
   def utc_offset
-    utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?)
+    utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) {|sign, h, m, sec|
+	    		hash = {:sign => sign, :hr => h, :min => m }
+			hash[:sec] = sec[0] unless sec.empty?
+			hash
+    		}
     utc_offset.eof
   end
 
@@ -290,7 +293,6 @@ module Vobject
 	    		ret = date_time_utcT._parse ctx1
 		else
 			if params and params[:TZID]
-			    puts "TZID"
 				if component == :STANDARD or component == :DAYLIGHT
 					STDERR.puts "Specified TZID within property #{key} in #{component}"
 					raise ctx1.generate_error 'source'
@@ -308,7 +310,6 @@ module Vobject
 	    	ret = datelist._parse ctx1
 	    else
 			if params and params[:TZID]
-			    puts "TZID"
 				if component == :STANDARD or component == :DAYLIGHT
 					STDERR.puts "Specified TZID within property #{key} in #{component}"
 					raise ctx1.generate_error 'source'
@@ -327,7 +328,6 @@ module Vobject
 	    	ret = periodlist._parse ctx1
 	    else
 			if params and params[:TZID]
-			    puts "TZID"
 				if component == :STANDARD or component == :DAYLIGHT
 					STDERR.puts "Specified TZID within property #{key} in #{component}"
 					raise ctx1.generate_error 'source'

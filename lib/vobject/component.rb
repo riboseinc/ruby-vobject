@@ -101,7 +101,7 @@ class Vobject::Component
     else
 	    base_class = Vobject::Component
     end
-    #base_class = (val.is_a?(Hash) and !val.has_key?(:value) ) ? component_base_class : property_base_class
+    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end

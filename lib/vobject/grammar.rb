@@ -132,9 +132,8 @@ module Vobject
 			parse_err("Violated format of parameter value #{name} = #{val}")
 		}
 
-    params	= seq(';'.r >> param ).map {|e|
-			e[0]
-    		} | seq(';'.r >> param, lazy{params} ) {|p, ps|
+    params	= 
+		seq(';'.r >> param & ';', lazy{params} ) {|p, ps|
 			p.merge(ps) {|key, old, new|
 				if @cardinality1[:PARAM].include?(key)
 						parse_err("Violated cardinality of parameter #{key}")
@@ -142,7 +141,8 @@ module Vobject
 				[old,  new].flatten
 				# deal with duplicate properties
 			}
-		}
+		} |
+	    	seq(';'.r >> param ).map {|e| e[0] } 
 
     contentline = seq(linegroup._?, name, params._?, ':', 
 		      C::VALUE, /[\r\n]/) {|group, name, params, _, value, _|
@@ -218,7 +218,7 @@ module Vobject
 				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
 				{ :DAYLIGHT => e }
 			}
-	timezoneprops	= (''.r & beginend).map {|e| {} } | 
+	timezoneprops	= 
 			seq(standardc, lazy{timezoneprops}) {|e, rest|
 				e.merge(rest)
 	                } | seq(daylightc, lazy{timezoneprops}) {|e, rest|
@@ -232,7 +232,8 @@ module Vobject
 				end
 				[old,  new].flatten
 				}
-			}
+			} |
+			(''.r & beginend).map {|e| {} } 
         todoprops	= (''.r & beginend).map {|e| {}   } | 
 			seq(contentline, lazy{todoprops}) {|c, rest|
 			k = c.keys[0]
@@ -244,7 +245,7 @@ module Vobject
 				[old,  new].flatten
 				}
 			}
-        eventprops	= (''.r & beginend).map {|e| {}   } | 
+        eventprops	= 
 			seq(contentline, lazy{eventprops}) {|c, rest|
 			k = c.keys[0]
 			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :EVENT, c[k][:value])
@@ -254,7 +255,8 @@ module Vobject
 				end
 				[old,  new].flatten
 				}
-			}
+			} |
+			(''.r & beginend).map {|e| {}   } 
 	alarmc		= seq(/BEGIN:VALARM[\r\n]/i.r, alarmprops, /END:VALARM[\r\n]/i.r) {|_, e, _|
 				parse_err("Missing ACTION property") unless e.has_key?(:ACTION)
 				parse_err("Missing TRIGGER property") unless e.has_key?(:TRIGGER)
@@ -276,8 +278,8 @@ module Vobject
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
-					e[:DTEND] < e[:DTSTART]
-				{ :VJOURNAL => e }
+					e[:DTEND][:value] < e[:DTSTART][:value]
+				{ :VFREEBUSY => e }
 			}
 	journalc	= seq(/BEGIN:VJOURNAL[\r\n]/i.r, journalprops, /END:VJOURNAL[\r\n]/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
@@ -287,7 +289,7 @@ module Vobject
 			}
 	timezonec	= seq(/BEGIN:VTIMEZONE[\r\n]/i.r, timezoneprops, /END:VTIMEZONE[\r\n]/i.r) {|_, e, _|
 				parse_err("Missing STANDARD or DAYLIGHT property") unless e.has_key?(:STANDARD) and e.has_key?(:DAYLIGHT)
-				{ :VJOURNAL => e }
+				{ :VTIMEZONE => e }
 			}
 	todoc		= seq(/BEGIN:VTODO[\r\n]/i.r, todoprops, alarmc._?, /END:VTODO[\r\n]/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
@@ -296,13 +298,12 @@ module Vobject
 				parse_err("Missing DTSTART property with DURATION property") if e.has_key?(:DURATION) and !e.has_key?(:DTSTART)
 				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
 				parse_err("DUE before DTSTART") if e.has_key?(:DUE) and e.has_key?(:DTSTART) and 
-					e[:DUE] < e[:DTSTART]
+					e[:DUE][:value] < e[:DTSTART][:value]
 				# TODO not doing constraint that due and dtstart are both or neither local time
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither local time
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither date
-				hash = { :VTODO => e }
-				hash = hash.merge(a[0]) unless a.empty?
-				hash
+				e = e.merge(a[0]) unless a.empty?
+				{ :VTODO => e }
 			}
 	eventc		= seq(/BEGIN:VEVENT[\r\n]/i.r, eventprops, alarmc._?, /END:VEVENT[\r\n]/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
@@ -310,11 +311,10 @@ module Vobject
 				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
 				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
 				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
-					e[:DTEND] < e[:DTSTART]
+					e[:DTEND][:value] < e[:DTSTART][:value]
 				# TODO not doing constraint that dtend and dtstart are both or neither local time
-				hash = { :VEVENT => e }
-				hash = hash.merge(a[0]) unless a.empty?
-				hash
+				e = e.merge(a[0]) unless a.empty?
+				{ :VEVENT => e }
 			}
 	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /[\r\n]/i.r, props, /END:/i.r, C::XNAME, /[\r\n]/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
@@ -331,9 +331,9 @@ module Vobject
 
 
 	component	= eventc | todoc | journalc | freebusyc | timezonec | ianacomp | xcomp
-	components 	= component | seq(component, lazy{components}) {|c, r|
+	components 	= seq(component, lazy{components}) {|c, r|
 				c.merge(r)
-			}
+			} | component
 
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
 	                C::XNAME | C::IANATOKEN
@@ -374,7 +374,7 @@ module Vobject
 private
 
   def unfold(str)
-	         str.gsub(/[\n\r]+[ \t]+/, '')
+	         str.gsub(/[\n\r][ \t]/, '')
   end
 
 

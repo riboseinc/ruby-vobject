@@ -19,23 +19,12 @@
       "ORGANIZER":{
         "value":"mailto:unclesam@example.com"
       },
-      "ATTENDEE":[
-        {
-          "value":"mailto:jqpublic@example.com",
-          "params":{
-            "PARTSTAT":"ACCEPTED"
-          }
-        },
-        {
-          "value":"mailto:jsmith@example.com",
-          "params":{
-            "DELEGATED_TO":[
-              "mailto:jqpublic@example.com",
-              "mailto:jdoe@example.com"
-            ]
-          }
+      "ATTENDEE":{
+        "value":"mailto:jqpublic@example.com",
+        "params":{
+          "PARTSTAT":"ACCEPTED"
         }
-      ],
+      },
       "DUE":{
         "value":"1998-04-15 00:00:00 +1000"
       },
