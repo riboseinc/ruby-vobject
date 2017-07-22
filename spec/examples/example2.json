@@ -1,92 +1,70 @@
 {
-  "VCALENDAR": [
-    {
-      "VERSION": {
-        "value": "2.0"
-      }
-    },{
-      "PRODID": {
-        "value": "-//ABC Corporation//NONSGML My Product//EN"
+  "VCALENDAR":{
+    "VERSION":{
+      "value":"2.0"
+    },
+    "PRODID":{
+      "value":"-//ABC Corporation//NONSGML My Product//EN"
+    },
+    "VTODO":{
+      "DTSTAMP":{
+        "value":"1998-01-30 13:45:00 UTC"
+      },
+      "SEQUENCE":{
+        "value":2
+      },
+      "UID":{
+        "value":"uid4@example.com"
+      },
+      "ORGANIZER":{
+        "value":"mailto:unclesam@example.com"
+      },
+      "ATTENDEE":[
+        {
+          "value":"mailto:jqpublic@example.com",
+          "params":{
+            "PARTSTAT":"ACCEPTED"
+          }
+        },
+        {
+          "value":"mailto:jsmith@example.com",
+          "params":{
+            "DELEGATED_TO":[
+              "mailto:jqpublic@example.com",
+              "mailto:jdoe@example.com"
+            ]
+          }
+        }
+      ],
+      "DUE":{
+        "value":"1998-04-15 00:00:00 +1000"
+      },
+      "STATUS":{
+        "value":"NEEDS-ACTION"
+      },
+      "SUMMARY":{
+        "value":"Submit Income Taxes"
       }
     },
-    {
-      "VTODO": [
-        {
-          "DTSTAMP": {
-            "value": "19980130T134500Z"
-          }
-        },
-        {
-          "SEQUENCE": {
-            "value": "2"
-          }
-        },
-        {
-          "UID": {
-            "value": "uid4@example.com"
-          }
-        },
-        {
-          "ORGANIZER": {
-            "value": "mailto:unclesam@example.com"
-          }
-        },
-        {
-          "ATTENDEE": {
-            "params": {
-              "PARTSTAT": "ACCEPTED"
-            },
-            "value": "mailto:jqpublic@example.com"
-          }
-        },
-        {
-          "DUE": {
-            "value": "19980415T000000"
-          }
-        },
-        {
-          "STATUS": {
-            "value": "NEEDS-ACTION"
-          }
-        },
-        {
-          "SUMMARY": {
-            "value": "Submit Income Taxes"
-          }
-        },
-        {
-          "VALARM": [
-            {
-              "ACTION": {
-                "value": "AUDIO"
-              }
-            },
-            {
-              "TRIGGER": {
-                "value": "19980403T120000Z"
-              }
-            },
-            {
-              "ATTACH": {
-                "params": {
-                  "FMTTYPE": "audio/basic"
-                },
-                "value": "http://example.com/pub/audio-files/ssbanner.aud"
-              }
-            },
-            {
-              "REPEAT": {
-                "value": "4"
-              }
-            },
-            {
-              "DURATION": {
-                "value": "PT1H"
-              }
-            }
-          ]
+    "VALARM":{
+      "ACTION":{
+        "value":"AUDIO"
+      },
+      "TRIGGER":{
+        "value":"1998-04-03 12:00:00 UTC"
+      },
+      "ATTACH":{
+        "value":"http://example.com/pub/audio-files/ssbanner.aud",
+        "params":{
+          "FMTTYPE":"audio/basic"
         }
-      ]
+      },
+      "REPEAT":{
+        "value":4
+      },
+      "DURATION":{
+        "value":"PT1H"
+      }
     }
-  ]
+  }
 }

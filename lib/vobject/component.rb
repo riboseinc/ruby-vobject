@@ -1,6 +1,7 @@
 require 'vobject'
 require 'vobject/property'
 require 'vobject/grammar'
+require 'json'
 
 class Vobject::Component
 
@@ -50,6 +51,26 @@ class Vobject::Component
     s << "END:#{name}\n"
 
     s
+  end
+
+  def to_hash
+    a = {}
+    children.each do |c|
+	if c.is_a?(Vobject::Component)
+		a = a.merge c.to_hash
+	elsif c.is_a?(Vobject::Property)
+		a = a.merge c.to_hash
+		#a[c.prop_name] = c.to_hash
+	else
+		a[c.name] = c.to_hash
+	end
+    end
+    ret = {comp_name => a }
+    ret
+  end
+
+  def to_json
+    self.to_hash.to_json
   end
 
   private

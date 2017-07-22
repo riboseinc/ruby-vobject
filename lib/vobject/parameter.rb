@@ -21,14 +21,7 @@
     end
 
     def to_s
-      line = group ? "#{group}." : ""
-      line << "#{name}"
-
-      (params || {}).each do |pname, pvalue|
-        pvalue.to_s.gsub!(/\n/, '\n')
-
-        line << ";#{pname}=#{pvalue}"
-      end
+      line = "#{param_name}"
 
       line << ":#{value}"
 
@@ -36,6 +29,19 @@
 
       line
     end
+
+  def to_hash
+    a = {}
+    if self.multiple
+        val = []
+        self.multiple.each do |c|
+            val << c.value
+        end
+        return {param_name => val}
+    else
+        return {param_name => value}
+    end
+  end
 
     private
 

@@ -48,6 +48,27 @@ require 'vobject/parameter'
       line
     end
 
+  def to_hash
+    ret = {}
+    if multiple
+	    ret[prop_name] = []
+	    multiple.each do |c|
+		    ret[prop_name] = ret[prop_name] << c.to_hash[prop_name]
+	    end
+    else
+        ret[prop_name][:group] = group unless group.nil?
+        ret = {prop_name => {:value => value }}
+        if params
+            ret[prop_name][:params] = {}
+            params.each do |p|
+		    ret[prop_name][:params] = ret[prop_name][:params].merge p.to_hash
+            end
+	end
+    end
+    return ret
+  end
+
+
     private
 
     def name
