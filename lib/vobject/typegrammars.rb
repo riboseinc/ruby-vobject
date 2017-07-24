@@ -19,43 +19,82 @@ module Vobject
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
     enddate 	= C::DATE | C::DATE_TIME
     seconds 	= /[0-9]{1,2}/.r
-    byseclist 	= seconds | seq(seconds, ',', lazy{byseclist})
+    byseclist 	= seconds.map {|s| s} | seq(seconds, ',', lazy{byseclist}) {|s, _, l|
+	    		[s, l].flatten
+	    	}
     minutes 	= /[0-9]{1,2}/.r
-    byminlist 	= minutes | seq(minutes, ',', lazy{byminlist})
+    byminlist 	= minutes.map {|m| m} | seq(minutes, ',', lazy{byminlist}) {|m, _, l|
+	    		[m, l].flatten
+		}
     hours 	= /[0-9]{1,2}/.r
-    byhrlist 	= hours | seq(hours, ',', lazy{byhrlist})
+    byhrlist 	= hours.map {|h| h} | seq(hours, ',', lazy{byhrlist}) {|h, _, l|
+	    		[h, l].flatten
+		}
     ordwk 	= /[0-9]{1,2}/.r
     weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
-    weekdaynum1	= seq(C::SIGN._?, ordwk)
-    weekdaynum 	= seq(weekdaynum1._?, weekday)
-    bywdaylist 	= weekdaynum | seq(weekdaynum, ',', lazy{bywdaylist})
+    weekdaynum1	= seq(C::SIGN._?, ordwk) {|s, o|
+	    		h = {:ordwk => s}
+			h[:sign] = s[0] unless s.empty?
+			h
+	    	}
+    weekdaynum 	= seq(weekdaynum1._?, weekday) {|a, b|
+	    		h = {:weekday => b}
+			h.merge a[0] unless a.empty?
+			h
+	    	}
+    bywdaylist 	= weekdaynum.map {|w| w} | seq(weekdaynum, ',', lazy{bywdaylist}) {|w, _, l|
+	    		[w, l].flatten
+		}
     ordmoday 	= /[0-9]{1,2}/.r
-    monthdaynum = seq(C::SIGN._?, ordmoday)
-    bymodaylist = monthdaynum | seq(monthdaynum, ',', lazy{bymodaylist})
+    monthdaynum = seq(C::SIGN._?, ordmoday) {|s, o|
+	    		h = {:ordmoday => s}
+			h[:sign] = s[0] unless s.empty?
+			h
+	    	}
+    bymodaylist = monthdaynum.map {|m| m} | seq(monthdaynum, ',', lazy{bymodaylist}) {|m, _, l|
+	    		[m, l].flatten
+		}
     ordyrday 	= /[0-9]{1,3}/.r
-    yeardaynum	= seq(C::SIGN._?, ordyrday)
-    byyrdaylist = yeardaynum | seq(yeardaynum, ',', lazy{byyrdaylist})
-    weeknum 	= seq(C::SIGN._?, ordwk)
-    bywknolist 	= weeknum | seq(weeknum, ',', lazy{bywknolist})
+    yeardaynum	= seq(C::SIGN._?, ordyrday) {|s, o|
+	    		h = {:ordyrday => s}
+			h[:sign] = s[0] unless s.empty?
+			h
+	    	}
+    byyrdaylist = yeardaynum.map {|y| y} | seq(yeardaynum, ',', lazy{byyrdaylist}) {|y, _, l|
+	    		[y, l].flatten
+		}
+    weeknum 	= seq(C::SIGN._?, ordwk) {|s, o|
+	    		h = {:ordwk => s}
+			h[:sign] = s[0] unless s.empty?
+			h
+	    	}
+    bywknolist 	= weeknum.map {|w| w} | seq(weeknum, ',', lazy{bywknolist}) {|w, _, l|
+	    		[w, l].flatten
+		}
     monthnum 	= /[0-9]{1,2}/.r
-    bymolist 	= monthnum | seq(monthnum, ',', lazy{bymolist})
+    bymolist 	= monthnum.map {|m| m} | seq(monthnum, ',', lazy{bymolist}) {|m, _, l|
+	    		[m, l].flatten
+		}
     setposday	= yeardaynum
-    bysplist 	= setposday | seq(setposday, ',', lazy{bysplist})
-    recur_rule_part = 	seq(/FREQ/i.r, '=', freq) |
-	    seq(/UNTIL/i.r, '=', enddate) |
-	    seq(/COUNT/i.r, '=', /[0-9]+/i.r) |
-	    seq(/INTERVAL/i.r, '=', /[0-9]+/i.r) |
-	    seq(/BYSECOND/i.r, '=', byseclist) |
-	    seq(/BYMINUTE/i.r, '=', byminlist) |
-	    seq(/BYHOUR/i.r, '=', byhrlist) |
-	    seq(/BYDAY/i.r, '=', bywdaylist) |
-	    seq(/BYMONTHDAY/i.r, '=', bymodaylist) |
-	    seq(/BYYEARDAY/i.r, '=', byyrdaylist) |
-	    seq(/BYWEEKNO/i.r, '=', bywknolist) |
-	    seq(/BYMONTH/i.r, '=', bymolist) |
-	    seq(/BYSETPOS/i.r, '=', bysplist) |
-	    seq(/WKST/i.r, '=', weekday) 
-    recur 	= recur_rule_part | seq(recur_rule_part, ';', lazy{recur})
+    bysplist 	= setposday.map {|s| s} | seq(setposday, ',', lazy{bysplist}) {|s, _, l|
+	    		[s, l].flatten
+		}
+    recur_rule_part = 	seq(/FREQ/i.r, '=', freq) {|k, _, v| {:freq => v} } |
+	    seq(/UNTIL/i.r, '=', enddate) {|k, _, v| {:until => v} } |
+	    seq(/COUNT/i.r, '=', /[0-9]+/i.r) {|k, _, v| {:count => v} } |
+	    seq(/INTERVAL/i.r, '=', /[0-9]+/i.r) {|k, _, v| {:interval => v} } |
+	    seq(/BYSECOND/i.r, '=', byseclist) {|k, _, v| {:bysecond => v} } |
+	    seq(/BYMINUTE/i.r, '=', byminlist) {|k, _, v| {:byminute => v} } |
+	    seq(/BYHOUR/i.r, '=', byhrlist) {|k, _, v| {:byhour => v} } |
+	    seq(/BYDAY/i.r, '=', bywdaylist) {|k, _, v| {:byday => v} } |
+	    seq(/BYMONTHDAY/i.r, '=', bymodaylist) {|k, _, v| {:bymonthday => v} } |
+	    seq(/BYYEARDAY/i.r, '=', byyrdaylist) {|k, _, v| {:byyearday => v} } |
+	    seq(/BYWEEKNO/i.r, '=', bywknolist)  {|k, _, v| {:byweekno => v} } |
+	    seq(/BYMONTH/i.r, '=', bymolist)  {|k, _, v| {:bymonth => v} } |
+	    seq(/BYSETPOS/i.r, '=', bysplist)  {|k, _, v| {:bysetpos => v} } |
+	    seq(/WKST/i.r, '=', weekday)  {|k, _, v| {:wkst => v} } 
+    recur 	= seq(recur_rule_part, ';', lazy{recur}) {|h, _, r| h.merge r } | 
+	    	recur_rule_part
     recur.eof
   end
 
@@ -371,12 +410,14 @@ module Vobject
 	    ret = value
     end
     if ret.kind_of?(Hash) and ret[:error]
-	STDERR.puts "#{ret[:error]} for property #{key}, value #{value}"
-        raise ctx1.generate_error 'source'
+	#STDERR.puts "#{ret[:error]} for property #{key}, value #{value}"
+        #raise ctx1.generate_error 'source'
+	raise  "#{ret[:error]} for property #{key}, value #{value}"
     end
     if Rsec::INVALID[ret] 
-	STDERR.puts "Type mismatch for property #{key}, value #{value}"
-        raise ctx1.generate_error 'source'
+	#STDERR.puts "Type mismatch for property #{key}, value #{value}"
+        #raise ctx1.generate_error 'source'
+        raise "Type mismatch for property #{key}, value #{value}"
     end
     return ret
   end

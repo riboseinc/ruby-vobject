@@ -291,7 +291,7 @@ module Vobject
 				parse_err("Missing STANDARD or DAYLIGHT property") unless e.has_key?(:STANDARD) and e.has_key?(:DAYLIGHT)
 				{ :VTIMEZONE => e }
 			}
-	todoc		= seq(/BEGIN:VTODO[\r\n]/i.r, todoprops, alarmc._?, /END:VTODO[\r\n]/i.r) {|_, e, a, _|
+	todoc		= seq(/BEGIN:VTODO[\r\n]/i.r, todoprops, alarmc.star, /END:VTODO[\r\n]/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DUE and DURATION properties") if e.has_key?(:DUE) and e.has_key?(:DURATION)
@@ -302,10 +302,12 @@ module Vobject
 				# TODO not doing constraint that due and dtstart are both or neither local time
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither local time
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither date
-				e = e.merge(a[0]) unless a.empty?
+				a.each do |x|
+					e = e.merge x
+				end
 				{ :VTODO => e }
 			}
-	eventc		= seq(/BEGIN:VEVENT[\r\n]/i.r, eventprops, alarmc._?, /END:VEVENT[\r\n]/i.r) {|_, e, a, _|
+	eventc		= seq(/BEGIN:VEVENT[\r\n]/i.r, eventprops, alarmc.star, /END:VEVENT[\r\n]/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
@@ -313,7 +315,9 @@ module Vobject
 				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
 					e[:DTEND][:value] < e[:DTSTART][:value]
 				# TODO not doing constraint that dtend and dtstart are both or neither local time
-				e = e.merge(a[0]) unless a.empty?
+				a.each do |x|
+					e = e.merge x
+				end
 				{ :VEVENT => e }
 			}
 	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /[\r\n]/i.r, props, /END:/i.r, C::XNAME, /[\r\n]/i.r) {|_, n, _, p, _, n1, _|

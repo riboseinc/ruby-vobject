@@ -24,29 +24,43 @@ module C
                         /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
                              Time.utc(yy, mm, dd, h, m, s)
                      }
-    durday      = seq(/[0-9]+/.r, 'D')
-        dursecond   = seq(/[0-9]+/.r, 'S')
-    durminute   = seq(/[0-9]+/.r, 'M', dursecond._?)
-        durhour     = seq(/[0-9]+/.r, 'H', durminute._?)
-    durweek     = seq(/[0-9]+/.r, 'W')
-        durtime1    = durhour | durminute | dursecond
-    durtime     = seq('T', durtime1)
-        durdate     = seq(durday, durtime._?)
+    durday      = seq(/[0-9]+/.r, 'D') {|d, _| {:days => d.to_i }}
+    dursecond   = seq(/[0-9]+/.r, 'S')  {|d, _| {:seconds => d.to_i }}
+    durminute   = seq(/[0-9]+/.r, 'M', dursecond._?)  {|d, _, s| 
+	    		hash =	{:minutes => d.to_i }
+			hash = hash.merge s[0] unless s.empty?
+			hash
+    		}
+    durhour     = seq(/[0-9]+/.r, 'H', durminute._?)  {|d, _, m| 
+	    		hash =	{:hours => d.to_i }
+			hash = hash.merge m[0] unless m.empty?
+			hash
+    		}
+    durweek     = seq(/[0-9]+/.r, 'W')  {|d, _| {:weeks => d.to_i }}
+    durtime1    = durhour | durminute | dursecond
+    durtime     = seq('T', durtime1) {|_, d| d }
+    durdate     = seq(durday, durtime._?) {|d, t| 
+	    		d = d.merge t[0] unless t.empty?
+			d
+		}
     duration1   = durdate | durtime | durweek
-        DURATION    = seq(SIGN._?, 'P', duration1)
+    DURATION    = seq(SIGN._?, 'P', duration1) {|s, _, d|
+			d[:sign] = s[0] unless s.empty?
+			d
+		}
 
     utf8_tail   = /[\u0080-\u00bf]/.r
-        utf8_2      = /[\u00c2-\u00df]/.r  | utf8_tail
+    utf8_2      = /[\u00c2-\u00df]/.r  | utf8_tail
     utf8_3      = /[\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef]/.r  |
                       utf8_tail
-        utf8_4      = /[\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]/.r | utf8_tail
+    utf8_4      = /[\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]/.r | utf8_tail
     #nonASCII    = utf8_2 | utf8_3 | utf8_4
     nonASCII    = /[\u0080-\u3ffff]/
-        wsp         = /[ \t]/.r
+    wsp         = /[ \t]/.r
     qSafeChar   = wsp | /[!\u0023-\u007e]/ | nonASCII
-        safeChar    = wsp | /[!\u0023-\u0039\u003c-\u007e]/  | nonASCII
+    safeChar    = wsp | /[!\u0023-\u0039\u003c-\u007e]/  | nonASCII
     vChar       = /[\u0021-\u007e]/.r
-        valueChar   = wsp | vChar | nonASCII
+    valueChar   = wsp | vChar | nonASCII
     dQuote      = /"/.r
 
 
@@ -54,7 +68,7 @@ module C
                             qSafe.join('')
                     }
     PTEXT       = safeChar.star.map(&:join)
-        VALUE       = valueChar.star.map(&:join)
+    VALUE       = valueChar.star.map(&:join)
 
 
     rfc5646irregular    = /en-GB-oed/i.r | /i-ami/i.r | /i-bnn/i.r | /i-default/i.r | /i-enochian/i.r |
