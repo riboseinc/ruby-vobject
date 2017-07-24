@@ -25,7 +25,7 @@
       "ATTENDEE":{
         "value":"mailto:jsmith@example.com",
         "params":{
-          "RSVP":"TRUE"
+          "RSVP":true
         }
       },
       "DTSTART":{

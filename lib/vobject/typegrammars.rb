@@ -116,6 +116,16 @@ module Vobject
 	    	}
     integer.eof
   end
+
+  def floatT
+	 floatT = prim(:double)
+	 floatT.eof
+  end
+
+  def timeT
+	  timeT = C::TIME
+	  timeT.eof
+  end
   
   def geovalue
     float 	    = prim(:double)
@@ -278,6 +288,11 @@ module Vobject
 	  actionvalue.eof
   end
 
+  def boolean
+	  boolean = C::BOOLEAN
+	  boolean.eof
+  end
+
 
 
   # Enforce type restrictions on values of particular properties.
@@ -407,7 +422,40 @@ module Vobject
 	when :REQUEST_STATUS
 	    ret = request_statusvalue._parse ctx1
     else
-	    ret = value
+	    if params and params[:VALUE]
+		case params[:VALUE]
+		when "BOOLEAN"
+			ret = boolean._parse ctx1
+		when "BINARY"
+			ret = binary._parse ctx1
+		when "CAL-ADDRESS"
+			ret = uri._parse ctx1
+		when "DATE-TIME"
+			ret = date_timeT._parse ctx1
+		when "DATE"
+			ret = dateT._parse ctx1
+		when "DURATION"
+			ret = durationT._parse ctx1
+		when "FLOAT"
+			ret = float._parse ctx1
+		when "INTEGER"
+			ret = integer._parse ctx1
+		when "PERIOD"
+			ret = period._parse ctx1
+		when "RECUR"
+			ret = recur._parse ctx1
+		when "TEXT"
+			ret = textT._parse ctx1
+		when "TIME"
+			ret = time._parse ctx1
+		when "URI"
+			ret = uri._parse ctx1
+		when "UTC-OFFSET"
+			ret = utc_offset._parse ctx1
+		end
+	    else 
+	        ret = value
+	    end
     end
     if ret.kind_of?(Hash) and ret[:error]
 	#STDERR.puts "#{ret[:error]} for property #{key}, value #{value}"

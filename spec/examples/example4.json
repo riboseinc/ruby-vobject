@@ -68,7 +68,7 @@
       "ATTENDEE":{
         "value":"mailto:employee-A@example.com",
         "params":{
-          "RSVP":"TRUE",
+          "RSVP":true,
           "ROLE":"REQ-PARTICIPANT",
           "CUTYPE":"GROUP"
         }

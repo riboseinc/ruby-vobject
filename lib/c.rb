@@ -7,22 +7,27 @@ module C
  # definitions common to classes
 
     SIGN        = /[+-]/i.r
-    BOOLEAN = ( /TRUE/i.r | /FALSE/i.r )
+    BOOLEAN = ( /TRUE/i.r.map{|x| true} | /FALSE/i.r.map{|x| false} )
     IANATOKEN =  /[a-zA-Z\d\-]+/.r
     vendorid   = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
     XNAME = seq( '[xX]-', vendorid, '-', IANATOKEN)
     #TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[nN;,\\])*/.r   
     TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r   
-     DATE       = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
+    DATE       = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
                              Time.utc(yy, mm, dd)
                      }
-     DATE_TIME  = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
+    DATE_TIME  = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
                           z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
                   }
-     DATE_TIME_UTC      = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
+    DATE_TIME_UTC      = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                         /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
                              Time.utc(yy, mm, dd, h, m, s)
+                     }
+    TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|h, m, s, z|
+	    			hash = {:hour => h, :min => m, :sec => s}
+				hash[:utc] = not(z.empty?)
+				hash
                      }
     durday      = seq(/[0-9]+/.r, 'D') {|d, _| {:days => d.to_i }}
     dursecond   = seq(/[0-9]+/.r, 'S')  {|d, _| {:seconds => d.to_i }}

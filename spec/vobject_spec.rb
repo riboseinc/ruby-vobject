@@ -78,9 +78,14 @@ describe Vobject do
     expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
   end
 
+  it 'should reject spurious boolean value' do
+    ics = File.read "spec/examples/boolean.ics"
+    expect { Vobject.parse(ics)}.to raise_error(/Type mismatch for property X_MAYBE/)
+  end
+
 =begin
   it 'should parse iCalendar properly' do
-    ics = File.read "spec/examples/boolean.ics"
+    ics = File.read "spec/examples/component.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
  puts vobj_json
@@ -88,16 +93,10 @@ describe Vobject do
   end
 
   it 'should parse iCalendar properly' do
-    ics = File.read "spec/examples/component.ics"
-    vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
-    expect(vobj_json).to include_json(exp_json)
-  end
-
-  it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/daily_recur.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -105,6 +104,7 @@ describe Vobject do
     ics = File.read "spec/examples/dates.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -112,6 +112,7 @@ describe Vobject do
     ics = File.read "spec/examples/day_long_recur_yearly.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -119,6 +120,7 @@ describe Vobject do
     ics = File.read "spec/examples/duration_instead_of_dtend.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -126,6 +128,7 @@ describe Vobject do
     ics = File.read "spec/examples/float.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -133,6 +136,7 @@ describe Vobject do
     ics = File.read "spec/examples/forced_types.ics"
     vobj_json = Vobject.parse(ics).to_json
     exp_json = JSON.load(File.read "spec/examples/example7.json")
+ puts vobj_json
     expect(vobj_json).to include_json(exp_json)
   end
 

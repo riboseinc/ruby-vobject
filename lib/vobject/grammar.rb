@@ -118,7 +118,7 @@ module Vobject
     		} | seq(/ROLE/i.r, '=', rolevalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RSVP/i.r, '=', C::BOOLEAN) {|name, _, val|
-			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/SENT-BY/i.r, '=', C::QUOTEDSTRING) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/TZID/i.r, '=', tzidvalue) {|name, _, val|
