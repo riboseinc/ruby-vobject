@@ -1,0 +1,24 @@
+{
+  "VCALENDAR":{
+    "VERSION":{
+      "value":"2.0"
+    },
+    "PRODID":{
+      "value":"-//ABC Corporation//NONSGML My Product//EN"
+    },
+    "VEVENT":{
+      "UID":{
+        "value":"uid1@example.com"
+      },
+      "DTSTAMP":{
+        "value":"2012-09-12 17:15:40 UTC"
+      },
+      "DTSTART":{
+        "value":"1970-03-08 02:00:00 +1000"
+      },
+      "SUMMARY":{
+        "value":"another"
+      }
+    }
+  }
+}

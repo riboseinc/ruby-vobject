@@ -83,39 +83,42 @@ describe Vobject do
     expect { Vobject.parse(ics)}.to raise_error(/Type mismatch for property X_MAYBE/)
   end
 
-=begin
-  it 'should parse iCalendar properly' do
+  it 'should process VALUE:BOOLEAN' do
+    ics = File.read "spec/examples/boolean1.ics"
+    vobj_json = Vobject.parse(ics).to_json
+    exp_json = JSON.load(File.read "spec/examples/boolean1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
+
+  it 'should allow repeated components' do
     ics = File.read "spec/examples/component.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/component.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/daily_recur.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/daily_recur.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/dates.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/dates.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/day_long_recur_yearly.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/day_long_recur_yearly.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
+=begin
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/duration_instead_of_dtend.ics"
     vobj_json = Vobject.parse(ics).to_json

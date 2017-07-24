@@ -5,6 +5,7 @@ require "date"
 require "tzinfo"
 include Rsec::Helpers
 require_relative "../c"
+require_relative "../error"
 require "vobject"
 require "vobject/typegrammars"
 
@@ -383,8 +384,9 @@ private
 
 
    def parse_err(msg)
-	   	  STDERR.puts msg
-	          raise @ctx.generate_error 'source'
+	   	  #STDERR.puts msg
+	          #raise @ctx.generate_error 'source'
+		  raise @ctx.report_error msg, 'source'
    end
 
   end

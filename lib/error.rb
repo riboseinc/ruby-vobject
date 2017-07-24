@@ -1,6 +1,5 @@
 # expand error reporting of Rsec
-module Rsec
-	class ParseContext
+	class Rsec::ParseContext
 		def report_error msg, source
 			#expand generate_error
       if self.pos <= @last_fail_pos
@@ -16,7 +15,6 @@ module Rsec
         expects = nil
       end
       msg = "#{msg}\nin #{source}:#{line} at #{col}#{expects}"
-      SyntaxError.new msg, line_text, line, col
+      Rsec::SyntaxError.new msg, line_text, line, col
 		end
 	end
-end

@@ -5,6 +5,7 @@ require "date"
 require "tzinfo"
 include Rsec::Helpers
 require_relative "../c"
+require_relative "../error"
 require 'vobject'
 
 module Vobject
@@ -19,17 +20,17 @@ module Vobject
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
     enddate 	= C::DATE | C::DATE_TIME
     seconds 	= /[0-9]{1,2}/.r
-    byseclist 	= seconds.map {|s| s} | seq(seconds, ',', lazy{byseclist}) {|s, _, l|
+    byseclist 	= seq(seconds, ',', lazy{byseclist}) {|s, _, l|
 	    		[s, l].flatten
-	    	}
+	    	} | seconds.map {|s| s}
     minutes 	= /[0-9]{1,2}/.r
-    byminlist 	= minutes.map {|m| m} | seq(minutes, ',', lazy{byminlist}) {|m, _, l|
+    byminlist 	= seq(minutes, ',', lazy{byminlist}) {|m, _, l|
 	    		[m, l].flatten
-		}
+		} | minutes.map {|m| m}
     hours 	= /[0-9]{1,2}/.r
-    byhrlist 	= hours.map {|h| h} | seq(hours, ',', lazy{byhrlist}) {|h, _, l|
+    byhrlist 	= seq(hours, ',', lazy{byhrlist}) {|h, _, l|
 	    		[h, l].flatten
-		}
+		} | hours.map {|h| h}
     ordwk 	= /[0-9]{1,2}/.r
     weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
     weekdaynum1	= seq(C::SIGN._?, ordwk) {|s, o|
@@ -42,43 +43,43 @@ module Vobject
 			h.merge a[0] unless a.empty?
 			h
 	    	}
-    bywdaylist 	= weekdaynum.map {|w| w} | seq(weekdaynum, ',', lazy{bywdaylist}) {|w, _, l|
+    bywdaylist 	= seq(weekdaynum, ',', lazy{bywdaylist}) {|w, _, l|
 	    		[w, l].flatten
-		}
+		} | weekdaynum.map {|w| w} 
     ordmoday 	= /[0-9]{1,2}/.r
     monthdaynum = seq(C::SIGN._?, ordmoday) {|s, o|
 	    		h = {:ordmoday => s}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
-    bymodaylist = monthdaynum.map {|m| m} | seq(monthdaynum, ',', lazy{bymodaylist}) {|m, _, l|
+    bymodaylist = seq(monthdaynum, ',', lazy{bymodaylist}) {|m, _, l|
 	    		[m, l].flatten
-		}
+		} | monthdaynum.map {|m| m}
     ordyrday 	= /[0-9]{1,3}/.r
     yeardaynum	= seq(C::SIGN._?, ordyrday) {|s, o|
 	    		h = {:ordyrday => s}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
-    byyrdaylist = yeardaynum.map {|y| y} | seq(yeardaynum, ',', lazy{byyrdaylist}) {|y, _, l|
+    byyrdaylist = seq(yeardaynum, ',', lazy{byyrdaylist}) {|y, _, l|
 	    		[y, l].flatten
-		}
+		} | yeardaynum.map {|y| y}
     weeknum 	= seq(C::SIGN._?, ordwk) {|s, o|
 	    		h = {:ordwk => s}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
-    bywknolist 	= weeknum.map {|w| w} | seq(weeknum, ',', lazy{bywknolist}) {|w, _, l|
+    bywknolist 	= seq(weeknum, ',', lazy{bywknolist}) {|w, _, l|
 	    		[w, l].flatten
-		}
+		} | weeknum.map {|w| w}
     monthnum 	= /[0-9]{1,2}/.r
-    bymolist 	= monthnum.map {|m| m} | seq(monthnum, ',', lazy{bymolist}) {|m, _, l|
+    bymolist 	= seq(monthnum, ',', lazy{bymolist}) {|m, _, l|
 	    		[m, l].flatten
-		}
+		} | monthnum.map {|m| m}
     setposday	= yeardaynum
-    bysplist 	= setposday.map {|s| s} | seq(setposday, ',', lazy{bysplist}) {|s, _, l|
+    bysplist 	= seq(setposday, ',', lazy{bysplist}) {|s, _, l|
 	    		[s, l].flatten
-		}
+		} | setposday.map {|s| s}
     recur_rule_part = 	seq(/FREQ/i.r, '=', freq) {|k, _, v| {:freq => v} } |
 	    seq(/UNTIL/i.r, '=', enddate) {|k, _, v| {:until => v} } |
 	    seq(/COUNT/i.r, '=', /[0-9]+/i.r) {|k, _, v| {:count => v} } |
@@ -148,8 +149,9 @@ module Vobject
   end 
 
   def versionvalue
-     versionvalue = '2.0'.r | prim(:double) | 
-                    seq(prim(:double), ';', prim(:double)) {|x, _, y| [x, y] }
+     versionvalue = 
+                    seq(prim(:double), ';', prim(:double)) {|x, _, y| [x, y] } |
+	     		'2.0'.r | prim(:double) 
      versionvalue.eof
   end
 
@@ -173,8 +175,9 @@ module Vobject
   end
 
   def textlist
-    textlist	= seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [a, b].flatten } |
-	    	C::TEXT.map {|t| [t]} 
+    textlist	=  
+	    	seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [a, b].flatten }  | 
+		C::TEXT.map {|t| [t]}
     textlist.eof
   end
 
@@ -215,10 +218,10 @@ module Vobject
 
   def datelist
 	 datelist   = 
-		 C::DATE.map {|d| [d] } | 
 		 seq(C::DATE, ",".r, lazy{datelist}) {|d, _, l|
 	                [d, l].flatten
-	            } 
+	            }  |
+		 C::DATE.map {|d| [d] } 
      	datelist.eof
   end
 
@@ -228,7 +231,6 @@ module Vobject
 
   def date_timelist
 	 date_timelist   = 
-		 	C::DATE_TIME.map {|d| [d] } 
 			seq(C::DATE_TIME, ",".r, lazy{date_timelist}) {|d, _, l|
 	                [d, l].flatten
 	            } |
@@ -458,13 +460,9 @@ module Vobject
 	    end
     end
     if ret.kind_of?(Hash) and ret[:error]
-	#STDERR.puts "#{ret[:error]} for property #{key}, value #{value}"
-        #raise ctx1.generate_error 'source'
 	raise  "#{ret[:error]} for property #{key}, value #{value}"
     end
     if Rsec::INVALID[ret] 
-	#STDERR.puts "Type mismatch for property #{key}, value #{value}"
-        #raise ctx1.generate_error 'source'
         raise "Type mismatch for property #{key}, value #{value}"
     end
     return ret
@@ -473,8 +471,9 @@ module Vobject
 private
 
    def parse_err(msg)
-	   	  STDERR.puts msg
-	          raise @ctx.generate_error 'source'
+	   	  #STDERR.puts msg
+	          #raise @ctx.generate_error 'source'
+	          raise @ctx.report_error msg, 'source'
    end
 
   end
