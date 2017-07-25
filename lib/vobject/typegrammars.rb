@@ -18,7 +18,7 @@ module Vobject
   def recur
     freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
 	    		/WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
-    enddate 	= C::DATE | C::DATE_TIME
+    enddate 	= C::DATE_TIME | C::DATE
     seconds 	= /[0-9]{1,2}/.r
     byseclist 	= seq(seconds, ',', lazy{byseclist}) {|s, _, l|
 	    		[s, l].flatten
@@ -350,8 +350,7 @@ module Vobject
 		else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					STDERR.puts "Specified TZID within property #{key} in #{component}"
-					raise ctx1.generate_error 'source'
+					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_time_utcT._parse ctx1
@@ -367,8 +366,7 @@ module Vobject
 	    else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					STDERR.puts "Specified TZID within property #{key} in #{component}"
-					raise ctx1.generate_error 'source'
+					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_time_utclist._parse ctx1
@@ -385,8 +383,7 @@ module Vobject
 	    else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					STDERR.puts "Specified TZID within property #{key} in #{component}"
-					raise ctx1.generate_error 'source'
+					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_time_utclist._parse ctx1
@@ -398,8 +395,7 @@ module Vobject
     when :TRIGGER
 	    if params and params[:VALUE] == 'DATE-TIME' or /^\d{8}T/.match(value)
 	        if params and params[:RELATED]
-                STDERR.puts "Specified RELATED within property #{key} as date-time"
-				raise ctx1.generate_error 'source'	        
+				raise ctx1.report_error "Specified RELATED within property #{key} as date-time", 'source'	        
 			end
 	    	ret = date_time_utcT._parse ctx1
 	    else
@@ -439,7 +435,7 @@ module Vobject
 		when "DURATION"
 			ret = durationT._parse ctx1
 		when "FLOAT"
-			ret = float._parse ctx1
+			ret = floatT._parse ctx1
 		when "INTEGER"
 			ret = integer._parse ctx1
 		when "PERIOD"
@@ -465,14 +461,13 @@ module Vobject
     if Rsec::INVALID[ret] 
         raise "Type mismatch for property #{key}, value #{value}"
     end
+    Rsec::Fail.reset
     return ret
   end
 
 private
 
    def parse_err(msg)
-	   	  #STDERR.puts msg
-	          #raise @ctx.generate_error 'source'
 	          raise @ctx.report_error msg, 'source'
    end
 
