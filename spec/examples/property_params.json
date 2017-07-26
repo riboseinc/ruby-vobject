@@ -1,0 +1,122 @@
+{
+  "VCALENDAR":{
+    "PRODID":{
+      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VEVENT":{
+      "DTSTAMP":{
+        "value":"1996-07-04 12:00:00 UTC"
+      },
+      "UID":{
+        "value":"uid1@example.com"
+      },
+      "ORGANIZER":{
+        "value":"mailto:jsmith@example.com"
+      },
+      "DTSTART":{
+        "value":"1996-09-18 14:30:00 UTC"
+      },
+      "DTEND":{
+        "value":"1996-09-20 22:00:00 UTC"
+      },
+      "STATUS":{
+        "value":"CONFIRMED"
+      },
+      "CATEGORIES":{
+        "value":[
+          "CONFERENCE"
+        ]
+      },
+      "SUMMARY":{
+        "value":"Networld+Interop Conference"
+      },
+      "DESCRIPTION":{
+        "value":"Networld+Interop Conference"
+      },
+      "ATTENDEE":[
+        {
+          "value":"mailto:foo1@bar",
+          "params":{
+            "DELEGATED_TO":[
+              "mailto:foo8@bar",
+              "mailto:foo7@bar"
+            ],
+            "CN":"Foo, Bar"
+          }
+        },
+        {
+          "value":"mailto:foo2@bar",
+          "params":{
+            "DELEGATED_TO":[
+              "mailto:foo8@bar",
+              "mailto:foo7@bar"
+            ],
+            "CN":"Foo; Bar"
+          }
+        },
+        {
+          "value":"mailto:foo3@bar",
+          "params":{
+            "CN":"Foo, Bar"
+          }
+        },
+        {
+          "value":"mailto:foo4@bar",
+          "params":{
+            "CN":"Foo; Bar"
+          }
+        },
+        {
+          "value":"mailto:foo5@bar",
+          "params":{
+            "DELEGATED_TO":"mailto:foo7@bar",
+            "CN":"Foo, Bar"
+          }
+        },
+        {
+          "value":"mailto:foo6@barTSTAT=ACCEPTED;RSVP=TRUE:mailto:foo@bar.com",
+          "params":{
+            "DELEGATED_TO":"mailto:foo7@bar",
+            "CN":"Foo; Bar"
+          }
+        }
+      ],
+      "X_FOO":{
+        "value":"FOO;BAR",
+        "params":{
+          "PARAM1":"VAL1"
+        }
+      },
+      "X_FOO2":{
+        "value":"FOO;BAR",
+        "params":{
+          "PARAM1":"VAL1",
+          "PARAM2":"VAL2"
+        }
+      },
+      "X_BAR":{
+        "value":"BAZ;BAR",
+        "params":{
+          "PARAM1":"VAL1:FOO"
+        }
+      },
+      "X_BAZ":{
+        "value":"BAZ;BAR",
+        "params":{
+          "PARAM1":"VAL1:FOO",
+          "PARAM2":"VAL2"
+        }
+      },
+      "X_BAZ2":{
+        "value":"BAZ;BAR",
+        "params":{
+          "PARAM1":"VAL1",
+          "PARAM2":"VAL2:FOO"
+        }
+      }
+    }
+  }
+}

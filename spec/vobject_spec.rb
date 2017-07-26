@@ -180,164 +180,155 @@ describe Vobject do
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/multiple_rrules.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/multiple_rrules.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
-=begin
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/multivalue.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/multivalue.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
-  it 'should parse iCalendar properly' do
+  it 'should reject initial newlines' do
     ics = File.read "spec/examples/newline_junk.ics"
-    vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
-    expect(vobj_json).to include_json(exp_json)
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/only_dtstart_date.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/only_dtstart_date.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/only_dtstart_time.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/only_dtstart_time.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/parserv2.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/parserv2.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/period.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/period.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/property_params.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/property_params.json")
     expect(vobj_json).to include_json(exp_json)
+  end
+
+  it 'should reject quoted value as ROLE paramter value' do
+    ics = File.read "spec/examples/property_params1.ics"
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)  
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/quoted_params.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/quoted_params.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/recur.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/recur.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/recur_instances.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/recur_instances.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/recur_instances_finite.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/recur_instances_finite.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/rfc.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/rfc.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
-  it 'should parse iCalendar properly' do
+  it 'should reject an empty iCalendar' do
     ics = File.read "spec/examples/single_empty_vcalendar.ics"
-    vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
-    expect(vobj_json).to include_json(exp_json)
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/time.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/time.json")
     expect(vobj_json).to include_json(exp_json)
+  end
+
+  it 'should reject quotation marks in TZID parameter' do
+    ics = File.read "spec/examples/tzid_with_quoted_gmt.ics"
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/tzid_with_gmt.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/tzid_with_gmt.json")
     expect(vobj_json).to include_json(exp_json)
+  end
+
+  it 'should reject DTEND property with date that precedes DTBEGIN property' do
+    ics = File.read "spec/examples/dtend_before_dtbegin.ics"
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/unfold_properties.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/unfold_properties.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/utc_negative_zero.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/utc_negative_zero.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/utc_offset.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/utc_offset.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/values.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/values.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
+=begin
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/Atikokan.ics"
     vobj_json = Vobject.parse(ics).to_json
@@ -381,19 +372,16 @@ describe Vobject do
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/Makebelieve/RDATE_utc_test.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/Makebelieve/RDATE_utc_test.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/Makebelieve/RRULE_UNTIL_test.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/Makebelieve/RRULE_UNTIL_test.json")
     expect(vobj_json).to include_json(exp_json)
   end
-
 
 =end
 

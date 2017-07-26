@@ -1,0 +1,30 @@
+{
+  "VCALENDAR":{
+    "CALSCALE":{
+      "value":"GREGORIAN"
+    },
+    "PRODID":{
+      "value":"-//Example Inc.//Example Calendar//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VEVENT":{
+      "DTSTAMP":{
+        "value":"2008-02-05 19:12:24 UTC"
+      },
+      "DTSTART":{
+        "value":"2008-10-06 00:00:00 UTC",
+        "params":{
+          "VALUE":"DATE"
+        }
+      },
+      "SUMMARY":{
+        "value":"Planning meeting"
+      },
+      "UID":{
+        "value":"4088E990AD89CB3DBB484909"
+      }
+    }
+  }
+}

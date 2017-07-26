@@ -1,0 +1,76 @@
+{
+  "VCALENDAR":{
+    "PRODID":{
+      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VEVENT":{
+      "DTSTAMP":{
+        "value":"1996-07-04 12:00:00 UTC"
+      },
+      "UID":{
+        "value":"uid1@example.com"
+      },
+      "ORGANIZER":{
+        "value":"mailto:jsmith@example.com"
+      },
+      "DTSTART":{
+        "value":"1996-09-18 14:30:00 UTC"
+      },
+      "DTEND":{
+        "value":"1996-09-20 22:00:00 UTC"
+      },
+      "STATUS":{
+        "value":"CONFIRMED"
+      },
+      "CATEGORIES":{
+        "value":[
+          "CONFERENCE"
+        ]
+      },
+      "SUMMARY":{
+        "value":"Networld+Interop Conference"
+      },
+      "DESCRIPTION":{
+        "value":"Networld+Interop Conference"
+      },
+      "RRULE":[
+        {
+          "value":{
+            "freq":"MONTHLY",
+            "bymonth":[
+              "1",
+              "3"
+            ]
+          }
+        },
+        {
+          "value":{
+            "freq":"MONTHLY",
+            "bymonth":"2"
+          }
+        },
+        {
+          "value":{
+            "freq":"DAILY",
+            "until":"2012-10-11 00:00:00 UTC"
+          }
+        },
+        {
+          "value":{
+            "freq":"DAILY",
+            "until":"2012-10-11 12:13:14 +1100"
+          }
+        },
+        {
+          "value":{
+            "freq":"DAILY",
+            "until":"2012-10-11 12:13:14 UTC"
+          }
+        }
+      ]
+    }
+  }
+}

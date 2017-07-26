@@ -267,7 +267,7 @@ module Vobject
     periodlist      = seq(period, ",".r, lazy{periodlist}) {|p, _, l|
                         [p, l].flatten
                     } |
-	    		period {|p| [p] } 
+	    		period.map {|p| [p] } 
     periodlist.eof
   end
   
@@ -352,9 +352,14 @@ module Vobject
 				if component == :STANDARD or component == :DAYLIGHT
 					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
-				tz = TZInfo::Timezone.get(params[:TZID])
-	    			ret = date_time_utcT._parse ctx1
-				ret = tz.utc_to_local(ret)
+				begin
+					tz = TZInfo::Timezone.get(params[:TZID])
+	    				ret = date_time_utcT._parse ctx1
+					ret = tz.utc_to_local(ret)
+				rescue
+					# undefined timezone
+	    				ret = date_time_utcT._parse ctx1
+				end
 			else 
 	    			ret = date_timeT._parse ctx1
 			end
@@ -445,7 +450,7 @@ module Vobject
 		when "TEXT"
 			ret = textT._parse ctx1
 		when "TIME"
-			ret = time._parse ctx1
+			ret = timeT._parse ctx1
 		when "URI"
 			ret = uri._parse ctx1
 		when "UTC-OFFSET"
