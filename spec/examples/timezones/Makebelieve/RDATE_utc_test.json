@@ -1,0 +1,102 @@
+{
+  "VCALENDAR":{
+    "PRODID":{
+      "value":"-//ical.js//NONSGML Makebelieve//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VTIMEZONE":{
+      "TZID":{
+        "value":"Makebelieve/RDATE_as_date_utc"
+      },
+      "X_LIC_LOCATION":{
+        "value":"Makebelieve/RDATE_as_date_utc"
+      },
+      "STANDARD":{
+        "TZOFFSETFROM":{
+          "value":{
+            "sign":"-",
+            "hr":"04",
+            "min":"00"
+          }
+        },
+        "TZOFFSETTO":{
+          "value":{
+            "sign":"-",
+            "hr":"05",
+            "min":"00"
+          }
+        },
+        "TZNAME":{
+          "value":"RDATE_as_date_utc_standard"
+        },
+        "DTSTART":{
+          "value":"1970-01-01 02:00:00 UTC"
+        },
+        "RDATE":[
+          {
+            "value":[
+              "1970-01-01 02:00:00 +1000"
+            ]
+          },
+          {
+            "value":[
+              "1980-01-01 00:00:00 UTC"
+            ],
+            "params":{
+              "VALUE":"DATE"
+            }
+          },
+          {
+            "value":[
+              "1990-01-01 07:00:00 UTC"
+            ]
+          }
+        ]
+      },
+      "DAYLIGHT":{
+        "TZOFFSETFROM":{
+          "value":{
+            "sign":"-",
+            "hr":"05",
+            "min":"00"
+          }
+        },
+        "TZOFFSETTO":{
+          "value":{
+            "sign":"-",
+            "hr":"04",
+            "min":"00"
+          }
+        },
+        "TZNAME":{
+          "value":"RDATE_as_date_utc_daylight"
+        },
+        "DTSTART":{
+          "value":"1975-01-01 02:00:00 UTC"
+        },
+        "RDATE":[
+          {
+            "value":[
+              "1975-01-01 02:00:00 +1100"
+            ]
+          },
+          {
+            "value":[
+              "1985-01-01 00:00:00 UTC"
+            ],
+            "params":{
+              "VALUE":"DATE"
+            }
+          },
+          {
+            "value":[
+              "1995-01-01 07:00:00 UTC"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -146,7 +146,7 @@ module Vobject
 	    	seq(';'.r >> param ).map {|e| e[0] } 
 
     contentline = seq(linegroup._?, name, params._?, ':', 
-		      C::VALUE, /[\r\n]/) {|group, name, params, _, value, _|
+		      C::VALUE, /(\r|\n|\r\n)/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {:value => value} }
 			hash[key][:group] = group[0]  unless group.empty?
@@ -207,13 +207,13 @@ module Vobject
 				[old,  new].flatten
 			}
 			}
-	standardc	= seq(/BEGIN:STANDARD[\r\n]/i.r, tzprops, /END:STANDARD[\r\n]/i.r) {|_, e, _|
+	standardc	= seq(/BEGIN:STANDARD(\r|\n|\r\n)/i.r, tzprops, /END:STANDARD(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
 				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
 				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
 				{ :STANDARD => e }
 			}
-	daylightc	= seq(/BEGIN:DAYLIGHT[\r\n]/i.r, tzprops, /END:DAYLIGHT[\r\n]/i.r) {|_, e, _|
+	daylightc	= seq(/BEGIN:DAYLIGHT(\r|\n|\r\n)/i.r, tzprops, /END:DAYLIGHT(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
 				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
 				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
@@ -258,7 +258,7 @@ module Vobject
 				}
 			} |
 			(''.r & beginend).map {|e| {}   } 
-	alarmc		= seq(/BEGIN:VALARM[\r\n]/i.r, alarmprops, /END:VALARM[\r\n]/i.r) {|_, e, _|
+	alarmc		= seq(/BEGIN:VALARM(\r|\n|\r\n)/i.r, alarmprops, /END:VALARM(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing ACTION property") unless e.has_key?(:ACTION)
 				parse_err("Missing TRIGGER property") unless e.has_key?(:TRIGGER)
 				if e.has_key?(:DURATION) and !e.has_key?(:REPEAT) or !e.has_key?(:DURATION) and e.has_key?(:REPEAT)
@@ -275,24 +275,24 @@ module Vobject
 				end
 				{ :VALARM => e }
 			}
-	freebusyc	= seq(/BEGIN:VFREEBUSY[\r\n]/i.r, fbprops, /END:VFREEBUSY[\r\n]/i.r) {|_, e, _|
+	freebusyc	= seq(/BEGIN:VFREEBUSY(\r|\n|\r\n)/i.r, fbprops, /END:VFREEBUSY(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
 					e[:DTEND][:value] < e[:DTSTART][:value]
 				{ :VFREEBUSY => e }
 			}
-	journalc	= seq(/BEGIN:VJOURNAL[\r\n]/i.r, journalprops, /END:VJOURNAL[\r\n]/i.r) {|_, e, _|
+	journalc	= seq(/BEGIN:VJOURNAL(\r|\n|\r\n)/i.r, journalprops, /END:VJOURNAL(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
 				{ :VJOURNAL => e }
 			}
-	timezonec	= seq(/BEGIN:VTIMEZONE[\r\n]/i.r, timezoneprops, /END:VTIMEZONE[\r\n]/i.r) {|_, e, _|
-				parse_err("Missing STANDARD or DAYLIGHT property") unless e.has_key?(:STANDARD) and e.has_key?(:DAYLIGHT)
+	timezonec	= seq(/BEGIN:VTIMEZONE(\r|\n|\r\n)/i.r, timezoneprops, /END:VTIMEZONE(\r|\n|\r\n)/i.r) {|_, e, _|
+				parse_err("Missing STANDARD or DAYLIGHT property") unless e.has_key?(:STANDARD) or e.has_key?(:DAYLIGHT)
 				{ :VTIMEZONE => e }
 			}
-	todoc		= seq(/BEGIN:VTODO[\r\n]/i.r, todoprops, alarmc.star, /END:VTODO[\r\n]/i.r) {|_, e, a, _|
+	todoc		= seq(/BEGIN:VTODO(\r|\n|\r\n)/i.r, todoprops, alarmc.star, /END:VTODO(\r|\n|\r\n)/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DUE and DURATION properties") if e.has_key?(:DUE) and e.has_key?(:DURATION)
@@ -308,7 +308,7 @@ module Vobject
 				end
 				{ :VTODO => e }
 			}
-	eventc		= seq(/BEGIN:VEVENT[\r\n]/i.r, eventprops, alarmc.star, /END:VEVENT[\r\n]/i.r) {|_, e, a, _|
+	eventc		= seq(/BEGIN:VEVENT(\r|\n|\r\n)/i.r, eventprops, alarmc.star, /END:VEVENT(\r|\n|\r\n)/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
@@ -321,13 +321,13 @@ module Vobject
 				end
 				{ :VEVENT => e }
 			}
-	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /[\r\n]/i.r, props, /END:/i.r, C::XNAME, /[\r\n]/i.r) {|_, n, _, p, _, n1, _|
+	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
 				{ n1.to_sym => p }
 			}
-	ianacomp	= seq(/BEGIN:/i.r, C::IANATOKEN, /[\r\n]/i.r, props, /END:/i.r, C::IANATOKEN, /[\r\n]/i.r) {|_, n, _, p, _, n1, _|
+	ianacomp	= seq(/BEGIN:/i.r, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::IANATOKEN, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
@@ -342,7 +342,7 @@ module Vobject
 
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
 	                C::XNAME | C::IANATOKEN
-	calprop     = seq(calpropname, params._?, ':', C::VALUE, 	/[\r\n]/) {|key, params, _, value, _|
+	calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {:value => Vobject::Typegrammars.typematch(key, params[0], :CALENDAR, value) }}
 			hash[key][:params] = params[0] unless params.empty?
@@ -355,7 +355,7 @@ module Vobject
 	            [old, new].flatten
 	        }
 	}
-    vobject 	= seq(/BEGIN:VCALENDAR[\r\n]/i.r, calprops, components, /END:VCALENDAR[\r\n]/i.r) { |(b, v, rest, e)|
+    vobject 	= seq(/BEGIN:VCALENDAR(\r|\n|\r\n)/i.r, calprops, components, /END:VCALENDAR(\r|\n|\r\n)/i.r) { |(b, v, rest, e)|
 			parse_err("Missing PRODID attribute") unless v.has_key?(:PRODID)
 			parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
 			rest.delete(:END)
@@ -379,7 +379,7 @@ module Vobject
 private
 
   def unfold(str)
-	         str.gsub(/[\n\r][ \t]/, '')
+	         str.gsub(/(\r|\n|\r\n)[ \t]/, '')
   end
 
 

@@ -328,44 +328,38 @@ describe Vobject do
     expect(vobj_json).to include_json(exp_json)
   end
 
-=begin
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/Atikokan.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/America/Atikokan.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/Denver.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/America/Denver.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/Los_Angeles.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/America/Los_Angeles.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/New_York.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/America/New_York.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/Makebelieve/RDATE_test.ics"
     vobj_json = Vobject.parse(ics).to_json
-    exp_json = JSON.load(File.read "spec/examples/example7.json")
- puts vobj_json
+    exp_json = JSON.load(File.read "spec/examples/timezones/Makebelieve/RDATE_test.json")
     expect(vobj_json).to include_json(exp_json)
   end
 
@@ -383,6 +377,5 @@ describe Vobject do
     expect(vobj_json).to include_json(exp_json)
   end
 
-=end
 
 end
