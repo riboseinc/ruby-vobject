@@ -34,8 +34,41 @@
         "value":"Networld+Interop Conference"
       },
       "DESCRIPTION":{
-        "value":"Networld+Interop Conference and Exhibit\nAtlanta World Congress Center\nAtlanta, Georgia"
-      }
+        "value":"Networld+Interop Conference"
+      },
+      "RRULE":[
+        {
+          "value":{
+            "rscale":"CHINESE",
+            "freq":"YEARLY"
+          }
+        },
+        {
+          "value":{
+            "rscale":"ETHIOPIC",
+            "freq":"MONTHLY",
+            "bymonth":"13"
+          }
+        },
+        {
+          "value":{
+            "rscale":"HEBREW",
+            "freq":"YEARLY",
+            "bymonth":"5L",
+            "bymonthday":{
+              "ordmoday":"8"
+            },
+            "skip":"FORWARD"
+          }
+        },
+        {
+          "value":{
+            "rscale":"GREGORIAN",
+            "freq":"YEARLY",
+            "skip":"FORWARD"
+          }
+        }
+      ]
     }
   }
 }

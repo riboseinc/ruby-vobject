@@ -177,13 +177,12 @@ bundle exec rspec
 
 This gem is implemented using [Rsec](https://github.com/luikore/rsec), a very fast PEG grammar based on StringScanner.
 
-## Development
+## Coverage
 
-Some really simple specs have been written. Please make sure they still
-pass after migrating into the grammar parser approach. Also, some other
-specs such as some special characters as stated in RFC 5545 and 6350
-should be tested as well.
+This tool is intended as a reference implementation, and it is very strict in its conformance: it requires all rules for parameter coocurrence, property typing, etc to be met by objects. It only parses one object at a time, and does not parse Vobject streams.
 
+This tool supports v2.0 iCal as specified in RFC 5545, and as updated in RFC 5546 (registry for values of METHOD and REQUEST-STATUS),
+RFC 6868 (caret escapes for parameter values), RFC 7529 (non-Gregorian Calendars)
 
 ## Contributing
 

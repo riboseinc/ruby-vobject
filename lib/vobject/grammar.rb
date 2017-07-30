@@ -44,7 +44,8 @@ module Vobject
 			/MEMBER/i.r | /PARTSTAT/i.r | /RANGE/i.r | /RELATED/i.r | /RELTYPE/i.r |
 			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r
     otherparamname = C::XNAME | seq(''.r ^ paramname, C::IANATOKEN )[1]
-    paramvalue 	= C::QUOTEDSTRING.map {|s| s } | C::PTEXT.map {|s| s.upcase }
+    paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)).upcase }
+    quotedparamvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } 
     cutypevalue	= /INDIVIDUAL/i.r | /GROUP/i.r | /RESOURCE/i.r | /ROOM/i.r | /UNKNOWN/i.r |
 	    		C::XNAME | C::IANATOKEN.map 
     encodingvalue = /8BIT/i.r | /BASE64/i.r
@@ -72,9 +73,9 @@ module Vobject
 			ret
 		}
     quotedStringList = (C::QUOTEDSTRING & /[;:]/.r).map {|e|
-                        [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
+                        [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
                 } | (seq(C::QUOTEDSTRING, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
-                         ret = list << e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")
+                         ret = list << rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))
                          ret
 		}           
 
@@ -83,7 +84,7 @@ module Vobject
     rfc4288subtypename 	= rfc4288regname
     fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
     			
-    param 	= seq(/ALTREP/i.r, '=', C::QUOTEDSTRING) {|name, _, val|
+    param 	= seq(/ALTREP/i.r, '=', quotedparamvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/CN/i.r, '=', paramvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
@@ -95,7 +96,7 @@ module Vobject
     		} | seq(/DELEGATED-TO/i.r, '=', quotedStringList) {|name, _, val|
 	    		val = val[0] if val.length == 1
 			{name.upcase.gsub(/-/,"_").to_sym => val}
-		} | seq(/DIR/i.r, '=', C::QUOTEDSTRING) {|name, _, val|
+		} | seq(/DIR/i.r, '=', quotedparamvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(/ENCODING/i.r, '=', encodingvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
@@ -120,7 +121,7 @@ module Vobject
 			{name.upcase.gsub(/-/,"_").to_sym => val.upcase}
     		} | seq(/RSVP/i.r, '=', C::BOOLEAN) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
-		} | seq(/SENT-BY/i.r, '=', C::QUOTEDSTRING) {|name, _, val|
+		} | seq(/SENT-BY/i.r, '=', quotedparamvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/TZID/i.r, '=', tzidvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
@@ -365,6 +366,11 @@ module Vobject
 		}
     vobject.eof 
   end 
+
+  # RFC 6868
+  def rfc6868decode(x)
+	  x.gsub(/\^n/, "\n").gsub(/\^\^/, '^').gsub(/\^'/, '"')
+  end
 
   def parse(vobject)
 	@ctx = Rsec::ParseContext.new unfold(vobject), 'source'

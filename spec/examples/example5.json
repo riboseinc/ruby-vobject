@@ -1,7 +1,7 @@
 {
   "VCALENDAR":{
     "METHOD":{
-      "value":"xyz"
+      "value":"ADD"
     },
     "VERSION":{
       "value":"2.0"
@@ -47,7 +47,7 @@
         "value":"Calendaring Interoperability Planning Meeting"
       },
       "DESCRIPTION":{
-        "value":"Discuss how we can test c&s interoperability\\nusing iCalendar and other IETF standards."
+        "value":"Discuss how we can test c&s interoperability\nusing iCalendar and other IETF standards."
       },
       "LOCATION":{
         "value":"LDB Lobby"

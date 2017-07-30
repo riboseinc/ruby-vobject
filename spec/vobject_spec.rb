@@ -16,6 +16,20 @@ describe Vobject do
   end
 =end
 
+  it 'should process RFC6868 caret parameters' do
+    ics = File.read "spec/examples/caretparams.ics"
+    vobj_json = Vobject.parse(ics).to_json
+    exp_json = JSON.load(File.read "spec/examples/caretparams.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
+
+  it 'should recognise RFC7529 calendar recurrences' do
+    ics = File.read "spec/examples/recur_RFC7529.ics"
+    vobj_json = Vobject.parse(ics).to_json
+    exp_json = JSON.load(File.read "spec/examples/recur_RFC7529.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
+
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/example2.ics"
     vobj_json = Vobject.parse(ics).to_json

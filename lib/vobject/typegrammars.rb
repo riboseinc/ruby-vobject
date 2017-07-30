@@ -34,7 +34,7 @@ module Vobject
     ordwk 	= /[0-9]{1,2}/.r
     weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
     weekdaynum1	= seq(C::SIGN._?, ordwk) {|s, o|
-	    		h = {:ordwk => s}
+	    		h = {:ordwk => o}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
@@ -48,7 +48,7 @@ module Vobject
 		} | weekdaynum.map {|w| w} 
     ordmoday 	= /[0-9]{1,2}/.r
     monthdaynum = seq(C::SIGN._?, ordmoday) {|s, o|
-	    		h = {:ordmoday => s}
+	    		h = {:ordmoday => o}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
@@ -57,7 +57,7 @@ module Vobject
 		} | monthdaynum.map {|m| m}
     ordyrday 	= /[0-9]{1,3}/.r
     yeardaynum	= seq(C::SIGN._?, ordyrday) {|s, o|
-	    		h = {:ordyrday => s}
+	    		h = {:ordyrday => o}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
@@ -65,14 +65,16 @@ module Vobject
 	    		[y, l].flatten
 		} | yeardaynum.map {|y| y}
     weeknum 	= seq(C::SIGN._?, ordwk) {|s, o|
-	    		h = {:ordwk => s}
+	    		h = {:ordwk => o}
 			h[:sign] = s[0] unless s.empty?
 			h
 	    	}
     bywknolist 	= seq(weeknum, ',', lazy{bywknolist}) {|w, _, l|
 	    		[w, l].flatten
 		} | weeknum.map {|w| w}
-    monthnum 	= /[0-9]{1,2}/.r
+    #monthnum 	= /[0-9]{1,2}/.r
+    # RFC 7529 add leap month indicator
+    monthnum 	= /[0-9]{1,2}L?/i.r
     bymolist 	= seq(monthnum, ',', lazy{bymolist}) {|m, _, l|
 	    		[m, l].flatten
 		} | monthnum.map {|m| m}
@@ -80,6 +82,14 @@ module Vobject
     bysplist 	= seq(setposday, ',', lazy{bysplist}) {|s, _, l|
 	    		[s, l].flatten
 		} | setposday.map {|s| s}
+    # http://www.unicode.org/repos/cldr/tags/latest/common/bcp47/calendar.xml
+    rscale	= C::XNAME | /buddhist/i.r | /chinese/i.r | /coptic/i.r | /dangi/i.r |
+	    	/ethioaa/i.r | /ethiopic-amete-alem/i.r | /ethiopic/i.r |
+		/gregory/i.r | /hebrew/i.r | /indian/i.r | /islamic/i.r |
+		/islamic-umalqura/i.r | /islamic-tbla/i.r | /islamic-civil/i.r |
+		/islamic-rgsa/i.r | /iso8601/i.r | /japanese/i.r | /persian/i.r |
+		/roc/i.r | /islamicc/i.r | /gregorian/i.r
+    skip	= /OMIT/i.r | /BACKWARD/i.r | /FORWARD/i.r
     recur_rule_part = 	seq(/FREQ/i.r, '=', freq) {|k, _, v| {:freq => v} } |
 	    seq(/UNTIL/i.r, '=', enddate) {|k, _, v| {:until => v} } |
 	    seq(/COUNT/i.r, '=', /[0-9]+/i.r) {|k, _, v| {:count => v} } |
@@ -93,7 +103,10 @@ module Vobject
 	    seq(/BYWEEKNO/i.r, '=', bywknolist)  {|k, _, v| {:byweekno => v} } |
 	    seq(/BYMONTH/i.r, '=', bymolist)  {|k, _, v| {:bymonth => v} } |
 	    seq(/BYSETPOS/i.r, '=', bysplist)  {|k, _, v| {:bysetpos => v} } |
-	    seq(/WKST/i.r, '=', weekday)  {|k, _, v| {:wkst => v} } 
+	    seq(/WKST/i.r, '=', weekday)  {|k, _, v| {:wkst => v} } |
+	    # RFC 7529
+	    seq(/RSCALE/i.r, '=', rscale)  {|k, _, v| {:rscale => v} } | 
+	    seq(/SKIP/i.r, '=', skip)  {|k, _, v| {:skip => v} } 
     recur 	= seq(recur_rule_part, ';', lazy{recur}) {|h, _, r| h.merge r } | 
 	    	recur_rule_part
     recur.eof
@@ -170,20 +183,22 @@ module Vobject
   end
 
   def textT
-    text	= C::TEXT
+    text	= C::TEXT.map {|t| unescape t }
     text.eof
   end
 
   def textlist
     textlist	=  
-	    	seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [a, b].flatten }  | 
-		C::TEXT.map {|t| [t]}
+	    	seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [unescape(a), b].flatten }  | 
+		C::TEXT.map {|t| [unescape(t)]}
     textlist.eof
   end
 
   def request_statusvalue
+	    @req_status = Set.new %w{2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 2.11 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13 3.14 4.0 5.0 5.1 5.2 5.3}
     extdata = seq(';'.r, C::TEXT) {|_, t| t}
     request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ';'.r, C::TEXT, extdata._?) {|n, _, t1, t2|
+			    parse_err("Invalid request status #{n}") unless @req_status.include?(n) #RFC 5546   			
                             hash = {:statcode => n, :statdesc => t1}
                             hash[:extdata] = t2[0] unless t2.empty?
                             hash
@@ -295,7 +310,20 @@ module Vobject
 	  boolean.eof
   end
 
+  # RFC 5546
+  def methodvalue
+	  methodvalue 	= /PUBLISH/i.r | /REQUEST/i.r | /REPLY/i.r | /ADD/i.r | /CANCEL/i.r | /REFRESH/i.r | 
+		  	/COUNTER/i.r | /DECLINECOUNTER/i.r
+	  methodvalue.eof
+  end
 
+
+
+  # text escapes: \\ \; \, \N \n
+  def unescape(x)
+	  x.gsub(/\\\\/, '\\').gsub(/\\;/, ';').gsub(/\\,/, ',').gsub(/\\[Nn]/, "\n")
+  end
+  
 
   # Enforce type restrictions on values of particular properties.
   # If successful, return typed interpretation of string
@@ -305,7 +333,7 @@ module Vobject
     when :CALSCALE
 	    ret = calscalevalue._parse ctx1
     when :METHOD
-	    ret = ianaToken._parse ctx1
+	    ret = methodvalue._parse ctx1
     when :PRODID
 	    ret = textT._parse ctx1
     when :VERSION
