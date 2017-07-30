@@ -8,6 +8,7 @@ require_relative "../c"
 require_relative "../error"
 require "vobject"
 require "vobject/typegrammars"
+require "vobject/paramcheck"
 
 module Vobject
  class Grammar
