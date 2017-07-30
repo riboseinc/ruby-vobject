@@ -16,6 +16,7 @@ module Vobject
 
 	 class << self
   def vobjectGrammar
+    attr_accessor :ctx
 
 # properties with value cardinality 1
     @cardinality1 = {}
@@ -177,7 +178,7 @@ module Vobject
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {:value => value} }
 			hash[key][:group] = group[0]  unless group.empty?
-			Vobject::Typegrammars.paramcheck(key, params.empty? ? {} : params[0])
+			Vobject::Paramcheck.paramcheck(key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 		}
@@ -185,7 +186,7 @@ module Vobject
         props	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{props}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :GENERIC, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :GENERIC, c[k][:value], @ctx)
 			c.merge( rest ) { | key, old, new|
 				[old,  new].flatten
 				# deal with duplicate properties
@@ -194,7 +195,7 @@ module Vobject
         alarmprops	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{alarmprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :ALARM, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :ALARM, c[k][:value], @ctx)
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:ALARM].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -205,7 +206,7 @@ module Vobject
         fbprops		= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{fbprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :FREEBUSY, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :FREEBUSY, c[k][:value], @ctx)
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:FREEBUSY].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -216,7 +217,7 @@ module Vobject
         journalprops	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{journalprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :JOURNAL, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :JOURNAL, c[k][:value], @ctx)
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:JOURNAL].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -227,7 +228,7 @@ module Vobject
         tzprops		= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{tzprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :TZ, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :TZ, c[k][:value], @ctx)
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:TZ].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -254,7 +255,7 @@ module Vobject
 				e.merge(rest)
 			} | seq(contentline, lazy{timezoneprops}) {|e, rest|
 			k = e.keys[0]
-			e[k][:value] = Vobject::Typegrammars.typematch(k, e[k][:params], :TIMEZONE, e[k][:value])
+			e[k][:value] = Vobject::Typegrammars.typematch(k, e[k][:params], :TIMEZONE, e[k][:value], @ctx)
 				e.merge( rest ) { | key, old, new|
 				if @cardinality1[:TIMEZONE].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -266,7 +267,7 @@ module Vobject
         todoprops	= (''.r & beginend).map {|e| {}   } | 
 			seq(contentline, lazy{todoprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :TODO, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :TODO, c[k][:value], @ctx)
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:TODO].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -276,7 +277,7 @@ module Vobject
 			}
         eventprops	= seq(contentline, lazy{eventprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :EVENT, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :EVENT, c[k][:value], @ctx)
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:EVENT].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -367,7 +368,7 @@ module Vobject
 	# RFC 7953
         availableprops	= seq(contentline, lazy{availableprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :AVAILABLE, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :AVAILABLE, c[k][:value], @ctx)
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:AVAILABLE].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -385,7 +386,7 @@ module Vobject
 			}
         availabilityprops	= seq(contentline, lazy{availabilityprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :VAVAILABILITY, c[k][:value])
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :VAVAILABILITY, c[k][:value], @ctx)
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:VAVAILABILITY].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -420,8 +421,8 @@ module Vobject
 	                C::XNAME | C::IANATOKEN
 	calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
-	    		hash = { key => {:value => Vobject::Typegrammars.typematch(key, params[0], :CALENDAR, value) }}
-			Vobject::Typegrammars.paramcheck(key, params.empty? ? {} : params[0])
+	    		hash = { key => {:value => Vobject::Typegrammars.typematch(key, params[0], :CALENDAR, value, @ctx) }}
+			Vobject::Paramcheck.paramcheck(key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 			# TODO not doing constraint that each description must be in a different language

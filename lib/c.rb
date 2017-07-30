@@ -112,5 +112,33 @@ module C
                             }
         RFC5646LANGVALUE    = rfc5646langtag | rfc5646privateuse | rfc5646grandfathered
 
+  # https://www.w3.org/TR/2011/REC-css3-color-20110607/#svg-color
+    color = /AliceBlue/i.r | /AntiqueWhite/i.r | /Aqua/i.r | /Aquamarine/i.r | /Azure/i.r | /Beige/i.r | 
+		  /Bisque/i.r | /Black/i.r | /BlanchedAlmond/i.r | /Blue/i.r | /BlueViolet/i.r | /Brown/i.r | 
+		  /BurlyWood/i.r | /CadetBlue/i.r | /Chartreuse/i.r | /Chocolate/i.r | /Coral/i.r | 
+		  /CornflowerBlue/i.r | /Cornsilk/i.r | /Crimson/i.r | /Cyan/i.r | /DarkBlue/i.r | 
+		  /DarkCyan/i.r | /DarkGoldenRod/i.r | /DarkGray/i.r | /DarkGrey/i.r | /DarkGreen/i.r | 
+		  /DarkKhaki/i.r | /DarkMagenta/i.r | /DarkOliveGreen/i.r | /DarkOrange/i.r | /DarkOrchid/i.r | 
+		  /DarkRed/i.r | /DarkSalmon/i.r | /DarkSeaGreen/i.r | /DarkSlateBlue/i.r | /DarkSlateGray/i.r | 
+		  /DarkSlateGrey/i.r | /DarkTurquoise/i.r | /DarkViolet/i.r | /DeepPink/i.r | /DeepSkyBlue/i.r | 
+		  /DimGray/i.r | /DimGrey/i.r | /DodgerBlue/i.r | /FireBrick/i.r | /FloralWhite/i.r | /ForestGreen/i.r | 
+		  /Fuchsia/i.r | /Gainsboro/i.r | /GhostWhite/i.r | /Gold/i.r | /GoldenRod/i.r | /Gray/i.r | /Grey/i.r | 
+		  /Green/i.r | /GreenYellow/i.r | /HoneyDew/i.r | /HotPink/i.r | /IndianRed/i.r | /Indigo/i.r | 
+		  /Ivory/i.r | /Khaki/i.r | /Lavender/i.r | /LavenderBlush/i.r | /LawnGreen/i.r | /LemonChiffon/i.r | 
+		  /LightBlue/i.r | /LightCoral/i.r | /LightCyan/i.r | /LightGoldenRodYellow/i.r | /LightGray/i.r | 
+		  /LightGrey/i.r | /LightGreen/i.r | /LightPink/i.r | /LightSalmon/i.r | /LightSeaGreen/i.r | 
+		  /LightSkyBlue/i.r | /LightSlateGray/i.r | /LightSlateGrey/i.r | /LightSteelBlue/i.r | 
+		  /LightYellow/i.r | /Lime/i.r | /LimeGreen/i.r | /Linen/i.r | /Magenta/i.r | /Maroon/i.r | 
+		  /MediumAquaMarine/i.r | /MediumBlue/i.r | /MediumOrchid/i.r | /MediumPurple/i.r | 
+		  /MediumSeaGreen/i.r | /MediumSlateBlue/i.r | /MediumSpringGreen/i.r | /MediumTurquoise/i.r | 
+		  /MediumVioletRed/i.r | /MidnightBlue/i.r | /MintCream/i.r | /MistyRose/i.r | /Moccasin/i.r | 
+		  /NavajoWhite/i.r | /Navy/i.r | /OldLace/i.r | /Olive/i.r | /OliveDrab/i.r | /Orange/i.r | 
+		  /OrangeRed/i.r | /Orchid/i.r | /PaleGoldenRod/i.r | /PaleGreen/i.r | /PaleTurquoise/i.r | 
+		  /PaleVioletRed/i.r | /PapayaWhip/i.r | /PeachPuff/i.r | /Peru/i.r | /Pink/i.r | /Plum/i.r | 
+		  /PowderBlue/i.r | /Purple/i.r | /RebeccaPurple/i.r | /Red/i.r | /RosyBrown/i.r | /RoyalBlue/i.r | 
+		  /SaddleBrown/i.r | /Salmon/i.r | /SandyBrown/i.r | /SeaGreen/i.r | /SeaShell/i.r | /Sienna/i.r | 
+		  /Silver/i.r | /SkyBlue/i.r | /SlateBlue/i.r | /SlateGray/i.r | /SlateGrey/i.r | /Snow/i.r | 
+		  /SpringGreen/i.r | /SteelBlue/i.r | /Tan/i.r | /Teal/i.r | /Thistle/i.r | /Tomato/i.r | 
+		  /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r 
 
 end

@@ -358,7 +358,12 @@ describe Vobject do
 
   it 'should disallow UID in an ALARM component' do
     ics = File.read "spec/examples/spurious_property.ics"
-    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
+    expect { Vobject.parse(ics)}.to raise_error(/Invalid property/)
+  end
+
+  it 'should disallow LANGUAGE parameter in a TRIGGER component' do
+    ics = File.read "spec/examples/spurious_param.ics"
+    expect { Vobject.parse(ics)}.to raise_error(/parameter given/)
   end
 
   it 'should parse iCalendar properly' do
