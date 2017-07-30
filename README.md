@@ -179,10 +179,14 @@ This gem is implemented using [Rsec](https://github.com/luikore/rsec), a very fa
 
 ## Coverage
 
-This tool is intended as a reference implementation, and it is very strict in its conformance: it requires all rules for parameter coocurrence, property typing, etc to be met by objects. It only parses one object at a time, and does not parse Vobject streams.
+This tool is intended as a reference implementation, and it is very strict in its conformance: it requires all rules for parameter coocurrence, 
+property typing, parameter typing, permitted properties within components, etc to be met by objects. 
+
+The tool only parses one object at a time, and does not parse Vobject streams.
 
 This tool supports v2.0 iCal as specified in RFC 5545, and as updated in RFC 5546 (registry for values of METHOD and REQUEST-STATUS),
-RFC 6868 (caret escapes for parameter values), RFC 7529 (non-Gregorian Calendars), RFC 7953 (VAVAILABILITY component),
+RFC 6868 (caret escapes for parameter values), RFC 7529 (non-Gregorian Calendars), RFC 7953 (VAVAILABILITY component), and
+RFC 7986 (new properties).
 
 ## Contributing
 

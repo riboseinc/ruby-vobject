@@ -323,10 +323,47 @@ module Vobject
 	  busytype.eof
   end
 
+  # https://www.w3.org/TR/2011/REC-css3-color-20110607/#svg-color
+  def color
+	  color = /AliceBlue/i.r | /AntiqueWhite/i.r | /Aqua/i.r | /Aquamarine/i.r | /Azure/i.r | /Beige/i.r | 
+		  /Bisque/i.r | /Black/i.r | /BlanchedAlmond/i.r | /Blue/i.r | /BlueViolet/i.r | /Brown/i.r | 
+		  /BurlyWood/i.r | /CadetBlue/i.r | /Chartreuse/i.r | /Chocolate/i.r | /Coral/i.r | 
+		  /CornflowerBlue/i.r | /Cornsilk/i.r | /Crimson/i.r | /Cyan/i.r | /DarkBlue/i.r | 
+		  /DarkCyan/i.r | /DarkGoldenRod/i.r | /DarkGray/i.r | /DarkGrey/i.r | /DarkGreen/i.r | 
+		  /DarkKhaki/i.r | /DarkMagenta/i.r | /DarkOliveGreen/i.r | /DarkOrange/i.r | /DarkOrchid/i.r | 
+		  /DarkRed/i.r | /DarkSalmon/i.r | /DarkSeaGreen/i.r | /DarkSlateBlue/i.r | /DarkSlateGray/i.r | 
+		  /DarkSlateGrey/i.r | /DarkTurquoise/i.r | /DarkViolet/i.r | /DeepPink/i.r | /DeepSkyBlue/i.r | 
+		  /DimGray/i.r | /DimGrey/i.r | /DodgerBlue/i.r | /FireBrick/i.r | /FloralWhite/i.r | /ForestGreen/i.r | 
+		  /Fuchsia/i.r | /Gainsboro/i.r | /GhostWhite/i.r | /Gold/i.r | /GoldenRod/i.r | /Gray/i.r | /Grey/i.r | 
+		  /Green/i.r | /GreenYellow/i.r | /HoneyDew/i.r | /HotPink/i.r | /IndianRed/i.r | /Indigo/i.r | 
+		  /Ivory/i.r | /Khaki/i.r | /Lavender/i.r | /LavenderBlush/i.r | /LawnGreen/i.r | /LemonChiffon/i.r | 
+		  /LightBlue/i.r | /LightCoral/i.r | /LightCyan/i.r | /LightGoldenRodYellow/i.r | /LightGray/i.r | 
+		  /LightGrey/i.r | /LightGreen/i.r | /LightPink/i.r | /LightSalmon/i.r | /LightSeaGreen/i.r | 
+		  /LightSkyBlue/i.r | /LightSlateGray/i.r | /LightSlateGrey/i.r | /LightSteelBlue/i.r | 
+		  /LightYellow/i.r | /Lime/i.r | /LimeGreen/i.r | /Linen/i.r | /Magenta/i.r | /Maroon/i.r | 
+		  /MediumAquaMarine/i.r | /MediumBlue/i.r | /MediumOrchid/i.r | /MediumPurple/i.r | 
+		  /MediumSeaGreen/i.r | /MediumSlateBlue/i.r | /MediumSpringGreen/i.r | /MediumTurquoise/i.r | 
+		  /MediumVioletRed/i.r | /MidnightBlue/i.r | /MintCream/i.r | /MistyRose/i.r | /Moccasin/i.r | 
+		  /NavajoWhite/i.r | /Navy/i.r | /OldLace/i.r | /Olive/i.r | /OliveDrab/i.r | /Orange/i.r | 
+		  /OrangeRed/i.r | /Orchid/i.r | /PaleGoldenRod/i.r | /PaleGreen/i.r | /PaleTurquoise/i.r | 
+		  /PaleVioletRed/i.r | /PapayaWhip/i.r | /PeachPuff/i.r | /Peru/i.r | /Pink/i.r | /Plum/i.r | 
+		  /PowderBlue/i.r | /Purple/i.r | /RebeccaPurple/i.r | /Red/i.r | /RosyBrown/i.r | /RoyalBlue/i.r | 
+		  /SaddleBrown/i.r | /Salmon/i.r | /SandyBrown/i.r | /SeaGreen/i.r | /SeaShell/i.r | /Sienna/i.r | 
+		  /Silver/i.r | /SkyBlue/i.r | /SlateBlue/i.r | /SlateGray/i.r | /SlateGrey/i.r | /Snow/i.r | 
+		  /SpringGreen/i.r | /SteelBlue/i.r | /Tan/i.r | /Teal/i.r | /Thistle/i.r | /Tomato/i.r | 
+		  /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r 
+	  color.eof
+  end
+
 
   # text escapes: \\ \; \, \N \n
   def unescape(x)
 	  x.gsub(/\\\\/, '\\').gsub(/\\;/, ';').gsub(/\\,/, ',').gsub(/\\[Nn]/, "\n")
+  end
+  
+  def registered_propname
+    registered_propname = C::NAME
+    registered_propname.eof
   end
   
 
@@ -334,13 +371,125 @@ module Vobject
   # If successful, return typed interpretation of string
   def typematch(key, params, component, value)
     ctx1 = Rsec::ParseContext.new value, 'source'
+    if not (key =~ /^x/i)
+        case component
+        when :EVENT
+            case key
+            when :DTSTAMP, :UID, :DTSTART, :CLASS, :CREATED, :DESCRIPTION,
+            :GEO, :LAST_MOD, :LOCATION, :ORGANIZER, :PRIORITY, :SEQUENCE, :STATUS,
+            :SUMMARY, :TRANSP, :URL, :RECURRENCE_ID, :RRULE, :DTEND, :DURATION,
+            :ATTACH, :ATTENDEE, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE,
+            :RSTATUS, :RELATED, :RESOURCES, :RDATE, :COLOR, :CONFERENCE, :IMAGE
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :TODO
+            case key
+            when :DTSTAMP, :UID, :DTSTART, :CLASS, :CREATED, :DESCRIPTION,
+            :GEO, :LAST_MOD, :LOCATION, :ORGANIZER, :PRIORITY, :PERCENT_COMPLETED, :SEQUENCE, :STATUS,
+            :SUMMARY, :URL, :RECURRENCE_ID, :RRULE, :DUE, :DURATION,
+            :ATTACH, :ATTENDEE, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE,
+            :RSTATUS, :RELATED, :RESOURCES, :RDATE, :COLOR, :CONFERENCE, :IMAGE
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :JOURNAL
+            case key
+            when :DTSTAMP, :UID, :DTSTART, :CLASS, :CREATED, :DESCRIPTION,
+            :LAST_MOD, :ORGANIZER, :RECURRENCE_ID, :SEQUENCE, :STATUS,
+            :SUMMARY, :URL, :RRULE, 
+            :ATTACH, :ATTENDEE, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE,
+            :RSTATUS, :RELATED,  :RDATE, :COLOR, :IMAGE
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :FREEBUSY
+            case key
+            when :DTSTAMP, :UID, :CONTACT, :DTSTART, :DTEND, :ORGANIZER, :URL,
+            :ATTENDEE, :COMMENT, :FREEBUSY, :RSTATUS
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :TIMEZONE
+            case key
+            when :TZID, :LAST_MODIFIED, :TZURL
+            else
+                    p = registered_propname.parse(key.to_s.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :DAYLIGHT, :STANDARD
+            case key
+            when :DTSTART, :TZOFFSETTO, :TZOFFSETFROM, :RRULE,
+            :COMMENT, :RDATE, :TZNAME
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :ALARM
+            case key
+            when :ACTION, :TRIGGER, :DURATION, :REPEAT, :ATTACH, :DESCRIPTION,
+            :SUMMARY, :ATTENDEE
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :VAVAILABILITY
+            case key
+            when :DTSTAMP, :UID, :BUSYTYPE, :CLASS, :CREATED, :DESCRIPTION,
+            :DTSTART, :LAST_MODIFIED, :LOCATION, :ORGANIZER, :PRIORITY, :SEQUENCE,
+            :SUMMARY, :URL, :DTEND, :DURATION, :CATEGORIES, :COMMENT, :CONTACT
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+            end
+        when :AVAILABLE
+            case key
+            when :DTSTAMP, :DTSTART, :UID, :DTEND, :DURATION, :CREATED,
+            :DESCRIPTION, :LAST_MODIFIED, :LOCATION, :RECURRENCE_ID, :RRULE,
+            :SUMMARY, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE, :RDATE
+            else
+                    p = registered_propname.parse(key.to_s)
+                    if Rsec::INVALID[p]
+                    else
+                        raise ctx1.report_error "Invalid property #{key} specified for #{component}", 'source'
+                    end
+                end
+        end
+    end    
+    
     case key
     when :CALSCALE
 	    ret = calscalevalue._parse ctx1
     when :METHOD
 	    ret = methodvalue._parse ctx1
-    when :PRODID
-	    ret = textT._parse ctx1
     when :VERSION
 	    ret = versionvalue._parse ctx1
     when :ATTACH
@@ -349,11 +498,23 @@ module Vobject
 	    else
 		    ret = uri._parse ctx1
 	    end
+    when :IMAGE
+	raise ctx1.report_error "No VALUE parameter specified for property #{key}", 'source' if params.empty?
+	raise ctx1.report_error "No VALUE parameter specified for property #{key}", 'source' unless params[:VALUE]
+	    if params[:VALUE] == 'BINARY'
+		raise ctx1.report_error "No ENCODING parameter specified for property #{key}", 'source' unless params[:ENCODING]
+		raise ctx1.report_error "Incorrect ENCODING parameter specified for property #{key}", 'source' unless params[:ENCODING] == 'BASE64'
+		    ret = binary._parse ctx1
+	    elsif params[:VALUE] == 'URI'
+		    ret = uri._parse ctx1
+	    else
+	raise ctx1.report_error "Incorrect VALUE parameter specified for property #{key}", 'source' 
+	    end
     when :CATEGORIES, :RESOURCES
 	    ret = textlist._parse ctx1
     when :CLASS
 	    ret = classvalue._parse ctx1
-    when :COMMENT, :DESCRIPTION, :LOCATION, :SUMMARY, :TZID, :TZNAME, :CONTACT, :RELATED_TO, :UID
+    when :COMMENT, :DESCRIPTION, :LOCATION, :SUMMARY, :TZID, :TZNAME, :CONTACT, :RELATED_TO, :UID, :PRODID, :NAME
 	    ret = textT._parse ctx1
     when :GEO
 	    ret = geovalue._parse ctx1
@@ -447,7 +608,12 @@ module Vobject
 	    ret = transpvalue._parse ctx1
     when :TZOFFSETFROM, :TZOFFSETTO
 	    ret = utc_offset._parse ctx1
-	when :TZURI, :URL
+	when :TZURI, :URL, :SOURCE, :CONFERENCE
+	    if key == :CONFERENCE
+		    raise ctx1.report_error "Missing URI VALUE parameter" if params.empty?
+		    raise ctx1.report_error "Missing URI VALUE parameter" if !params[:VALUE]
+		raise ctx1.report_error "Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}" if params[:VALUE]  != 'URI'
+	    end
 	    ret = uri._parse ctx1
 	when :ATTENDEE, :ORGANIZER
 	    ret = uri._parse ctx1
@@ -462,6 +628,15 @@ module Vobject
 	# RFC 7953
 	when :BUSYTYPE
 		ret = busytype._parse ctx1
+	# RFC 7986
+	when :REFRESH_INTERVAL
+		raise ctx1.report_error "Missing VALUE parameter for property #{key}" if params.empty?
+		raise ctx1.report_error "Missing VALUE parameter for property #{key}" if !params[:VALUE] 
+		raise ctx1.report_error "Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}" if params[:VALUE]  != 'DURATION'
+		ret = durationT._parse ctx1
+	# RFC 7986
+	when :COLOR
+		ret = color._parse ctx1
     else
 	    if params and params[:VALUE]
 		case params[:VALUE]
@@ -507,6 +682,239 @@ module Vobject
     Rsec::Fail.reset
     return ret
   end
+  
+     def paramcheck(prop, params) 
+	   if params and params[:ALTREP]
+		   case prop
+		   when :COMMENT, :DESCRIPTION, :LOCATION, :RESOURCES, :SUMMARY, :CONTACT, :NAME, :IMAGE
+		   else
+                   	parse_err(":ALTREP parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:CN]
+		   case prop
+		   when  :ATTENDEE, :ORGANIZER
+		   else
+                   	parse_err(":CN parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:CUTYPE]
+		   case prop
+		   when :ATTENDEE
+		   else
+                   	parse_err(":CUTYPE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:DELEGATED_FROM]
+		   case prop
+		   when   :ATTENDEE
+		   else
+                   	parse_err(":DELEGATED_FROM parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:DELEGATED_TO]
+		   case prop
+		   when   :ATTENDEE
+		   else
+                   	parse_err(":DELEGATED_TO parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:DIR]
+		   case prop
+		   when  :ATTENDEE, :ORGANIZER
+		   else
+                   	parse_err(":DIR parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:ENCODING]
+		   case prop
+		   when :ATTACH, :IMAGE  
+		   else
+                   	parse_err(":ENCODING parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:FMTTYPE]
+		   case prop
+		   when  :ATTACH, :IMAGE
+		   else
+                   	parse_err(":FMTTYPE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:FBTYPE]
+		   case prop
+		   when  :FREEBUSY
+		   else
+                   	parse_err(":FBTYPE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:LANGUAGE]
+		   case prop
+		   when  :CATEGORIES, :COMMENT, :DESCRIPTION, :LOCATION, :RESOURCES, 
+		   :SUMMARY, :TZNAME,  :ATTENDEE, :CONTACT, :ORGANIZER, :REQUEST_STATUS,
+		   :NAME, :CONFERENCE
+		   else
+                   	parse_err(":LANGUAGE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:MEMBER]
+		   case prop
+		   when   :ATTENDEE
+		   else
+                   	parse_err(":MEMBER parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:PARTSTAT]
+		   case prop
+		   when  :ATTENDEE 
+		   else
+                   	parse_err(":PARTSTAT parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:RANGE]
+		   case prop
+		   when  :RECURRENCE_ID
+		   else
+                   	parse_err(":RANGE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:RELATED]
+		   case prop
+		   when :TRIGGER 
+		   else
+                   	parse_err(":RELATED parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:RELTYPE]
+		   case prop
+		   when :RELATED_TO
+		   else
+                   	parse_err(":RELTYPE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:ROLE]
+		   case prop
+		   when  :ATTENDEE
+		   else
+                   	parse_err(":ROLE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:RSVP]
+		   case prop
+		   when  :ATTENDEE
+		   else
+                   	parse_err(":RSVP parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:SENT_BY]
+		   case prop
+		   when  :ATTENDEE, :ORGANIZER
+		   else
+                   	parse_err(":SENT_BY parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:TZID]
+		   case prop
+		   when :DTEND, :DUE, :DTSTART, :RECURRENCE_ID, :EXDATE, :RDATE
+		   else
+                   	parse_err(":TZID parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:DISPLAY]
+		   case prop
+		   when  :IMAGE
+		   else
+                   	parse_err(":DISPLAY parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:FEATURE]
+		   case prop
+		   when  :CONFERENCE
+		   else
+                   	parse_err(":FEATURE parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:LABEL]
+		   case prop
+		   when  :CONFERENCE
+		   else
+                   	parse_err(":LABEL parameter given for #{prop}") 
+		   end
+	   end
+	   if params and params[:EMAIL]
+		   case prop
+		   when  :ORGANIZER, :ATTENDEE
+		   else
+                   	parse_err(":EMAIL parameter given for #{prop}") 
+		   end
+	   end
+
+
+           case prop
+	           when :TZURL, :URL, :CONFERENCE, :SOURCE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "uri"
+	                   }
+	           when :FREEBUSY
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "period"
+	                   }
+	           when :COMPLETED
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "date-time"
+	                   }
+	           when :PERCENT_COMPLETE, :PRIORITY, :REPEAT, :SEQUENCE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "integer"
+	                   }
+	           when :DURATION, :REFRESH_INTERVAL
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "duration"
+	                   }
+	           when :GEO
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "float"
+	                   }
+	           when :CREATED, :DTSTAMP, :LAST_MODIFIED
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "date-time"
+	                   }
+	           when :CALSCALE, :METHOD, :PRODID, :VERSION, :CATEGORIES, :CLASS, :COMMENT, :DESCRIPTION, :LOCATION, :RESOURCES, :STATUS, :SUMMARY, :TRANSP, :TZID, :TZNAME, :CONTACT, :RELATED_TO, :UID, :ACTION, :REQUEST_STATUS, :COLOR, :NAME
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "text"
+	                   }
+	           when :DTEND, :DUE, :DTSTART, :RECURRENCE_ID, :EXDATE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "date-time" and val.downcase != "date"
+	                   }
+	           when :RDATE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "period" and val.downcase != "date" and val.downcase != "date-time" 
+	                   }
+	           when :RRULE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "recur" 
+	                   }
+	           when :TZOFFSETFROM, :TZOFFSETTO
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "utc-offset"
+	                   }
+	           when :ATTENDEE, :ORGANIZER
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "cal-address"
+	                   }
+	           when :TRIGGER
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "duration" and val.downcase != "date-time"
+	                   }
+	           when :ATTACH, :IMAGE
+	                   params.each {|key, val|
+	                           parse_err("illegal value #{val} given for parameter #{key} of #{prop}") if key == :VALUE and val.downcase != "uri" and val.downcase != "binary"
+	                   }
+		   else
+		  end
+    end
+
+
 
 private
 

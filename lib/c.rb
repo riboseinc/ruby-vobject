@@ -29,6 +29,19 @@ module C
 				hash[:utc] = not(z.empty?)
 				hash
                      }
+    ICALPROPNAMES	= /BEGIN/i.r | /END/i.r | /CALSCALE/i.r | /METHOD/i.r | /VERSION/i.r |
+	    	/ATTACH/i.r | /IMAGE/i.r | /CATEGORIES/i.r | /RESOURCERS/i.r | /CLASS/i.r |
+		/COMMENT/i.r | /DESCRIPTION/i.r | /LOCATION/i.r | /SUMMARY/i.r | /TZID/i.r |
+		/TZNAME/i.r | /CONTACT/i.r | /RELATED-TO/i.r | /UID/i.r | /PRODID/i.r | /NAME/i.r |
+		/GEO/i.r | /PERCENT-COMPLETE/i.r | /PRIORITY/i.r | /STATUS/i.r | /COMPLETED/i.r |
+		/CREATEED/i.r | /DTSTAMP/i.r | /LAST-MODIFIED/i.r | /DTEND/i.r | /DTSTART/i.r |
+		/DUE/i.r | /RECURRENCE-ID/i.r | /EXDATE/i.r | /RDATE/i.r | /TRIGGER/i.r | 
+		/FREEBUSY/i.r | /TRANSP/i.r | /TZOFFSETFROM/i.r | /TZOFFSETTO/i.r |
+		/TZURI/i.r | /URL/i.r | /SOURCE/i.r | /CONFERENCE/i.r | /ATTENDEE/i.r |
+		/ORGANIZER/i.r | /RRULE/i.r | /ACTION/i.r | /REPEAT/i.r | /SEQUENCE/i.r |
+		/REQUEST-STATUS/i.r | /BUSYTYPE/i.r | /REFRESH-INTERVAL/i.r | /COLOR/i.r
+    beginend	= /BEGIN/i.r | /END/i.r
+    NAME        = C::XNAME | seq( ''.r ^ beginend, C::IANATOKEN )[1]
     durday      = seq(/[0-9]+/.r, 'D') {|d, _| {:days => d.to_i }}
     dursecond   = seq(/[0-9]+/.r, 'S')  {|d, _| {:seconds => d.to_i }}
     durminute   = seq(/[0-9]+/.r, 'M', dursecond._?)  {|d, _, s| 

@@ -356,6 +356,11 @@ describe Vobject do
     expect(vobj_json).to include_json(exp_json)
   end
 
+  it 'should disallow UID in an ALARM component' do
+    ics = File.read "spec/examples/spurious_property.ics"
+    expect { Vobject.parse(ics)}.to raise_error(Rsec::SyntaxError)
+  end
+
   it 'should parse iCalendar properly' do
     ics = File.read "spec/examples/timezones/America/Atikokan.ics"
     vobj_json = Vobject.parse(ics).to_json

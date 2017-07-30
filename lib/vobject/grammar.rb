@@ -19,12 +19,14 @@ module Vobject
 
 # properties with value cardinality 1
     @cardinality1 = {}
+    @cardinality1[:ICAL] = Set.new [:PRODID, :VERSION, :CALSCALE, :METHOD, :UID, :LAST_MOD, :URL,
+    			:REFRESH_INTERVAL, :SOURCE, :COLOR]
     @cardinality1[:EVENT] = Set.new [:UID, :DTSTAMP, :DTSTART, :CLASS, :CREATED, :DESCRIPTION, :GEO, :LAST_MOD,
-    			:LOCATION, :ORGANIZER, :PRIORITY, :SEQ, :STATUS, :TRANSP, :URL, :RECURID]
+    			:LOCATION, :ORGANIZER, :PRIORITY, :SEQ, :STATUS, :TRANSP, :URL, :RECURID, :COLOR]
     @cardinality1[:TODO] = Set.new [:UID, :DTSTAMP, :CLASS, :COMPLETED, :CREATED, :DESCRIPTION, :DTSTART, :GEO, :LAST_MOD,
-    			:LOCATION, :ORGANIZER, :PERCENT_COMPLETE, :PRIORITY, :SEQ, :STATUS, :SUMMARY, :URL, :RECURID]
+    			:LOCATION, :ORGANIZER, :PERCENT_COMPLETE, :PRIORITY, :SEQ, :STATUS, :SUMMARY, :URL, :RECURID, :COLOR]
     @cardinality1[:JOURNAL] = Set.new [:UID, :DTSTAMP, :CLASS, :CREATED, :DTSTART, :LAST_MOD,
-    			:ORGANIZER, :SEQ, :STATUS, :SUMMARY, :URL, :RECURID]
+    			:ORGANIZER, :SEQ, :STATUS, :SUMMARY, :URL, :RECURID, :COLOR]
     @cardinality1[:FREEBUSY] = Set.new [:UID, :DTSTAMP, :CONTACT, :DTSTART, :DTEND, :ORGANIZER, :URL]
     @cardinality1[:TIMEZONE] = Set.new [:TZID, :LAST_MOD, :TZURL]
     @cardinality1[:TZ] = Set.new [:DTSTART, :TZOFFSETTTO, :TZOFFSETFROM]
@@ -34,19 +36,19 @@ module Vobject
     @cardinality1[:AVAILABLE] = Set.new [:DTSTAMP, :DTSTART, :UID, :CREATED, :DESCRIPTION, :LAST_MOD, :LOCATION,
     				:RECURID, :RRULE, :SUMMARY]
     @cardinality1[:PARAM] = Set.new [:FMTTYPE, :LANGUAGE, :ALTREP, :FBTYPE, :TRANSP, :CUTYPE, :MEMBER, :ROLE, :PARTSTAT, :RSVP, :DELEGATED_TO, 
-    :DELEGATED_FROM, :SENT_BY, :CN, :DIR, :RANGE, :RELTYPE, :RELATED]
+    :DELEGATED_FROM, :SENT_BY, :CN, :DIR, :RANGE, :RELTYPE, :RELATED, :DISPLAY, :FEATURE, :LABEL]
 
     group 	= C::IANATOKEN
     linegroup 	= group <<  '.' 
     beginend 	= /BEGIN/i.r | /END/i.r
-    name  	= C::XNAME | seq( ''.r ^ beginend, C::IANATOKEN )[1]
 
 
 # parameters and parameter types
     paramname 	= /ALTREP/i.r | /CN/i.r | /CUTYPE/i.r | /DELEGATED-FROM/i.r | /DELEGATED-TO/i.r |
 	    		/DIR/i.r | /ENCODING/i.r | /FMTTYPE/i.r | /FBTYPE/i.r | /LANGUAGE/i.r |
 			/MEMBER/i.r | /PARTSTAT/i.r | /RANGE/i.r | /RELATED/i.r | /RELTYPE/i.r |
-			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r | /RSCALE/i.r
+			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r | /RSCALE/i.r | /DISPLAY/i.r |
+			/FEATURE/i.r | /LABEL/i.r | /EMAIL/i.r
     otherparamname = C::XNAME | seq(''.r ^ paramname, C::IANATOKEN )[1]
     paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)).upcase }
     quotedparamvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } 
@@ -87,6 +89,17 @@ module Vobject
     rfc4288typename 	= rfc4288regname
     rfc4288subtypename 	= rfc4288regname
     fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
+
+    # RFC 7986
+    displayval		= /BADGE/i.r | /GRAPHIC/i.r | /FULLSIZE/i.r | /THUMBNAIL/i.r | C::XNAME | C::IANATOKEN
+    displayvallist	= seq(displayval, ',', lazy{displayvallist}) {|d,_,l|
+	    			[d, l].flatten
+			} | displayval.map {|d| [d] }
+    featureval		= /AUDIO/i.r | /CHAT/i.r | /FEED/i.r | /MODERATOR/i.r | /PHONE/i.r | /SCREEN/i.r |
+	    			/VIDEO/i.r | C::XNAME | C::IANATOKEN
+    featurevallist	= seq(featureval, ',', lazy{featurevallist}) {|d,_,l|
+	    			[d, l].flatten
+			} | featureval.map {|d| [d] }
     			
     param 	= seq(/ALTREP/i.r, '=', quotedparamvalue) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
@@ -131,6 +144,15 @@ module Vobject
 			{name.upcase.gsub(/-/,"_").to_sym => val}
 		} | seq(/VALUE/i.r, '=', valuetype) {|name, _, val|
 			{name.upcase.gsub(/-/,"_").to_sym => val}
+		# RFC 7986
+		} | seq(/DISPLAY/i.r, '=', displayvallist) {|name, _, val| 
+			{name.upcase.gsub(/-/,"_").to_sym => val}
+		} | seq(/FEATURE/i.r, '=', featurevallist) {|name, _, val| 
+			{name.upcase.gsub(/-/,"_").to_sym => val}
+		} | seq(/EMAIL/i.r, '=', paramvalue) {|name, _, val| 
+			{name.upcase.gsub(/-/,"_").to_sym => val}
+		} | seq(/LABEL/i.r, '=', paramvalue) {|name, _, val| 
+			{name.upcase.gsub(/-/,"_").to_sym => val}
     		} | seq(otherparamname, '=', pvalueList) {|name, _, val|
 	    		val = val[0] if val.length == 1
 			{name.upcase.gsub(/-/,"_").to_sym => val}
@@ -150,11 +172,12 @@ module Vobject
 		} |
 	    	seq(';'.r >> param ).map {|e| e[0] } 
 
-    contentline = seq(linegroup._?, name, params._?, ':', 
+    contentline = seq(linegroup._?, C::NAME, params._?, ':', 
 		      C::VALUE, /(\r|\n|\r\n)/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {:value => value} }
 			hash[key][:group] = group[0]  unless group.empty?
+			Vobject::Typegrammars.paramcheck(key, params.empty? ? {} : params[0])
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 		}
@@ -270,12 +293,16 @@ module Vobject
 				end
 				if e[:ACTION] == 'AUDIO'
 					parse_err("Multiple ATTACH properties") if e.has_key?(:ATTACH) and e[:ATTACH].kind_of?(Array)
+					parse_err("Invalid DESCRIPTION property") if e.has_key?(:DESCRIPTION) 
+					parse_err("Invalid SUMMARY property") if e.has_key?(:SUMMARY) 
+					parse_err("Invalid ATTENDEE property") if e.has_key?(:ATTENDEE) 
 				elsif e[:ACTION] == 'DISP'
 					parse_err("Missing DESCRIPTION property") unless e.has_key?(:DESCRIPTION)
+					parse_err("Invalid ATTACH property") if e.has_key?(:ATTACH) 
+					parse_err("Invalid SUMMARY property") if e.has_key?(:SUMMARY) 
+					parse_err("Invalid ATTENDEE property") if e.has_key?(:ATTENDEE) 
 				elsif e[:ACTION] == 'EMAIL'
 					parse_err("Missing DESCRIPTION property") unless e.has_key?(:DESCRIPTION)
-					parse_err("Missing SUMMARY property") unless e.has_key?(:SUMMARY)
-					parse_err("Missing ATTENDEE property") unless e.has_key?(:ATTENDEE)
 				end
 				{ :VALARM => e }
 			}
@@ -331,7 +358,7 @@ module Vobject
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
 				{ n1.to_sym => p }
 			}
-	ianacomp	= seq(/BEGIN:/i.r, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::IANATOKEN, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
+	ianacomp	= seq(/BEGIN:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
@@ -388,17 +415,23 @@ module Vobject
 			} | component
 
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
+			/UID/i.r | /LAST-MOD/i.r | /URL/i.r | /REFRESH/i.r | /SOURCE/i.r | /COLOR/i.r | # RFC 7986
+			/NAME/i.r | /DESCRIPTION/i.r | /CATEGORIES/i.r | /IMAGE/i.r | # RFC 7986
 	                C::XNAME | C::IANATOKEN
 	calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {:value => Vobject::Typegrammars.typematch(key, params[0], :CALENDAR, value) }}
+			Vobject::Typegrammars.paramcheck(key, params.empty? ? {} : params[0])
 			hash[key][:params] = params[0] unless params.empty?
 			hash
+			# TODO not doing constraint that each description must be in a different language
 	}
 	calprops    = (''.r & beginend).map { {} } | 
 		seq(calprop, lazy{calprops} ) {|c, rest|
 	        c.merge( rest) {|key, old, new|
-	            parse_err("Multiple instances of #{key}") if key == :PRODID or key == :VERSION or key == :CALSCALE or key == :METHOD
+		if @cardinality1[:ICAL].include?(key.upcase)
+						parse_err("Violated cardinality of property #{key}")
+		end
 	            [old, new].flatten
 	        }
 	}
