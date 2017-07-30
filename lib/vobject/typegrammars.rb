@@ -317,6 +317,11 @@ module Vobject
 	  methodvalue.eof
   end
 
+  # RFC 7953
+  def busytype
+	  busytype = /BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | /BUSY/i.r |  C::IANATOKEN | C::XNAME
+	  busytype.eof
+  end
 
 
   # text escapes: \\ \; \, \N \n
@@ -370,7 +375,9 @@ module Vobject
     when :COMPLETED, :CREATED, :DTSTAMP, :LAST_MODIFIED
 	    ret = date_time_utcT._parse ctx1
     when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
-	    if params and params[:VALUE] == 'DATE'
+	    if (key == :DTEND or key == :DTSTART) and (component == :VAVAILABILITY or component == :AVAILABLE)
+	    		ret = date_timeT._parse ctx1
+	    elsif params and params[:VALUE] == 'DATE'
 	    	ret = dateT._parse ctx1
 	    else
 		if component == :FREEBUSY
@@ -452,6 +459,9 @@ module Vobject
 	    ret = integer._parse ctx1
 	when :REQUEST_STATUS
 	    ret = request_statusvalue._parse ctx1
+	# RFC 7953
+	when :BUSYTYPE
+		ret = busytype._parse ctx1
     else
 	    if params and params[:VALUE]
 		case params[:VALUE]

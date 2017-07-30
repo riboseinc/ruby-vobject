@@ -29,6 +29,10 @@ module Vobject
     @cardinality1[:TIMEZONE] = Set.new [:TZID, :LAST_MOD, :TZURL]
     @cardinality1[:TZ] = Set.new [:DTSTART, :TZOFFSETTTO, :TZOFFSETFROM]
     @cardinality1[:ALARM] = Set.new [:ACTION, :TRIGGER, :DURATION, :REPEAT, :DESCRIPTION, :SUMMARY]
+    @cardinality1[:VAVAILABILITY] = Set.new [:UID, :DTSTAMP, :DTSTART, :BUSYTYPE, :CLASS, :CREATED, :DESCRIPTION, :LAST_MOD,
+    			:LOCATION, :ORGANIZER, :PRIORITY, :SEQ, :SUMMARY, :URL]
+    @cardinality1[:AVAILABLE] = Set.new [:DTSTAMP, :DTSTART, :UID, :CREATED, :DESCRIPTION, :LAST_MOD, :LOCATION,
+    				:RECURID, :RRULE, :SUMMARY]
     @cardinality1[:PARAM] = Set.new [:FMTTYPE, :LANGUAGE, :ALTREP, :FBTYPE, :TRANSP, :CUTYPE, :MEMBER, :ROLE, :PARTSTAT, :RSVP, :DELEGATED_TO, 
     :DELEGATED_FROM, :SENT_BY, :CN, :DIR, :RANGE, :RELTYPE, :RELATED]
 
@@ -42,7 +46,7 @@ module Vobject
     paramname 	= /ALTREP/i.r | /CN/i.r | /CUTYPE/i.r | /DELEGATED-FROM/i.r | /DELEGATED-TO/i.r |
 	    		/DIR/i.r | /ENCODING/i.r | /FMTTYPE/i.r | /FBTYPE/i.r | /LANGUAGE/i.r |
 			/MEMBER/i.r | /PARTSTAT/i.r | /RANGE/i.r | /RELATED/i.r | /RELTYPE/i.r |
-			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r
+			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r | /RSCALE/i.r
     otherparamname = C::XNAME | seq(''.r ^ paramname, C::IANATOKEN )[1]
     paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)).upcase }
     quotedparamvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } 
@@ -247,8 +251,7 @@ module Vobject
 				[old,  new].flatten
 				}
 			}
-        eventprops	= 
-			seq(contentline, lazy{eventprops}) {|c, rest|
+        eventprops	= seq(contentline, lazy{eventprops}) {|c, rest|
 			k = c.keys[0]
 			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :EVENT, c[k][:value])
 				c.merge( rest ) { | key, old, new|
@@ -334,9 +337,52 @@ module Vobject
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
 				{ n1.to_sym => p }
 			}
+	# RFC 7953
+        availableprops	= seq(contentline, lazy{availableprops}) {|c, rest|
+			k = c.keys[0]
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :AVAILABLE, c[k][:value])
+				c.merge( rest ) { | key, old, new|
+				if @cardinality1[:AVAILABLE].include?(key.upcase)
+						parse_err("Violated cardinality of property #{key}")
+				end
+				[old,  new].flatten
+				}
+			} |
+			(''.r & beginend).map {|e| {}   } 
+	availablec		= seq(/BEGIN:AVAILABLE(\r|\n|\r\n)/i.r, availableprops, /END:AVAILABLE(\r|\n|\r\n)/i.r) {|_, e, _|
+				#parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP) # required in spec, but not in examples
+				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
+				parse_err("Missing UID property") unless e.has_key?(:UID)
+				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
+				{ :AVAILABLE => e }
+			}
+        availabilityprops	= seq(contentline, lazy{availabilityprops}) {|c, rest|
+			k = c.keys[0]
+			c[k][:value] = Vobject::Typegrammars.typematch(k, c[k][:params], :VAVAILABILITY, c[k][:value])
+				c.merge( rest ) { | key, old, new|
+				if @cardinality1[:VAVAILABILITY].include?(key.upcase)
+						parse_err("Violated cardinality of property #{key}")
+				end
+				[old,  new].flatten
+				}
+			} |
+			(''.r & beginend).map {|e| {}   } 
+	vavailabilityc		= seq(/BEGIN:VAVAILABILITY(\r|\n|\r\n)/i.r, availabilityprops, availablec.star, /END:VAVAILABILITY(\r|\n|\r\n)/i.r) {|_, e, a, _|
+				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
+				parse_err("Missing UID property") unless e.has_key?(:UID)
+				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
+				parse_err("Missing DTSTART property with DURATION property") if e.has_key?(:DURATION) and !e.has_key?(:DTSTART)
+				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
+					e[:DTEND][:value] < e[:DTSTART][:value]
+				# TODO not doing constraint that dtend and dtstart are both or neither local time
+				# TODO not doing constraint that each TZID param must have matching VTIMEZONE component
+				a.each do |x|
+					e = e.merge x
+				end
+				{ :VAVAILABILITY => e }
+			}
 
-
-	component	= eventc | todoc | journalc | freebusyc | timezonec | ianacomp | xcomp
+	component	= eventc | todoc | journalc | freebusyc | timezonec | ianacomp | xcomp | vavailabilityc
 	components 	= seq(component, lazy{components}) {|c, r|
 				c.merge(r)
 			} | component

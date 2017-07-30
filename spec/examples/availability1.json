@@ -1,0 +1,89 @@
+{
+  "VCALENDAR":{
+    "CALSCALE":{
+      "value":"GREGORIAN"
+    },
+    "PRODID":{
+      "value":"-//example.com//iCalendar 2.0//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VEVENT":{
+      "DTSTAMP":{
+        "value":"2011-11-13 04:41:11 UTC"
+      },
+      "DTSTART":{
+        "value":"2011-11-06 07:00:00 UTC",
+        "params":{
+          "TZID":"America/Montreal"
+        }
+      },
+      "DURATION":{
+        "value":"PT2H"
+      },
+      "SUMMARY":{
+        "value":"Meeting"
+      },
+      "UID":{
+        "value":"768CB0C2-8642-43F7-A6C4-F8BB04B829B4"
+      }
+    },
+    "VAVAILABILITY":{
+      "UID":{
+        "value":"452DFCA7-3203-4A3D-9A9A-99753A383B41"
+      },
+      "DTSTAMP":{
+        "value":"2011-10-05 13:32:25 UTC"
+      },
+      "DTSTART":{
+        "value":"2011-10-02 00:00:00 +1000",
+        "params":{
+          "TZID":"America/Montreal"
+        }
+      },
+      "AVAILABLE":{
+        "UID":{
+          "value":"466D5C68-5C4A-4078-AF5D-9C55EA9145D7"
+        },
+        "SUMMARY":{
+          "value":"Monday to Friday from 8:00 to 18:00"
+        },
+        "DTSTART":{
+          "value":"2011-10-02 08:00:00 +1100",
+          "params":{
+            "TZID":"America/Montreal"
+          }
+        },
+        "DTEND":{
+          "value":"2011-10-02 18:00:00 +1100",
+          "params":{
+            "TZID":"America/Montreal"
+          }
+        },
+        "RRULE":{
+          "value":{
+            "freq":"WEEKLY",
+            "byday":[
+              {
+                "weekday":"MO"
+              },
+              {
+                "weekday":"TU"
+              },
+              {
+                "weekday":"WE"
+              },
+              {
+                "weekday":"TH"
+              },
+              {
+                "weekday":"FR"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

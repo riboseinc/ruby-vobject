@@ -1,0 +1,104 @@
+{
+  "VCALENDAR":{
+    "CALSCALE":{
+      "value":"GREGORIAN"
+    },
+    "PRODID":{
+      "value":"-//example.com//iCalendar 2.0//EN"
+    },
+    "VERSION":{
+      "value":"2.0"
+    },
+    "VEVENT":{
+      "DTSTAMP":{
+        "value":"2011-11-13 04:41:11 UTC"
+      },
+      "DTSTART":{
+        "value":"2011-11-06 05:00:00 UTC",
+        "params":{
+          "TZID":"America/Denver"
+        }
+      },
+      "DURATION":{
+        "value":"PT2H"
+      },
+      "SUMMARY":{
+        "value":"Lunch meeting in Denver"
+      },
+      "UID":{
+        "value":"2346C09A-42BF-439E-916C-FC83AF869171"
+      }
+    },
+    "VAVAILABILITY":{
+      "ORGANIZER":{
+        "value":"mailto:bernard@example.com"
+      },
+      "UID":{
+        "value":"F01411E3-38B8-4490-8A1F-0CCEC57A0943"
+      },
+      "DTSTAMP":{
+        "value":"2011-10-05 13:32:25 UTC"
+      },
+      "DTSTART":{
+        "value":"2011-10-23 00:00:00 +1100",
+        "params":{
+          "TZID":"America/Denver"
+        }
+      },
+      "DTEND":{
+        "value":"2011-10-30 00:00:00 +1100",
+        "params":{
+          "TZID":"America/Denver"
+        }
+      },
+      "PRIORITY":{
+        "value":1
+      },
+      "AVAILABLE":{
+        "UID":{
+          "value":"A35AA091-3846-48ED-96F6-881E8A0D0A93"
+        },
+        "SUMMARY":{
+          "value":"Monday to Friday from 9:00 to 17:00"
+        },
+        "DTSTART":{
+          "value":"2011-10-23 08:00:00 +1100",
+          "params":{
+            "TZID":"America/Denver"
+          }
+        },
+        "DTEND":{
+          "value":"2011-10-23 18:00:00 +1100",
+          "params":{
+            "TZID":"America/Denver"
+          }
+        },
+        "RRULE":{
+          "value":{
+            "freq":"WEEKLY",
+            "byday":[
+              {
+                "weekday":"MO"
+              },
+              {
+                "weekday":"TU"
+              },
+              {
+                "weekday":"WE"
+              },
+              {
+                "weekday":"TH"
+              },
+              {
+                "weekday":"FR"
+              }
+            ]
+          }
+        },
+        "LOCATION":{
+          "value":"Denver"
+        }
+      }
+    }
+  }
+}
