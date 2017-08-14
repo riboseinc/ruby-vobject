@@ -10,7 +10,7 @@ module C
     BOOLEAN = ( /TRUE/i.r.map{|x| true} | /FALSE/i.r.map{|x| false} )
     IANATOKEN =  /[a-zA-Z\d\-]+/.r
     vendorid   = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-    XNAME = seq( '[xX]-', vendorid, '-', IANATOKEN)
+    XNAME = seq( '[xX]-', vendorid, '-', IANATOKEN).map(&:join)
     #TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[nN;,\\])*/.r   
     TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r   
     DATE       = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
