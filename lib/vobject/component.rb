@@ -1,12 +1,13 @@
 require 'vobject'
 require 'vobject/property'
-require 'vobject/grammar'
+require 'vobject/vcalendar/grammar'
 require 'json'
 
 class Vobject::Component
 
   attr_accessor :comp_name, :children
 
+=begin
   class << self
 
     def parse(vcf)
@@ -23,6 +24,7 @@ class Vobject::Component
     end
 
   end
+=end
 
   def initialize key, cs
     self.comp_name = key
@@ -39,6 +41,17 @@ class Vobject::Component
         cc = child_class(key, val)
         self.children << cc.new(key, val)
     end
+  end
+
+  def child_class key, val
+    if !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+	    base_class = property_base_class
+    else
+	    base_class = Vobject::Component
+    end
+    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
+    camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
+    base_class.const_get(camelized_key) rescue base_class
   end
 
   def to_s
@@ -79,33 +92,6 @@ class Vobject::Component
     comp_name
   end
 
-  def child_class key, val
-    if !(val.is_a?(Hash) and !val.has_key?(:value) ) 
-	    base_class = property_base_class
-    elsif key == :VTODO
-	    base_class = Vobject::Component::ToDo
-    elsif key == :VFREEBUSY
-	    base_class = Vobject::Component::FreeBusy
-    elsif key == :JOURNAL
-	    base_class = Vobject::Component::Journal
-    elsif key == :STANDARD
-	    base_class = Vobject::Component::Timezone::Standard
-    elsif key == :DAYLIGHT
-	    base_class = Vobject::Component::Timezone::Daylight
-    elsif key == :VTIMEZONE
-	    base_class = Vobject::Component::Timezone
-    elsif key == :VEVENT
-	    base_class = Vobject::Component::Event
-    elsif key == :VALARM
-	    base_class = Vobject::Component::Alarm
-    else
-	    base_class = Vobject::Component
-    end
-    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
-    camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
-    base_class.const_get(camelized_key) rescue base_class
-  end
-
   def property_base_class
     Vobject::Property
   end
@@ -124,20 +110,78 @@ class Vobject::Component
 
 end
 
-class Vobject::Component::ToDo < Vobject::Component
+
+class Vobject::Component::Vcalendar < Vobject::Component
+
+  attr_accessor :comp_name, :children
+
+  class << self
+
+    def parse(vcf)
+      hash = Vobject::Vcalendar::Grammar.parse(vcf)
+      comp_name = hash.keys.first
+
+      self.new comp_name, hash[comp_name]
+    end
+
+
+    def initialize key, cs
+	    super key, cs  
+    end
+
+  def child_class key, val
+    if !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+	    base_class = property_base_class
+    elsif key == :VTODO
+	    base_class = Vobject::Component::Vcalendar::ToDo
+    elsif key == :VFREEBUSY
+	    base_class = Vobject::Component::Vcalendar::FreeBusy
+    elsif key == :JOURNAL
+	    base_class = Vobject::Component::Vcalendar::Journal
+    elsif key == :STANDARD
+	    base_class = Vobject::Component::Vcalendar::Timezone::Standard
+    elsif key == :DAYLIGHT
+	    base_class = Vobject::Component::Vcalendar::Timezone::Daylight
+    elsif key == :VTIMEZONE
+	    base_class = Vobject::Component::Vcalendar::Timezone
+    elsif key == :VEVENT
+	    base_class = Vobject::Component::Vcalendar::Event
+    elsif key == :VALARM
+	    base_class = Vobject::Component::Vcalendar::Alarm
+    else
+	    base_class = Vobject::Component::Vcalendar
+    end
+    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
+    camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
+    base_class.const_get(camelized_key) rescue base_class
+  end
+
+    private
+
+    def raise_invalid_parsing
+      raise "Vobject component parse failed"
+    end
+
+  end
 end
-class Vobject::Component::Freebusy < Vobject::Component
+
+
+
+
+class Vobject::Component::Vcalendar::ToDo < Vobject::Component::Vcalendar
 end
-class Vobject::Component::Journal < Vobject::Component
+class Vobject::Component::Vcalendar::Freebusy < Vobject::Component::Vcalendar
 end
-class Vobject::Component::Timezone < Vobject::Component
+class Vobject::Component::Vcalendar::Journal < Vobject::Component::Vcalendar
 end
-class Vobject::Component::Timezone::Standard < Vobject::Component::Timezone
+class Vobject::Component::Vcalendar::Timezone < Vobject::Component::Vcalendar
 end
-class Vobject::Component::Timezone::Daylight < Vobject::Component::Timezone
+class Vobject::Component::Vcalendar::Timezone::Standard < Vobject::Component::Vcalendar::Timezone
 end
-class Vobject::Component::Event < Vobject::Component
+class Vobject::Component::Vcalendar::Timezone::Daylight < Vobject::Component::Vcalendar::Timezone
 end
-class Vobject::Component::Alarm < Vobject::Component
+class Vobject::Component::Vcalendar::Event < Vobject::Component::Vcalendar
+end
+class Vobject::Component::Vcalendar::Alarm < Vobject::Component::Vcalendar
 end
 

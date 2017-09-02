@@ -4,8 +4,8 @@ require "uri"
 require "date"
 require "tzinfo"
 include Rsec::Helpers
-require_relative "../c"
-require_relative "../error"
+require_relative "../../c"
+require_relative "../../error"
 require_relative "./propertyparent"
 require 'vobject'
 

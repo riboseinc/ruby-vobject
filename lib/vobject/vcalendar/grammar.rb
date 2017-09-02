@@ -4,11 +4,11 @@ require "uri"
 require "date"
 require "tzinfo"
 include Rsec::Helpers
-require_relative "../c"
-require_relative "../error"
+require_relative "../../c"
+require_relative "../../error"
 require "vobject"
-require "vobject/typegrammars"
-require "vobject/paramcheck"
+require "vobject/vcalendar/typegrammars"
+require "vobject/vcalendar/paramcheck"
 
 module Vobject::Vcalendar
  class Grammar

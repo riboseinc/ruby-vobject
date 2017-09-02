@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.platform      = Gem::Platform.local
   spec.require_paths = ['lib']
 
-  spec.summary       = %q{Parse iCalendar or vCar into a ruby hash.}
+  spec.summary       = %q{Parse iCalendar or vCard into a ruby hash.}
   spec.description   = %q{The main purpose of the gem is to parse vobject formatted text into a ruby
 hash format. Currently there are two possiblities of vobjects, namely
 iCalendar (https://tools.ietf.org/html/rfc5545) and vCard

@@ -1,8 +1,7 @@
-require 'vobject/typegrammars'
-require 'vobject/grammar'
+require 'vobject/vcalendar/typegrammars'
+require 'vobject/vcalendar/grammar'
 require 'vobject/component'
 
-module Vobject
 
 class Vcalendar < Vobject::Component
 
@@ -19,7 +18,7 @@ class Vcalendar < Vobject::Component
   end
 
   def parse(vcf)
-      return Vobject::Component.parse(vcf)
+      return Vobject::Component::Vcalendar.parse(vcf)
   end
 
   def initialize version
@@ -33,5 +32,4 @@ class Vcalendar < Vobject::Component
   end
   
   
-end
 end
