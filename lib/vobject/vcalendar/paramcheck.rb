@@ -6,7 +6,7 @@ require "tzinfo"
 include Rsec::Helpers
 require_relative "../../c"
 require_relative "../../error"
-require 'vobject'
+#require 'vobject'
 
 module Vobject::Vcalendar
  class Paramcheck
