@@ -7,8 +7,8 @@ include Rsec::Helpers
 require_relative "../../c"
 require_relative "../../error"
 require "vobject"
-#require "vobject/vcalendar/typegrammars"
-#require "vobject/vcalendar/paramcheck"
+require "vobject/vcalendar/typegrammars"
+require "vobject/vcalendar/paramcheck"
 
 module Vobject::Vcalendar
  class Grammar
