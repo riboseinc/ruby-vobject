@@ -16,16 +16,22 @@ require 'vobject/parameter'
           self.prop_name = key
 	}
       else
-        self.group = options[:group]
         self.prop_name = key
-	unless options[:params].nil? or options[:params].empty?
+	if options.nil? or options.empty?
+		self.group = nil
 		self.params = []
-		options[:params].each {|k, v|
-			self.params << parameter_base_class.new(k, v)
-		}
+        	self.value = nil
+	else
+        	self.group = options[:group]
+        	self.prop_name = key
+		unless options[:params].nil? or options[:params].empty?
+			self.params = []
+			options[:params].each {|k, v|
+				self.params << parameter_base_class.new(k, v)
+			}
+		end
+        	self.value = parse_value(options[:value])
 	end
-        #self.params = options[:params]
-        self.value = parse_value(options[:value])
      end
 
       raise_invalid_initialization if key != name

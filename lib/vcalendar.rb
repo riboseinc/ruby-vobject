@@ -1,5 +1,6 @@
 #require 'vobject/vcalendar/typegrammars'
 #require 'vobject/vcalendar/grammar'
+require 'vobject'
 require 'vobject/component'
 
 

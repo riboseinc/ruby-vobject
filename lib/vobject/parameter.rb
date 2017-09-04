@@ -1,5 +1,7 @@
+module Vobject
 
-  class Vobject::Parameter
+
+  class Parameter
 
     MAX_LINE_WIDTH = 75
 
@@ -96,3 +98,4 @@
 
   end
 
+ end
