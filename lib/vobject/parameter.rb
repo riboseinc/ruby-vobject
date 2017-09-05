@@ -19,7 +19,7 @@ module Vobject
         self.value = options
      end
 
-      raise_invalid_initialization if key != name
+      raise_invalid_initialization(key, name) if key != name
     end
 
     def to_s
@@ -74,8 +74,8 @@ module Vobject
 	  end
 
 
-    def raise_invalid_initialization
-      raise "vObject property initialization failed"
+    def raise_invalid_initialization(key, name)
+      raise "vObject property initialization failed (#{key}, #{name})"
     end
 
     # This implements the line folding as specified in
