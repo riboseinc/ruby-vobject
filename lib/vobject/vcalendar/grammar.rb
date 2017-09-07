@@ -74,18 +74,17 @@ module Vobject::Vcalendar
 		/TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | C::XNAME | C::IANATOKEN
     rolevalue 	= /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r | 
 	    		C::XNAME | C::IANATOKEN
-    pvalueList 	= (paramvalue & /[;:]/.r).map {|e| 
-	    		[e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
-    		} | (seq(paramvalue, ','.r, lazy{pvalueList}) & /[;:]/.r).map {|e, _, list|
-			ret = list << e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n") 
-			ret
-		}
-    quotedStringList = (C::QUOTEDSTRING & /[;:]/.r).map {|e|
-                        [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
-                } | (seq(C::QUOTEDSTRING, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
+    pvalueList 	= (seq(paramvalue, ','.r, lazy{pvalueList}) & /[;:]/.r).map {|e, _, list|
+			[e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n") , list].flatten
+		} | (paramvalue & /[;:]/.r).map {|e|
+                        [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
+               }
+    quotedStringList = (seq(C::QUOTEDSTRING, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
                          ret = list << rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))
                          ret
-		}           
+		} | (C::QUOTEDSTRING & /[;:]/.r).map {|e|
+                        [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
+                }
 
     rfc4288regname 	= /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
     rfc4288typename 	= rfc4288regname
