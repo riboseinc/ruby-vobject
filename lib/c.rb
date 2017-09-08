@@ -75,8 +75,8 @@ module C
     #nonASCII    = utf8_2 | utf8_3 | utf8_4
     nonASCII    = /[\u0080-\u3ffff]/
     wsp         = /[ \t]/.r
-    qSafeChar   = wsp | /[!\u0023-\u007e]/ | nonASCII
-    safeChar    = wsp | /[!\u0023-\u0039\u003c-\u007e]/  | nonASCII
+    qSafeChar   = wsp | /[\u0021\u0023-\u007e]/ | nonASCII
+    safeChar    = wsp | /[\u0021\u0023-\u0039\u003c-\u007e]/  | nonASCII
     vChar       = /[\u0021-\u007e]/.r
     valueChar   = wsp | vChar | nonASCII
     dQuote      = /"/.r
