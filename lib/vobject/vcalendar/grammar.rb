@@ -80,8 +80,7 @@ module Vobject::Vcalendar
                         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
                }
     quotedStringList = (seq(C::QUOTEDSTRING, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
-                         ret = list << rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))
-                         ret
+                         [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")), list].flatten
 		} | (C::QUOTEDSTRING & /[;:]/.r).map {|e|
                         [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
                 }

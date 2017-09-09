@@ -41,8 +41,8 @@
           "value":"mailto:foo1@bar",
           "params":{
             "DELEGATED_TO":[
-              "mailto:foo8@bar",
-              "mailto:foo7@bar"
+              "mailto:foo7@bar",
+              "mailto:foo8@bar"
             ],
             "CN":"Foo, Bar"
           }
@@ -51,8 +51,8 @@
           "value":"mailto:foo2@bar",
           "params":{
             "DELEGATED_TO":[
-              "mailto:foo8@bar",
-              "mailto:foo7@bar"
+              "mailto:foo7@bar",
+              "mailto:foo8@bar"
             ],
             "CN":"Foo; Bar"
           }

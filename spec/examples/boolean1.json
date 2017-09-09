@@ -30,8 +30,8 @@
           "value":"mailto:jsmith@example.com",
           "params":{
             "DELEGATED_TO":[
-              "mailto:jqpublic@example.com",
-              "mailto:jdoe@example.com"
+              "mailto:jdoe@example.com",
+              "mailto:jqpublic@example.com"
             ]
           }
         }

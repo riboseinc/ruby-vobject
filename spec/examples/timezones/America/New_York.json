@@ -1,80 +1,24 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//tzurl.org//NONSGML Olson 2012h//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VTIMEZONE":{
-      "TZID":{
-        "value":"America/New_York"
-      },
-      "X_LIC_LOCATION":{
-        "value":"America/New_York"
-      },
-      "DAYLIGHT":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"05",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"04",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"EDT"
-        },
-        "DTSTART":{
-          "value":"1970-03-08 02:00:00 +1000"
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "bymonth":"3",
-            "byday":{
-              "weekday":"SU"
-            }
-          }
-        }
-      },
-      "STANDARD":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"04",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"05",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"EST"
-        },
-        "DTSTART":{
-          "value":"1970-11-01 02:00:00 +1000"
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "bymonth":"11",
-            "byday":{
-              "weekday":"SU"
-            }
-          }
-        }
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//tzurl.org//NONSGML Olson 2012h//EN"},
+   "VERSION":{"value":"2.0"},
+   "VTIMEZONE":
+    {"TZID":{"value":"America/New_York"},
+     "X_LIC_LOCATION":{"value":"America/New_York"},
+     "DAYLIGHT":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"05", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"04", "min":"00"}},
+       "TZNAME":{"value":"EDT"},
+       "DTSTART":{"value":"1970-03-08 02:00:00 +1000"},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY", "bymonth":["3"], "byday":[{"weekday":"SU"}]}}},
+     "STANDARD":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"04", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"05", "min":"00"}},
+       "TZNAME":{"value":"EST"},
+       "DTSTART":{"value":"1970-11-01 02:00:00 +1000"},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY",
+           "bymonth":["11"],
+           "byday":[{"weekday":"SU"}]}}}}}}

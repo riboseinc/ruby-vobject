@@ -30,7 +30,8 @@ require 'vobject/parameter'
 				self.params << parameter_base_class.new(k, v)
 			}
 		end
-        	self.value = parse_value(options[:value])
+        	#self.value = parse_value(options[:value])
+        	self.value = options[:value]
 	end
      end
 
@@ -41,10 +42,8 @@ require 'vobject/parameter'
       line = group ? "#{group}." : ""
       line << "#{name}"
 
-      (params || {}).each do |pname, pvalue|
-        pvalue.to_s.gsub!(/\n/, '\n')
-
-        line << ";#{pname}=#{pvalue}"
+      (params || {}).each do |p|
+        line << p.to_s
       end
 
       line << ":#{value}"
@@ -62,7 +61,7 @@ require 'vobject/parameter'
 		    ret[prop_name] = ret[prop_name] << c.to_hash[prop_name]
 	    end
     else
-        ret = {prop_name => {:value => value }}
+        ret = {prop_name => {:value => value.to_hash }}
         ret[prop_name][:group] = group unless group.nil?
         if params
             ret[prop_name][:params] = {}

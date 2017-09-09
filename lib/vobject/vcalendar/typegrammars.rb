@@ -8,6 +8,7 @@ require_relative "../../c"
 require_relative "../../error"
 require_relative "./propertyparent"
 require 'vobject'
+require_relative "./propertyvalue"
 
 module Vobject::Vcalendar
  class Typegrammars
@@ -23,15 +24,15 @@ module Vobject::Vcalendar
     seconds 	= /[0-9]{1,2}/.r
     byseclist 	= seq(seconds, ',', lazy{byseclist}) {|s, _, l|
 	    		[s, l].flatten
-	    	} | seconds.map {|s| s}
+	    	} | seconds.map {|s| [s]}
     minutes 	= /[0-9]{1,2}/.r
     byminlist 	= seq(minutes, ',', lazy{byminlist}) {|m, _, l|
 	    		[m, l].flatten
-		} | minutes.map {|m| m}
+		} | minutes.map {|m| [m]}
     hours 	= /[0-9]{1,2}/.r
     byhrlist 	= seq(hours, ',', lazy{byhrlist}) {|h, _, l|
 	    		[h, l].flatten
-		} | hours.map {|h| h}
+		} | hours.map {|h| [h]}
     ordwk 	= /[0-9]{1,2}/.r
     weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
     weekdaynum1	= seq(C::SIGN._?, ordwk) {|s, o|
@@ -46,7 +47,7 @@ module Vobject::Vcalendar
 	    	}
     bywdaylist 	= seq(weekdaynum, ',', lazy{bywdaylist}) {|w, _, l|
 	    		[w, l].flatten
-		} | weekdaynum.map {|w| w} 
+		} | weekdaynum.map {|w| [w]} 
     ordmoday 	= /[0-9]{1,2}/.r
     monthdaynum = seq(C::SIGN._?, ordmoday) {|s, o|
 	    		h = {:ordmoday => o}
@@ -55,7 +56,7 @@ module Vobject::Vcalendar
 	    	}
     bymodaylist = seq(monthdaynum, ',', lazy{bymodaylist}) {|m, _, l|
 	    		[m, l].flatten
-		} | monthdaynum.map {|m| m}
+		} | monthdaynum.map {|m| [m]}
     ordyrday 	= /[0-9]{1,3}/.r
     yeardaynum	= seq(C::SIGN._?, ordyrday) {|s, o|
 	    		h = {:ordyrday => o}
@@ -64,7 +65,7 @@ module Vobject::Vcalendar
 	    	}
     byyrdaylist = seq(yeardaynum, ',', lazy{byyrdaylist}) {|y, _, l|
 	    		[y, l].flatten
-		} | yeardaynum.map {|y| y}
+		} | yeardaynum.map {|y| [y]}
     weeknum 	= seq(C::SIGN._?, ordwk) {|s, o|
 	    		h = {:ordwk => o}
 			h[:sign] = s[0] unless s.empty?
@@ -72,17 +73,17 @@ module Vobject::Vcalendar
 	    	}
     bywknolist 	= seq(weeknum, ',', lazy{bywknolist}) {|w, _, l|
 	    		[w, l].flatten
-		} | weeknum.map {|w| w}
+		} | weeknum.map {|w| [w]}
     #monthnum 	= /[0-9]{1,2}/.r
     # RFC 7529 add leap month indicator
     monthnum 	= /[0-9]{1,2}L?/i.r
     bymolist 	= seq(monthnum, ',', lazy{bymolist}) {|m, _, l|
 	    		[m, l].flatten
-		} | monthnum.map {|m| m}
+		} | monthnum.map {|m| [m]}
     setposday	= yeardaynum
     bysplist 	= seq(setposday, ',', lazy{bysplist}) {|s, _, l|
 	    		[s, l].flatten
-		} | setposday.map {|s| s}
+		} | setposday.map {|s| [s]}
     # http://www.unicode.org/repos/cldr/tags/latest/common/bcp47/calendar.xml
     rscale	= C::XNAME | /buddhist/i.r | /chinese/i.r | /coptic/i.r | /dangi/i.r |
 	    	/ethioaa/i.r | /ethiopic-amete-alem/i.r | /ethiopic/i.r |
@@ -108,32 +109,37 @@ module Vobject::Vcalendar
 	    # RFC 7529
 	    seq(/RSCALE/i.r, '=', rscale)  {|k, _, v| {:rscale => v} } | 
 	    seq(/SKIP/i.r, '=', skip)  {|k, _, v| {:skip => v} } 
-    recur 	= seq(recur_rule_part, ';', lazy{recur}) {|h, _, r| h.merge r } | 
+    recur1 	= seq(recur_rule_part, ';', lazy{recur1}) {|h, _, r| h.merge r } | 
 	    	recur_rule_part
+    recur	= recur1.map{|r| Vobject::Vcalendar::PropertyValue::Recur.new r }
     recur.eof
   end
 
   def integer  
-    integer 	= prim(:int32)
+    integer 	= prim(:int32).map {|i| Vobject::Vcalendar::PropertyValue::Integer.new i }
     integer.eof
   end
   
   def percent_complete  
-    integer 	= prim(:int32) {|a|
-	    		(a >= 0 and a <= 100) ? a :  {:error => 'Percentage outside of range 0..100'}
+    integer 	= prim(:int32).map {|a|
+	    		(a >= 0 and a <= 100) ? 
+				(Vobject::Vcalendar::PropertyValue::PercentComplete.new a) :  
+				{:error => 'Percentage outside of range 0..100'}
 	    	}
     integer.eof
   end
   
   def priority  
-    integer 	= prim(:int32) {|a|
-	    		(a >= 0 and a <= 9) ? a :  {:error => 'Percentage outside of range 0..100'}
+    integer 	= prim(:int32).map {|a|
+	    		(a >= 0 and a <= 9) ? 
+				(Vobject::Vcalendar::PropertyValue::Priority.new a) :  
+				{:error => 'Percentage outside of range 0..100'}
 	    	}
     integer.eof
   end
 
   def floatT
-	 floatT = prim(:double)
+	 floatT = prim(:double).map {|f| Vobject::Vcalendar::PropertyValue::Float.new f }
 	 floatT.eof
   end
 
@@ -146,52 +152,58 @@ module Vobject::Vcalendar
     float 	    = prim(:double)
     # TODO confirm that Rsec can do signs!
     geovalue	= seq(float, ';', float) {|a, _, b|
-	     ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? {:lat => a, :long => b} :
+	     ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? 
+		        Vobject::Vcalendar::PropertyValue::Geovalue.new({:lat => a, :long => b}) :
 			{:error => 'Latitude/Longitude outside of range -180..180'}
     }
     geovalue.eof
   end
 
   def calscalevalue
-    calscalevalue = /GREGORIAN/i.r
+    calscalevalue = /GREGORIAN/i.r.map {Vobject::Vcalendar::PropertyValue::Calscale.new "GREGORIAN" }
     calscalevalue.eof
   end
 
   def ianaToken
-    ianaToken 	= C::IANATOKEN 
+    ianaToken 	= C::IANATOKEN.map {|x| Vobject::Vcalendar::PropertyValue::Ianatoken.new x}
     ianaToken.eof
   end 
 
   def versionvalue
      versionvalue = 
-                    seq(prim(:double), ';', prim(:double)) {|x, _, y| [x, y] } |
-	     		'2.0'.r | prim(:double) 
+                    seq(prim(:double), ';', prim(:double)) {|x, _, y| Vobject::Vcalendar::PropertyValue::Version.new [x, y] } |
+	     		'2.0'.r.map {|v| Vobject::Vcalendar::PropertyValue::Version.new ['2.0'] } | 
+		        prim(:double).map {|v| Vobject::Vcalendar::PropertyValue::Version.new v }
      versionvalue.eof
   end
 
   def binary
 	binary	= seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) {|b, q|
-				( (b.length + q.length) % 4 == 0 ) ? b + q : {:error => 'Malformed binary coding'}
+				( (b.length + q.length) % 4 == 0 ) ? Vobject::Vcalendar::PropertyValue::Binary.new(b + q)
+				: {:error => 'Malformed binary coding'}
 		}
 	binary.eof
   end
 
   def uri
 	uri         = /\S+/.r.map {|s|
-	                  	s =~ URI::regexp ? s : {:error => 'Invalid URI'}
+	                  	s =~ URI::regexp ? 
+					Vobject::Vcalendar::PropertyValue::Uri.new(s) : 
+					{:error => 'Invalid URI'}
 			 }
 	uri.eof
   end
 
   def textT
-    text	= C::TEXT.map {|t| unescape t }
+    text	= C::TEXT.map {|t| Vobject::Vcalendar::PropertyValue::Text.new(unescape t) }
     text.eof
   end
 
   def textlist
-    textlist	=  
-	    	seq(C::TEXT, ','.r, lazy{textlist}) { |a, _, b| [unescape(a), b].flatten }  | 
+    textlist1	=  
+	    	seq(C::TEXT, ','.r, lazy{textlist1}) { |a, _, b| [unescape(a), b].flatten }  | 
 		C::TEXT.map {|t| [unescape(t)]}
+    textlist	= textlist1.map {|m| Vobject::Vcalendar::PropertyValue::Textlist.new m }
     textlist.eof
   end
 
@@ -202,28 +214,32 @@ module Vobject::Vcalendar
 			    return {:error => "Invalid request status #{n}"} unless @req_status.include?(n) #RFC 5546   			
                             hash = {:statcode => n, :statdesc => t1}
                             hash[:extdata] = t2[0] unless t2.empty?
-                            hash
+                            Vobject::Vcalendar::PropertyValue::Requeststatusvalue.new hash
                         }
     request_statusvalue.eof
   end
 
   def classvalue
-	classvalue = /PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | C::XNAME | C::IANATOKEN
+	classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | C::XNAME | C::IANATOKEN).map {|m|
+		Vobject::Vcalendar::PropertyValue::ClassValue.new m }
 	classvalue.eof
   end
 
   def eventstatus
-	  eventstatus	= /TENTATIVE/i.r | /CONFIRMED/i.r | /CANCELLED/i.r
+	  eventstatus	= (/TENTATIVE/i.r | /CONFIRMED/i.r | /CANCELLED/i.r).map {|m|
+		Vobject::Vcalendar::PropertyValue::EventStatus.new m }
 	  eventstatus.eof
   end
 
   def todostatus
-	  todostatus	= /NEEDS-ACTION/i.r | /COMPLETED/i.r | /IN-PROCESS/i.r | /CANCELLED/i.r
+	  todostatus	= (/NEEDS-ACTION/i.r | /COMPLETED/i.r | /IN-PROCESS/i.r | /CANCELLED/i.r).map {|m|
+		Vobject::Vcalendar::PropertyValue::Todostatus.new m }
 	  todostatus.eof
   end
 
   def journalstatus
-	  journalstatus	= /DRAFT/i.r | /FINAL/i.r | /CANCELLED/i.r
+	  journalstatus	= (/DRAFT/i.r | /FINAL/i.r | /CANCELLED/i.r).map {|m|
+		Vobject::Vcalendar::PropertyValue::Journalstatus.new m }
 	  journalstatus.eof
   end
 
@@ -233,11 +249,12 @@ module Vobject::Vcalendar
   end
 
   def datelist
-	 datelist   = 
-		 seq(C::DATE, ",".r, lazy{datelist}) {|d, _, l|
+	 datelist1   = 
+		 seq(C::DATE, ",".r, lazy{datelist1}) {|d, _, l|
 	                [d, l].flatten
 	            }  |
 		 C::DATE.map {|d| [d] } 
+	datelist = datelist1.map {|m| Vobject::Vcalendar::PropertyValue::Datelist.new m }
      	datelist.eof
   end
 
@@ -246,11 +263,12 @@ module Vobject::Vcalendar
   end
 
   def date_timelist
-	 date_timelist   = 
-			seq(C::DATE_TIME, ",".r, lazy{date_timelist}) {|d, _, l|
+	 date_timelist1   = 
+			seq(C::DATE_TIME, ",".r, lazy{date_timelist1}) {|d, _, l|
 	                [d, l].flatten
 	            } |
 		 	C::DATE_TIME.map {|d| [d] }  
+	date_timelist = date_timelist1.map {|m| Vobject::Vcalendar::PropertyValue::Datetimelist.new m }
      date_timelist.eof
   end
 
@@ -260,10 +278,11 @@ module Vobject::Vcalendar
   end
   
   def date_time_utclist
-	 date_time_utclist   = seq(C::DATE_TIME_UTC, ",".r, lazy{date_time_utclist}) {|d, _, l|
+	 date_time_utclist1   = seq(C::DATE_TIME_UTC, ",".r, lazy{date_time_utclist1}) {|d, _, l|
 	                [d, l].flatten
 	            } |
 		 C::DATE_TIME_UTC.map {|d| [d] } 
+	date_time_utclist = date_time_uctlist1.map {|m| Vobject::Vcalendar::PropertyValue::Datetimeutclist.new m }
      date_time_utclist.eof
   end
 
@@ -280,15 +299,17 @@ module Vobject::Vcalendar
                         {:start => s, :duration => d}
                     }
     period 	        = period_explicit | period_start
-    periodlist      = seq(period, ",".r, lazy{periodlist}) {|p, _, l|
+    periodlist1      = seq(period, ",".r, lazy{periodlist1}) {|p, _, l|
                         [p, l].flatten
                     } |
 	    		period.map {|p| [p] } 
+    periodlist	= periodlist1.map{|m| Vobject::Vcalendar::PropertyValue::Periodlist.new m }
     periodlist.eof
   end
   
   def transpvalue
-	  transpvalue	= /OPAQUE/i.r | /TRANSPARENT/i.r
+	  transpvalue	= (/OPAQUE/i.r | /TRANSPARENT/i.r).map {|m|
+		Vobject::Vcalendar::PropertyValue::TranspValue.new m }
 	  transpvalue.eof
   end
 
@@ -296,37 +317,41 @@ module Vobject::Vcalendar
     utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) {|sign, h, m, sec|
 	    		hash = {:sign => sign, :hr => h, :min => m }
 			hash[:sec] = sec[0] unless sec.empty?
-			hash
+			Vobject::Vcalendar::PropertyValue::Utcoffset.new hash
     		}
     utc_offset.eof
   end
 
   def actionvalue
-	  actionvalue	= /AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | C::IANATOKEN | C::XNAME
+	  actionvalue	= (/AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | C::IANATOKEN | C::XNAME).map {|m|
+		Vobject::Vcalendar::PropertyValue::ActionValue.new m }
 	  actionvalue.eof
   end
 
   def boolean
-	  boolean = C::BOOLEAN
+	  boolean = C::BOOLEAN.map {|b| Vobject::Vcalendar::PropertyValue::Boolean.new b }
 	  boolean.eof
   end
 
   # RFC 5546
   def methodvalue
-	  methodvalue 	= /PUBLISH/i.r | /REQUEST/i.r | /REPLY/i.r | /ADD/i.r | /CANCEL/i.r | /REFRESH/i.r | 
-		  	/COUNTER/i.r | /DECLINECOUNTER/i.r
+	  methodvalue 	= (/PUBLISH/i.r | /REQUEST/i.r | /REPLY/i.r | /ADD/i.r | /CANCEL/i.r | /REFRESH/i.r | 
+		  	/COUNTER/i.r | /DECLINECOUNTER/i.r).map {|m|
+		Vobject::Vcalendar::PropertyValue::MethodValue.new m }
 	  methodvalue.eof
   end
 
   # RFC 7953
   def busytype
-	  busytype = /BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | /BUSY/i.r |  C::IANATOKEN | C::XNAME
+	  busytype = (/BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | /BUSY/i.r |  C::IANATOKEN | C::XNAME).map {|m|
+		Vobject::Vcalendar::PropertyValue::BusyType.new m }
 	  busytype.eof
   end
 
   # https://www.w3.org/TR/2011/REC-css3-color-20110607/#svg-color
   def color
-	  color = C::COLOR
+	  color = C::COLOR.map {|m|
+		Vobject::Vcalendar::PropertyValue::Color.new m }
 	  color.eof
   end
 
@@ -404,7 +429,7 @@ module Vobject::Vcalendar
 	    ret = date_time_utcT._parse ctx1
     when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
 	    if (key == :DTEND or key == :DTSTART) and (component == :VAVAILABILITY or component == :AVAILABLE)
-	    		ret = date_timeT._parse ctx1
+	    	ret = date_timeT._parse ctx1
 	    elsif params and params[:VALUE] == 'DATE'
 	    	ret = dateT._parse ctx1
 	    else
@@ -418,7 +443,7 @@ module Vobject::Vcalendar
 				begin
 					tz = TZInfo::Timezone.get(params[:TZID])
 	    				ret = date_time_utcT._parse ctx1
-					ret = tz.utc_to_local(ret)
+					ret.value = tz.utc_to_local(ret.value)
 				rescue
 					# undefined timezone
 	    				ret = date_time_utcT._parse ctx1
@@ -537,7 +562,7 @@ module Vobject::Vcalendar
 			ret = utc_offset._parse ctx1
 		end
 	    else 
-	        ret = value
+	        ret = Vobject::Vcalendar::PropertyValue::Text.new value
 	    end
     end
     if ret.kind_of?(Hash) and ret[:error]

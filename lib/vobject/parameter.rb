@@ -25,7 +25,7 @@ module Vobject
     def to_s
       line = "#{param_name}"
 
-      line << ":#{value}"
+      line << "=#{value}"
 
       line = fold_line(line) << "\n"
 

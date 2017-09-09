@@ -1,6 +1,8 @@
 require "rsec"
 require "set"
 require "uri"
+require_relative "vobject/vcalendar/propertyvalue"
+
 
 module C
 
@@ -14,15 +16,16 @@ module C
     #TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[nN;,\\])*/.r   
     TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r   
     DATE       = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
-                             Time.utc(yy, mm, dd)
+                             Vobject::Vcalendar::PropertyValue::Date.new Time.utc(yy, mm, dd)
                      }
     DATE_TIME  = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-                          z.empty? ? Time.local(yy, mm, dd, h, m, s) : Time.utc(yy, mm, dd, h, m, s)
+                          z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(Time.local(yy, mm, dd, h, m, s)) :
+				  Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(Time.utc(yy, mm, dd, h, m, s))
                   }
     DATE_TIME_UTC      = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                         /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-                             Time.utc(yy, mm, dd, h, m, s)
+                             Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(Time.utc(yy, mm, dd, h, m, s))
                      }
     TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|h, m, s, z|
 	    			hash = {:hour => h, :min => m, :sec => s}
@@ -64,7 +67,7 @@ module C
     duration1   = durdate | durtime | durweek
     DURATION    = seq(SIGN._?, 'P', duration1) {|s, _, d|
 			d[:sign] = s[0] unless s.empty?
-			d
+			Vobject::Vcalendar::PropertyValue::Duration.new d
 		}
 
     utf8_tail   = /[\u0080-\u00bf]/.r

@@ -56,10 +56,10 @@
         "RRULE":{
           "value":{
             "freq":"YEARLY",
-            "bymonth":"3",
-            "byday":{
+            "bymonth":["3"],
+            "byday":[{
               "weekday":"SU"
-            }
+            }]
           }
         }
       }

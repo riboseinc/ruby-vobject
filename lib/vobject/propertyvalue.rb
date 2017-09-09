@@ -2,7 +2,7 @@ module Vobject
       	class PropertyValue
 
 
-    #attr_accessor :group, :prop_name, :params, :value, :multiple
+		attr_accessor :value, :type
 
     def initialize val
         self.value = val
@@ -13,6 +13,10 @@ module Vobject
     end
 
     def to_s
+      self.value
+    end
+
+    def to_hash
       self.value
     end
 
