@@ -47,17 +47,17 @@
           "value":{
             "rscale":"ETHIOPIC",
             "freq":"MONTHLY",
-            "bymonth":"13"
+            "bymonth":["13"]
           }
         },
         {
           "value":{
             "rscale":"HEBREW",
             "freq":"YEARLY",
-            "bymonth":"5L",
-            "bymonthday":{
+            "bymonth":["5L"],
+            "bymonthday":[{
               "ordmoday":"8"
-            },
+            }],
             "skip":"FORWARD"
           }
         },

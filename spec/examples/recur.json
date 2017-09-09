@@ -49,7 +49,7 @@
         {
           "value":{
             "freq":"MONTHLY",
-            "bymonth":"2"
+            "bymonth":["2"]
           }
         },
         {

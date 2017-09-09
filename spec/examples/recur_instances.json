@@ -33,10 +33,10 @@
             "freq":"YEARLY",
             "wkst":"MO",
             "interval":"1",
-            "bymonth":"11",
-            "byday":{
+            "bymonth":["11"],
+            "byday":[{
               "weekday":"SU"
-            }
+            }]
           }
         },
         "TZNAME":{
@@ -66,10 +66,10 @@
             "freq":"YEARLY",
             "wkst":"MO",
             "interval":"1",
-            "bymonth":"3",
-            "byday":{
+            "bymonth":["3"],
+            "byday":[{
               "weekday":"SU"
-            }
+            }]
           }
         },
         "TZNAME":{

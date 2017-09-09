@@ -282,7 +282,7 @@ module Vobject::Vcalendar
 	                [d, l].flatten
 	            } |
 		 C::DATE_TIME_UTC.map {|d| [d] } 
-	date_time_utclist = date_time_uctlist1.map {|m| Vobject::Vcalendar::PropertyValue::Datetimeutclist.new m }
+	date_time_utclist = date_time_utclist1.map {|m| Vobject::Vcalendar::PropertyValue::Datetimeutclist.new m }
      date_time_utclist.eof
   end
 

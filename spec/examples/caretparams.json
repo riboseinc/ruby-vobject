@@ -31,10 +31,10 @@
         "RRULE":{
           "value":{
             "freq":"YEARLY",
-            "byday":{
+            "byday":[{
               "weekday":"SU"
-            },
-            "bymonth":"11"
+            }],
+            "bymonth":["11"]
           }
         },
         "TZNAME":{
@@ -62,10 +62,10 @@
         "RRULE":{
           "value":{
             "freq":"YEARLY",
-            "byday":{
+            "byday":[{
               "weekday":"SU"
-            },
-            "bymonth":"3"
+            }],
+            "bymonth":["3"]
           }
         },
         "TZNAME":{
