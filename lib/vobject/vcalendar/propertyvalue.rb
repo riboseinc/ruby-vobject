@@ -360,6 +360,7 @@ module PropertyValue
 	    ret = ret + "#{self.value[:hours]}H" if self.value[:hours]
 	    ret = ret + "#{self.value[:minutes]}M" if self.value[:minutes]
 	    ret = ret + "#{self.value[:seconds]}S" if self.value[:seconds]
+	    ret
     end
 
     def to_hash
@@ -376,8 +377,8 @@ module PropertyValue
     end
 
     def to_s
-	    ret = "#{val[:hour]}#{val[:min]}#{val[:sec]}"
-	    ret = ret + "Z" if val[:utc]
+	    ret = "#{self.value[:hour]}#{self.value[:min]}#{self.value[:sec]}"
+	    ret = ret + "Z" if self.value[:utc]
 	    ret
     end
 
@@ -414,7 +415,7 @@ module PropertyValue
     end
 
     def to_s
-	    ret = "#{val[:lat]};#{val[:long]}"
+	    ret = "#{self.value[:lat]};#{self.value[:long]}"
 	    ret
     end
 
@@ -470,13 +471,13 @@ module PropertyValue
     def to_s
       self.value.map{|m| 
 	      ret = m[:start].to_s + "/"
-	      ret += m[:end].to_s if m[:end]
-	      ret += m[:duration].to_s if m[:duration]
+	      ret += m[:end].to_s if m.has_key? :end
+	      ret += m[:duration].to_s if m.has_key? :duration
       }.join(',')
     end
 
     def to_hash
-      	self.value
+      	self.value.map {|m| m.each {|k, v| m[k] = v.to_hash }}
     end
 
   end

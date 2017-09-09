@@ -463,7 +463,7 @@ module Vobject::Vcalendar
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_time_utclist._parse ctx1
-				ret = ret.map {|x| tz.utc_to_local(x) }
+				ret.value = ret.value.each {|x| x.value = tz.utc_to_local(x.value) }
 			else 
 	    			ret = date_timelist._parse ctx1
 			end
@@ -480,7 +480,7 @@ module Vobject::Vcalendar
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_time_utclist._parse ctx1
-				ret = ret.map {|x| tz.utc_to_local(x) }
+				ret.value = ret.value.each {|x| x.value = tz.utc_to_local(x.value) }
 			else 
 	    			ret = date_timelist._parse ctx1
 			end

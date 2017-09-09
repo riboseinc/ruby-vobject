@@ -1,208 +1,86 @@
-{
-  "VCALENDAR":{
-    "VERSION":{
-      "value":"2.0"
-    },
-    "PRODID":{
-      "value":"Zimbra-Calendar-Provider"
-    },
-    "VTIMEZONE":{
-      "TZID":{
-        "value":"America/Los_Angeles"
-      },
-      "STANDARD":{
-        "DTSTART":{
-          "value":"1971-01-01 02:00:00 +1000"
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "wkst":"MO",
-            "interval":"1",
-            "bymonth":["11"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        },
-        "TZNAME":{
-          "value":"PST"
-        }
-      },
-      "DAYLIGHT":{
-        "DTSTART":{
-          "value":"1971-01-01 02:00:00 +1000"
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "wkst":"MO",
-            "interval":"1",
-            "bymonth":["3"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        },
-        "TZNAME":{
-          "value":"PDT"
-        }
-      }
-    },
-    "VEVENT":{
-      "UID":{
-        "value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"
-      },
-      "DESCRIPTION":{
-        "value":"IAM FOO"
-      },
-      "RRULE":{
-        "value":{
-          "freq":"MONTHLY",
-          "interval":"1",
-          "byday":{
-            "weekday":"TU"
-          },
-          "until":"2012-12-31 10:00:00 +1100"
-        }
-      },
-      "SUMMARY":{
-        "value":"Crazy Event Thingy!"
-      },
-      "ATTENDEE":[
-        {
-          "value":"mailto:calmozilla1@gmail.com",
-          "params":{
-            "CUTYPE":"INDIVIDUAL",
-            "ROLE":"REQ-PARTICIPANT",
-            "PARTSTAT":"ACCEPTED",
-            "CN":"SAHAJA LAL",
-            "X_NUM_GUESTS":"0"
-          }
-        },
-        {
-          "value":"mailto:james@lightsofapollo.com",
-          "params":{
-            "CUTYPE":"INDIVIDUAL",
-            "ROLE":"REQ-PARTICIPANT",
-            "PARTSTAT":"NEEDS-ACTION",
-            "CN":"JAMES@LIGHTSOFAPOLLO.COM",
-            "X_NUM_GUESTS":"0"
-          }
-        },
-        {
-          "value":"mailto:iam.revelation@gmail.com",
-          "params":{
-            "CUTYPE":"INDIVIDUAL",
-            "ROLE":"REQ-PARTICIPANT",
-            "PARTSTAT":"NEEDS-ACTION",
-            "CN":"IAM.REVELATION@GMAIL.COM",
-            "X_NUM_GUESTS":"0"
-          }
-        }
-      ],
-      "LOCATION":{
-        "value":"PLACE"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jlal@mozilla.com",
-        "params":{
-          "CN":"JAMES LAL"
-        }
-      },
-      "DTSTART":{
-        "value":"2012-10-02 03:00:00 UTC",
-        "params":{
-          "TZID":"America/Los_Angeles"
-        }
-      },
-      "DTEND":{
-        "value":"2012-10-02 03:30:00 UTC",
-        "params":{
-          "TZID":"America/Los_Angeles"
-        }
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "CLASS":{
-        "value":"PUBLIC"
-      },
-      "TRANSP":{
-        "value":"OPAQUE"
-      },
-      "LAST_MODIFIED":{
-        "value":"2012-09-12 17:15:06 UTC"
-      },
-      "DTSTAMP":{
-        "value":"2012-09-12 17:15:06 UTC"
-      },
-      "SEQUENCE":{
-        "value":0
-      },
-      "RDATE":[
-        {
-          "value":[
-            "2012-11-10 02:00:00 UTC"
-          ],
-          "params":{
-            "TZID":"America/Los_Angeles"
-          }
-        },
-        {
-          "value":[
-            "2012-11-05 02:00:00 UTC"
-          ],
-          "params":{
-            "TZID":"America/Los_Angeles"
-          }
-        }
-      ],
-      "VALARM":{
-        "ACTION":{
-          "value":"DISPLAY"
-        },
-        "TRIGGER":{
-          "value":{
-            "minutes":5,
-            "sign":"-"
-          },
-          "params":{
-            "RELATED":"START"
-          }
-        },
-        "DESCRIPTION":{
-          "value":"Reminder"
-        }
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"VERSION":{"value":"2.0"},
+   "PRODID":{"value":"Zimbra-Calendar-Provider"},
+   "VTIMEZONE":
+    {"TZID":{"value":"America/Los_Angeles"},
+     "STANDARD":
+      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+       "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY",
+           "wkst":"MO",
+           "interval":"1",
+           "bymonth":["11"],
+           "byday":[{"weekday":"SU"}]}},
+       "TZNAME":{"value":"PST"}},
+     "DAYLIGHT":
+      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+       "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY",
+           "wkst":"MO",
+           "interval":"1",
+           "bymonth":["3"],
+           "byday":[{"weekday":"SU"}]}},
+       "TZNAME":{"value":"PDT"}}},
+   "VEVENT":
+    {"UID":{"value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"},
+     "DESCRIPTION":{"value":"IAM FOO"},
+     "RRULE":
+      {"value":
+        {"freq":"MONTHLY",
+         "interval":"1",
+         "byday":[{"weekday":"TU"}],
+         "until":"2012-12-31 10:00:00 +1100"}},
+     "SUMMARY":{"value":"Crazy Event Thingy!"},
+     "ATTENDEE":
+      [{"value":"mailto:calmozilla1@gmail.com",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"ACCEPTED",
+          "CN":"SAHAJA LAL",
+          "X_NUM_GUESTS":"0"}},
+       {"value":"mailto:james@lightsofapollo.com",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"NEEDS-ACTION",
+          "CN":"JAMES@LIGHTSOFAPOLLO.COM",
+          "X_NUM_GUESTS":"0"}},
+       {"value":"mailto:iam.revelation@gmail.com",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"NEEDS-ACTION",
+          "CN":"IAM.REVELATION@GMAIL.COM",
+          "X_NUM_GUESTS":"0"}}],
+     "LOCATION":{"value":"PLACE"},
+     "ORGANIZER":
+      {"value":"mailto:jlal@mozilla.com", "params":{"CN":"JAMES LAL"}},
+     "DTSTART":
+      {"value":"2012-10-02 03:00:00 UTC",
+       "params":{"TZID":"America/Los_Angeles"}},
+     "DTEND":
+      {"value":"2012-10-02 03:30:00 UTC",
+       "params":{"TZID":"America/Los_Angeles"}},
+     "STATUS":{"value":"CONFIRMED"},
+     "CLASS":{"value":"PUBLIC"},
+     "TRANSP":{"value":"OPAQUE"},
+     "LAST_MODIFIED":{"value":"2012-09-12 17:15:06 UTC"},
+     "DTSTAMP":{"value":"2012-09-12 17:15:06 UTC"},
+     "SEQUENCE":{"value":0},
+     "RDATE":
+      [{"value":["2012-11-10 02:00:00 UTC"],
+        "params":{"TZID":"America/Los_Angeles"}},
+       {"value":["2012-11-05 02:00:00 UTC"],
+        "params":{"TZID":"America/Los_Angeles"}}],
+     "VALARM":
+      {"ACTION":{"value":"DISPLAY"},
+       "TRIGGER":
+        {"value":{"minutes":5, "sign":"-"}, "params":{"RELATED":"START"}},
+       "DESCRIPTION":{"value":"Reminder"}}}}}
