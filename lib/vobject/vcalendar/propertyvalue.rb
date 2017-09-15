@@ -9,7 +9,8 @@ module PropertyValue
 
    class << self 
   def escape x
-	  x.gsub(/\\/, "\\\\").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;")
+	  # temporarily escape \\ as \u007f, which is banned from text
+	  x.gsub(/\\/, "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;").gsub(/\u007f/, "\\\\\\\\")
   end
    end
 

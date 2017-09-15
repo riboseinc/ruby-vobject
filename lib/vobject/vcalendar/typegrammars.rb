@@ -358,7 +358,8 @@ module Vobject::Vcalendar
 
   # text escapes: \\ \; \, \N \n
   def unescape(x)
-	  x.gsub(/\\\\/, '\\').gsub(/\\;/, ';').gsub(/\\,/, ',').gsub(/\\[Nn]/, "\n")
+	  # temporarily escape \\ as \007f, which is disallowed in any text
+	  x.gsub(/\\\\/, "\u007f").gsub(/\\;/, ';').gsub(/\\,/, ',').gsub(/\\[Nn]/, "\n").gsub(/\u007f/, "\\")
   end
   
   def registered_propname
