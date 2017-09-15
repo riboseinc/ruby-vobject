@@ -6,6 +6,7 @@ module Vobject
     attr_accessor :param_name, :value, :multiple
 
     def initialize key, options
+      self.param_name = key
       if options.class == Array 
 	self.multiple = []
 	options.each {|v|
@@ -13,7 +14,6 @@ module Vobject
           self.param_name = key
 	}
       else
-        self.param_name = key
         self.value = options
      end
 
@@ -23,11 +23,22 @@ module Vobject
     def to_s
       # we made param names have underscore instead of dash as symbols
       line = "#{param_name.to_s.gsub(/_/,'-')}"
-
-      # RFC 6868
-      line << "=" + value.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
-
+      line << "=" 
+      if self.multiple
+	        arr = []
+      		self.value.each {|v|
+			arr << to_s_line(v.value.to_s)
+		}
+		line << arr.join(',')
+      else
+	      	line << to_s_line(self.value.to_s)
+      end
       line
+    end
+
+    def to_s_line(val)
+      # RFC 6868
+      val.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
     end
 
   def to_hash

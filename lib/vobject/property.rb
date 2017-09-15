@@ -56,7 +56,7 @@ require 'vobject/parameter'
       line << "#{name.to_s.gsub(/_/,'-')}"
 
       (params || {}).each do |p|
-        line << ";#{p.to_s}"
+        	line << ";#{p.to_s}"
       end
 
       line << ":#{self.value.to_s}"
