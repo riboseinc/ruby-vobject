@@ -1,10 +1,10 @@
+require 'vobject'
 require 'vobject/parameter'
 
 
 
   class Vobject::Property
 
-    MAX_LINE_WIDTH = 75
 
     attr_accessor :group, :prop_name, :params, :value, :multiple
 
@@ -39,16 +39,29 @@ require 'vobject/parameter'
     end
 
     def to_s
+	if self.multiple.nil? or self.multiple.empty?
+		ret = self.to_s_line
+	else
+		arr = []
+		self.multiple.each do |x|
+			arr << x.to_s_line
+		end
+		ret = arr.join("")
+	end
+	return ret
+    end
+
+    def to_s_line
       line = group ? "#{group}." : ""
-      line << "#{name}"
+      line << "#{name.to_s.gsub(/_/,'-')}"
 
       (params || {}).each do |p|
-        line << p.to_s
+        line << ";#{p.to_s}"
       end
 
-      line << ":#{value}"
+      line << ":#{self.value.to_s}"
 
-      line = fold_line(line) << "\n"
+      line = Vobject::fold_line(line) << "\n"
 
       line
     end
@@ -112,23 +125,6 @@ require 'vobject/parameter'
       raise "vObject property initialization failed"
     end
 
-    # This implements the line folding as specified in
-    # http://tools.ietf.org/html/rfc6350#section-3.2
-    #
-    # NOTE: the "line" here is not including the trailing \n
-    def fold_line(line)
-      folded_line    = line[0, MAX_LINE_WIDTH]
-      remainder_line = line[MAX_LINE_WIDTH, line.length - MAX_LINE_WIDTH] || ''
-
-      max_width = MAX_LINE_WIDTH - 1
-
-      for i in 0..((remainder_line.length - 1) / max_width)
-        folded_line << "\n "
-        folded_line << remainder_line[i * max_width, max_width]
-      end
-
-      folded_line
-    end
 
   end
 

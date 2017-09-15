@@ -42,7 +42,7 @@ module Vobject::Vcalendar
 	    	}
     weekdaynum 	= seq(weekdaynum1._?, weekday) {|a, b|
 	    		h = {:weekday => b}
-			h.merge a[0] unless a.empty?
+			h = h.merge a[0] unless a.empty?
 			h
 	    	}
     bywdaylist 	= seq(weekdaynum, ',', lazy{bywdaylist}) {|w, _, l|
@@ -428,9 +428,7 @@ module Vobject::Vcalendar
     when :COMPLETED, :CREATED, :DTSTAMP, :LAST_MODIFIED
 	    ret = date_time_utcT._parse ctx1
     when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
-	    if (key == :DTEND or key == :DTSTART) and (component == :VAVAILABILITY or component == :AVAILABLE)
-	    	ret = date_timeT._parse ctx1
-	    elsif params and params[:VALUE] == 'DATE'
+	    if params and params[:VALUE] == 'DATE'
 	    	ret = dateT._parse ctx1
 	    else
 		if component == :FREEBUSY
@@ -442,11 +440,12 @@ module Vobject::Vcalendar
 				end
 				begin
 					tz = TZInfo::Timezone.get(params[:TZID])
-	    				ret = date_time_utcT._parse ctx1
-					ret.value = tz.utc_to_local(ret.value)
+	    				ret = date_timeT._parse ctx1
+					# note that we use the registered tz information to map to UTC, rather than look up the values witin the VTIMEZONE component
+					ret.value = {:time => tz.local_to_utc(ret.value[:time]), :zone => params[:TZID]}
 				rescue
-					# undefined timezone
-	    				ret = date_time_utcT._parse ctx1
+					# undefined timezone: default to floating local
+	    				ret = date_timeT._parse ctx1
 				end
 			else 
 	    			ret = date_timeT._parse ctx1
@@ -462,8 +461,10 @@ module Vobject::Vcalendar
 					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
-	    			ret = date_time_utclist._parse ctx1
-				ret.value = ret.value.each {|x| x.value = tz.utc_to_local(x.value) }
+	    			ret = date_timelist._parse ctx1
+				ret.value.each {|x| 
+					x.value = {:time => tz.local_to_utc(x.value[:time]), :zone => params[:TZID]} 
+				}
 			else 
 	    			ret = date_timelist._parse ctx1
 			end
@@ -479,8 +480,10 @@ module Vobject::Vcalendar
 					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
-	    			ret = date_time_utclist._parse ctx1
-				ret.value = ret.value.each {|x| x.value = tz.utc_to_local(x.value) }
+	    			ret = date_timelist._parse ctx1
+				ret.value.each {|x| 
+					x.value = {:time => tz.local_to_utc(x.value[:time]), :zone => params[:TZID] } 
+				}
 			else 
 	    			ret = date_timelist._parse ctx1
 			end

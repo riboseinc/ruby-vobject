@@ -8,17 +8,23 @@
       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"05", "min":"00"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"04", "min":"00"}},
        "TZNAME":{"value":"EDT"},
-       "DTSTART":{"value":"1970-03-08 02:00:00 +1000"},
+       "DTSTART":
+        {"value":
+          {"time":"1970-03-08 07:00:00 UTC", "zone":"America/New_York"}},
        "RRULE":
         {"value":
-          {"freq":"YEARLY", "bymonth":["3"], "byday":[{"weekday":"SU"}]}}},
+          {"freq":"YEARLY",
+           "bymonth":["3"],
+           "byday":[{"weekday":"SU", "ordwk":"2"}]}}},
      "STANDARD":
       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"04", "min":"00"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"05", "min":"00"}},
        "TZNAME":{"value":"EST"},
-       "DTSTART":{"value":"1970-11-01 02:00:00 +1000"},
+       "DTSTART":
+        {"value":
+          {"time":"1970-11-01 07:00:00 UTC", "zone":"America/New_York"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
            "bymonth":["11"],
-           "byday":[{"weekday":"SU"}]}}}}}}
+           "byday":[{"weekday":"SU", "ordwk":"1"}]}}}}}}

@@ -1,169 +1,71 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//Google Inc//Google Calendar 70.9054//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "CALSCALE":{
-      "value":"GREGORIAN"
-    },
-    "X_WR_CALNAME":{
-      "value":"calmozilla1@gmail.com"
-    },
-    "X_WR_TIMEZONE":{
-      "value":"America/Los_Angeles"
-    },
-    "VTIMEZONE":{
-      "TZID":{
-        "value":"America/Los_Angeles"
-      },
-      "X_LIC_LOCATION":{
-        "value":"America/Los_Angeles"
-      },
-      "DAYLIGHT":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"PDT"
-        },
-        "DTSTART":{
-          "value":"1970-03-08 02:00:00 +1000"
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "bymonth":["3"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        }
-      },
-      "STANDARD":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"PST"
-        },
-        "DTSTART":{
-          "value":"1970-11-01 02:00:00 +1000"
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
-            "bymonth":["11"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        }
-      }
-    },
-    "VEVENT":{
-      "DTSTART":{
-        "value":"2012-08-03 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "DTEND":{
-        "value":"2012-08-04 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "RRULE":{
-        "value":{
-          "freq":"WEEKLY",
-          "byday":[
-            {
-              "weekday":"MO"
-            },
-            {
-              "weekday":"TU"
-            },
-            {
-              "weekday":"WE"
-            },
-            {
-              "weekday":"TH"
-            },
-            {
-              "weekday":"FR"
-            }
-          ]
-        }
-      },
-      "DTSTAMP":{
-        "value":"2012-08-03 22:13:06 UTC"
-      },
-      "UID":{
-        "value":"4pfh824gvims850j0gar361t04@google.com"
-      },
-      "CREATED":{
-        "value":"2012-08-03 22:13:06 UTC"
-      },
-      "DESCRIPTION":{
-        "value":""
-      },
-      "LAST_MODIFIED":{
-        "value":"2012-08-03 22:13:06 UTC"
-      },
-      "LOCATION":{
-        "value":""
-      },
-      "SEQUENCE":{
-        "value":0
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "SUMMARY":{
-        "value":"Day Long Event"
-      },
-      "TRANSP":{
-        "value":"TRANSPARENT"
-      },
-      "VALARM":{
-        "ACTION":{
-          "value":"DISPLAY"
-        },
-        "DESCRIPTION":{
-          "value":"This is an event reminder"
-        },
-        "TRIGGER":{
-          "value":"2012-08-02 23:30:00 UTC",
-          "params":{
-            "VALUE":"DATE-TIME"
-          }
-        }
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//Google Inc//Google Calendar 70.9054//EN"},
+   "VERSION":{"value":"2.0"},
+   "CALSCALE":{"value":"GREGORIAN"},
+   "X_WR_CALNAME":{"value":"calmozilla1@gmail.com"},
+   "X_WR_TIMEZONE":{"value":"America/Los_Angeles"},
+   "VTIMEZONE":
+    {"TZID":{"value":"America/Los_Angeles"},
+     "X_LIC_LOCATION":{"value":"America/Los_Angeles"},
+     "DAYLIGHT":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+       "TZNAME":{"value":"PDT"},
+       "DTSTART":
+        {"value":
+          {"time":"1970-03-08 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY",
+           "bymonth":["3"],
+           "byday":[{"weekday":"SU", "ordwk":"2"}]}}},
+     "STANDARD":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+       "TZNAME":{"value":"PST"},
+       "DTSTART":
+        {"value":
+          {"time":"1970-11-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+       "RRULE":
+        {"value":
+          {"freq":"YEARLY",
+           "bymonth":["11"],
+           "byday":[{"weekday":"SU", "ordwk":"1"}]}}}},
+   "VEVENT":
+    {"DTSTART":
+      {"value":"2012-08-03 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+     "DTEND":
+      {"value":"2012-08-04 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+     "RRULE":
+      {"value":
+        {"freq":"WEEKLY",
+         "byday":
+          [{"weekday":"MO"},
+           {"weekday":"TU"},
+           {"weekday":"WE"},
+           {"weekday":"TH"},
+           {"weekday":"FR"}]}},
+     "DTSTAMP":{"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+     "UID":{"value":"4pfh824gvims850j0gar361t04@google.com"},
+     "CREATED":{"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+     "DESCRIPTION":{"value":""},
+     "LAST_MODIFIED":
+      {"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+     "LOCATION":{"value":""},
+     "SEQUENCE":{"value":0},
+     "STATUS":{"value":"CONFIRMED"},
+     "SUMMARY":{"value":"Day Long Event"},
+     "TRANSP":{"value":"TRANSPARENT"},
+     "VALARM":
+      [{"ACTION":{"value":"EMAIL"},
+        "DESCRIPTION":{"value":"This is an event reminder"},
+        "SUMMARY":{"value":"Alarm notification"},
+        "ATTENDEE":{"value":"mailto:calmozilla1@gmail.com"},
+        "TRIGGER":
+         {"value":{"time":"2012-08-02 23:30:00 UTC", "zone":"Z"},
+          "params":{"VALUE":"DATE-TIME"}}},
+       {"ACTION":{"value":"DISPLAY"},
+        "DESCRIPTION":{"value":"This is an event reminder"},
+        "TRIGGER":
+         {"value":{"time":"2012-08-02 23:30:00 UTC", "zone":"Z"},
+          "params":{"VALUE":"DATE-TIME"}}}]}}}

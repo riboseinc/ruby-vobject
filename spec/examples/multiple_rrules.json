@@ -4,7 +4,9 @@
    "VTIMEZONE":
     {"TZID":{"value":"America/Los_Angeles"},
      "STANDARD":
-      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+      {"DTSTART":
+        {"value":
+          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "RRULE":
@@ -13,10 +15,12 @@
            "wkst":"MO",
            "interval":"1",
            "bymonth":["11"],
-           "byday":[{"weekday":"SU"}]}},
+           "byday":[{"weekday":"SU", "ordwk":"1"}]}},
        "TZNAME":{"value":"PST"}},
      "DAYLIGHT":
-      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+      {"DTSTART":
+        {"value":
+          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "RRULE":
@@ -25,40 +29,45 @@
            "wkst":"MO",
            "interval":"1",
            "bymonth":["3"],
-           "byday":[{"weekday":"SU"}]}},
+           "byday":[{"weekday":"SU", "ordwk":"2"}]}},
        "TZNAME":{"value":"PDT"}}},
    "VEVENT":
     {"UID":{"value":"1334F9B7-6136-444E-A58D-472564C6AA73"},
      "RRULE":
-      [{"value":{"freq":"WEEKLY", "until":"2012-07-30 06:59:59 UTC"}},
+      [{"value":
+         {"freq":"WEEKLY",
+          "until":{"time":"2012-07-30 06:59:59 UTC", "zone":"Z"}}},
        {"value":
          {"freq":"MONTHLY",
           "byday":[{"weekday":"SU"}],
-          "until":"2012-07-30 06:59:59 UTC"}}],
+          "until":{"time":"2012-07-30 06:59:59 UTC", "zone":"Z"}}}],
      "SUMMARY":{"value":"sahaja <> frashed"},
      "DESCRIPTION":{"value":"weekly 1on1"},
      "ATTENDEE":
       {"value":"mailto:jlal@mozilla.com",
        "params":
-        {"CN":"JAMES LAL",
+        {"CN":"James Lal",
          "CUTYPE":"INDIVIDUAL",
          "ROLE":"REQ-PARTICIPANT",
          "PARTSTAT":"NEEDS-ACTION",
          "RSVP":true}},
      "ORGANIZER":
       {"value":"mailto:frashed@mozilla.com",
-       "params":{"CN":"FARAMARZ RASHED"}},
+       "params":{"CN":"Faramarz Rashed"}},
      "DTSTART":
-      {"value":"2012-03-26 04:00:00 UTC",
+      {"value":
+        {"time":"2012-03-26 18:00:00 UTC", "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "DTEND":
-      {"value":"2012-03-26 04:30:00 UTC",
+      {"value":
+        {"time":"2012-03-26 18:30:00 UTC", "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "TRANSP":{"value":"OPAQUE"},
-     "LAST_MODIFIED":{"value":"2012-03-26 16:15:22 UTC"},
-     "DTSTAMP":{"value":"2012-07-30 16:56:37 UTC"},
+     "LAST_MODIFIED":
+      {"value":{"time":"2012-03-26 16:15:22 UTC", "zone":"Z"}},
+     "DTSTAMP":{"value":{"time":"2012-07-30 16:56:37 UTC", "zone":"Z"}},
      "SEQUENCE":{"value":9},
      "VALARM":
       {"ACTION":{"value":"DISPLAY"},

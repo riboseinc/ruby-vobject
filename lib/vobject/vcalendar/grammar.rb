@@ -52,7 +52,7 @@ module Vobject::Vcalendar
 			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r | /RSCALE/i.r | /DISPLAY/i.r |
 			/FEATURE/i.r | /LABEL/i.r | /EMAIL/i.r
     otherparamname = C::XNAME | seq(''.r ^ paramname, C::IANATOKEN )[1]
-    paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)).upcase }
+    paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)) }
     quotedparamvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } 
     cutypevalue	= /INDIVIDUAL/i.r | /GROUP/i.r | /RESOURCE/i.r | /ROOM/i.r | /UNKNOWN/i.r |
 	    		C::XNAME | C::IANATOKEN.map 
@@ -239,23 +239,23 @@ module Vobject::Vcalendar
 				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
 				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
 				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
-				{ :STANDARD => e }
+				{ :STANDARD => {:component => [e] }}
 			}
 	daylightc	= seq(/BEGIN:DAYLIGHT(\r|\n|\r\n)/i.r, tzprops, /END:DAYLIGHT(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
 				parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
 				parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
-				{ :DAYLIGHT => e }
+				{ :DAYLIGHT => {:component => [e] }}
 			}
 	timezoneprops	= 
 			seq(standardc, lazy{timezoneprops}) {|e, rest|
-				e.merge(rest)
+				e.merge(rest) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 	                } | seq(daylightc, lazy{timezoneprops}) {|e, rest|
-				e.merge(rest)
+				e.merge(rest) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 			} | seq(contentline, lazy{timezoneprops}) {|e, rest|
 			k = e.keys[0]
 			e[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(k, e[k][:params], :TIMEZONE, e[k][:value], @ctx)
-				e.merge( rest ) { | key, old, new|
+			e.merge( rest ) { | key, old, new|
 				if @cardinality1[:TIMEZONE].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
 				end
@@ -304,24 +304,24 @@ module Vobject::Vcalendar
 				elsif e[:ACTION] == 'EMAIL'
 					parse_err("Missing DESCRIPTION property") unless e.has_key?(:DESCRIPTION)
 				end
-				{ :VALARM => e }
+				{ :VALARM => {:component => [e] }}
 			}
 	freebusyc	= seq(/BEGIN:VFREEBUSY(\r|\n|\r\n)/i.r, fbprops, /END:VFREEBUSY(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) and e.has_key?(:DTSTART) and 
 					e[:DTEND][:value] < e[:DTSTART][:value]
-				{ :VFREEBUSY => e }
+				{ :VFREEBUSY => {:component => [e] }}
 			}
 	journalc	= seq(/BEGIN:VJOURNAL(\r|\n|\r\n)/i.r, journalprops, /END:VJOURNAL(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) and !e.has_key?(:DTSTART)
-				{ :VJOURNAL => e }
+				{ :VJOURNAL => {:component => [e] }}
 			}
 	timezonec	= seq(/BEGIN:VTIMEZONE(\r|\n|\r\n)/i.r, timezoneprops, /END:VTIMEZONE(\r|\n|\r\n)/i.r) {|_, e, _|
 				parse_err("Missing STANDARD or DAYLIGHT property") unless e.has_key?(:STANDARD) or e.has_key?(:DAYLIGHT)
-				{ :VTIMEZONE => e }
+				{ :VTIMEZONE => {:component => [e] }}
 			}
 	todoc		= seq(/BEGIN:VTODO(\r|\n|\r\n)/i.r, todoprops, alarmc.star, /END:VTODO(\r|\n|\r\n)/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
@@ -335,9 +335,9 @@ module Vobject::Vcalendar
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither local time
 				# TODO not doing constraint that recurrence-id and dtstart are both or neither date
 				a.each do |x|
-					e = e.merge x
+					e = e.merge(x) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 				end
-				{ :VTODO => e }
+				{ :VTODO => {:component => [e] }}
 			}
 	eventc		= seq(/BEGIN:VEVENT(\r|\n|\r\n)/i.r, eventprops, alarmc.star, /END:VEVENT(\r|\n|\r\n)/i.r) {|_, e, a, _|
 				parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
@@ -348,21 +348,21 @@ module Vobject::Vcalendar
 					e[:DTEND][:value] < e[:DTSTART][:value]
 				# TODO not doing constraint that dtend and dtstart are both or neither local time
 				a.each do |x|
-					e = e.merge x
+					e = e.merge(x) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 				end
-				{ :VEVENT => e }
+				{ :VEVENT => {:component => [e] }}
 			}
 	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
-				{ n1.to_sym => p }
+				{ n1.to_sym => {:component => [p]} }
 			}
 	ianacomp	= seq(/BEGIN:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
-				{ n1.to_sym => p }
+				{ n1.to_sym => {:component => [p]} }
 			}
 	# RFC 7953
         availableprops	= seq(contentline, lazy{availableprops}) {|c, rest|
@@ -381,7 +381,7 @@ module Vobject::Vcalendar
 				parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
 				parse_err("Missing UID property") unless e.has_key?(:UID)
 				parse_err("Coocurring DTEND and DURATION properties") if e.has_key?(:DTEND) and e.has_key?(:DURATION)
-				{ :AVAILABLE => e }
+				{ :AVAILABLE => {:component => [e]} }
 			}
         availabilityprops	= seq(contentline, lazy{availabilityprops}) {|c, rest|
 			k = c.keys[0]
@@ -404,14 +404,14 @@ module Vobject::Vcalendar
 				# TODO not doing constraint that dtend and dtstart are both or neither local time
 				# TODO not doing constraint that each TZID param must have matching VTIMEZONE component
 				a.each do |x|
-					e = e.merge x
+					e = e.merge(x) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 				end
-				{ :VAVAILABILITY => e }
+				{ :VAVAILABILITY => {:component => [e]} }
 			}
 
 	component	= eventc | todoc | journalc | freebusyc | timezonec | ianacomp | xcomp | vavailabilityc
 	components 	= seq(component, lazy{components}) {|c, r|
-				c.merge(r)
+				c.merge(r) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 			} | component
 
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
@@ -439,12 +439,84 @@ module Vobject::Vcalendar
 			parse_err("Missing PRODID attribute") unless v.has_key?(:PRODID)
 			parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
 			rest.delete(:END)
-			parse_err("Missing DTSTART property") if !v.has_key?(:METHOD) and rest.has_key?(:VEVENT) and
-				!rest[:VEVENT].has_key?(:DTSTART)
-	            	{ :VCALENDAR => v.merge( rest ) }
+			if !v.has_key?(:METHOD) and rest.has_key?(:VEVENT)
+				rest[:VEVENT][:component].each {|e|
+					parse_err("Missing DTSTART property from VEVENT component")  if ( !e.has_key?(:DTSTART) )
+				}
+			end
+	            	tidyup({ :VCALENDAR => v.merge( rest ) })
 		}
     vobject.eof 
   end 
+
+  # any residual tidying of object
+  def tidyup(v)
+	  # adjust any VTIMEZONE.{STANDARD|DAYLIGHT}.{DTSTART|RDATE} times from floating local to the time within the timezone component
+	if !v[:VCALENDAR].has_key?(:VTIMEZONE) or v[:VCALENDAR][:VTIMEZONE][:component].nil? or v[:VCALENDAR][:VTIMEZONE][:component].empty?
+		return v
+	else
+		 if v[:VCALENDAR][:VTIMEZONE][:component].kind_of?(Array)
+			 v[:VCALENDAR][:VTIMEZONE][:component].each {|x|
+				 x = timezoneadjust x
+			 }
+		 else
+			 v[:VCALENDAR][:VTIMEZONE][:component] = timezoneadjust v[:VCALENDAR][:VTIMEZONE][:component]
+		 end
+		 return v
+	end
+  end
+
+
+  def timezoneadjust(x)
+	   if x[:TZID].nil? or x[:TZID].empty?
+		return x
+	   else
+		   # TODO deal with unregistered timezones
+		   begin
+		   tz = TZInfo::Timezone.get(x[:TZID][:value].value) 
+	   		rescue 
+				return x
+		   end
+		[:STANDARD, :DAYLIGHT].each {|k|
+		if x.has_key?(k)
+	  	   if x[k][:component].kind_of?(Array)
+			x[k][:component].each {|y|
+				# subtracting a minute to avoid PeriodNotFound exceptions on the boundary between daylight saving and standard time
+				# if that doesn't work either, we'll rescue to floating localtime
+				# TODO lookup offsets applicable by parsing dates and offsets in the ical. I'd rather not.
+				y[:DTSTART][:value].value = {:time => tz.local_to_utc(y[:DTSTART][:value].value[:time] - 60 , true) + 60, :zone => x[:TZID][:value].value} rescue y[:DTSTART][:value].value 
+				if y.has_key?(:RDATE)
+					if y[:RDATE].kind_of?(Array)
+						y[:RDATE].each {|z|
+			                                z[:value].value.each {|w|
+								w.value = {:time => tz.local_to_utc(w.value[:time] -60 , true) +60, :zone => x[:TZID][:value].value } rescue w.value
+			                                }
+						}
+					else
+						y[:RDATE][:value].value = {:time => tz.local_to_utc(y[:RDATE].value[:time] -60, true) +60, :zone => x[:TZID][:value].value } rescue y[:RDATE][:value].value 
+					end
+				end
+			}
+		    else 
+			    x[k][:component][:DTSTART][:value].value  =  {:time => tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time]-60, true)+60, :zone => x[:TZID][:value].value} rescue x[k][:component][:DTSTART][:value].value
+			if x[k][:component].has_key?(:RDATE)
+				if x[k][:component][:RDATE].kind_of?(Array)
+					x[k][:component][:RDATE].each {|z|
+		                                z[:value].value.each {|w|
+							w.value = {:time => tz.local_to_utc(w.value[:time]-60, true)+60, :zone => x[:TZID][:value].value } rescue w.value 
+		                                }
+					}
+				else
+					x[k][:component][:RDATE][:value].value = {:time => tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time]-60, true)+60, :zone => x[:TZID][:value].value } rescue x[k][:component][:RDATE][:value].value
+				end
+			end
+		     end
+		end
+		}
+	end
+	return x
+  end
+
 
   # RFC 6868
   def rfc6868decode(x)

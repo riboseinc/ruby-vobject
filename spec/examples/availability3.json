@@ -3,14 +3,22 @@
    "PRODID":{"value":"-//example.com//iCalendar 2.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"2011-11-13 04:41:11 UTC", "zone":"Z"}},
-     "DTSTART":
-      {"value":
-        {"time":"2011-11-06 17:00:00 UTC", "zone":"America/Montreal"},
-       "params":{"TZID":"America/Montreal"}},
-     "DURATION":{"value":"PT2H"},
-     "SUMMARY":{"value":"Meeting"},
-     "UID":{"value":"768CB0C2-8642-43F7-A6C4-F8BB04B829B4"}},
+    [{"DTSTAMP":{"value":{"time":"2011-11-13 04:41:11 UTC", "zone":"Z"}},
+      "DTSTART":
+       {"value":
+         {"time":"2011-11-06 17:00:00 UTC", "zone":"America/Montreal"},
+        "params":{"TZID":"America/Montreal"}},
+      "DURATION":{"value":"PT2H"},
+      "SUMMARY":{"value":"Meeting"},
+      "UID":{"value":"768CB0C2-8642-43F7-A6C4-F8BB04B829B4"}},
+     {"DTSTAMP":{"value":{"time":"2011-11-23 04:41:11 UTC", "zone":"Z"}},
+      "DTSTART":
+       {"value":
+         {"time":"2011-11-06 17:00:00 UTC", "zone":"America/Montreal"},
+        "params":{"TZID":"America/Montreal"}},
+      "DURATION":{"value":"PT2H"},
+      "SUMMARY":{"value":"Meeting Again"},
+      "UID":{"value":"768CB0C2-8642-43F7-A6C4-F8BB04B829B5"}}],
    "VAVAILABILITY":
     {"UID":{"value":"452DFCA7-3203-4A3D-9A9A-99753A383B41"},
      "DTSTAMP":{"value":{"time":"2011-10-05 13:32:25 UTC", "zone":"Z"}},

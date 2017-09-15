@@ -1,103 +1,59 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//custom/thing"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VTIMEZONE":{
-      "TZID":{
-        "value":"America/Denver"
-      },
-      "DAYLIGHT":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"06",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"MDT"
-        },
-        "DTSTART":{
-          "value":"1918-03-31 02:00:00 +1000"
-        },
-        "RDATE":[
-          {
-            "value":[
-              "2003-04-06 02:00:00 +1000"
-            ]
-          },
-          {
-            "value":[
-              "2004-04-04 02:00:00 +1000"
-            ]
-          },
-          {
-            "value":[
-              "2005-04-03 02:00:00 +1000"
-            ]
-          },
-          {
-            "value":[
-              "2006-04-02 02:00:00 +1000"
-            ]
-          }
-        ]
-      },
-      "STANDARD":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"06",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"MST"
-        },
-        "DTSTART":{
-          "value":"1918-10-27 02:00:00 +1000"
-        },
-        "RDATE":[
-          {
-            "value":[
-              "2003-10-26 03:00:00 +1100"
-            ]
-          },
-          {
-            "value":[
-              "2004-10-31 03:00:00 +1100"
-            ]
-          },
-          {
-            "value":[
-              "2005-10-30 03:00:00 +1100"
-            ]
-          },
-          {
-            "value":[
-              "2006-10-29 03:00:00 +1100"
-            ]
-          }
-        ]
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//custom/thing"},
+   "VERSION":{"value":"2.0"},
+   "VTIMEZONE":
+    {"TZID":{"value":"America/Denver"},
+     "DAYLIGHT":
+      [{"TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"06", "min":"00"}},
+        "TZNAME":{"value":"MDT"},
+        "DTSTART":
+         {"value":
+           {"time":"2007-03-11 09:00:00 UTC", "zone":"America/Denver"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
+            "bymonth":["3"],
+            "byday":[{"weekday":"SU", "ordwk":"2"}]}}},
+       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"06", "min":"00"}},
+        "TZNAME":{"value":"MDT"},
+        "DTSTART":
+         {"value":
+           {"time":"1918-03-31 09:00:00 UTC", "zone":"America/Denver"}},
+        "RDATE":
+         [{"value":
+            [{"time":"2003-04-06 09:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":
+            [{"time":"2004-04-04 09:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":
+            [{"time":"2005-04-03 09:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":[{"time":"2006-04-02 02:00:00 +1000", "zone":""}]}]}],
+     "STANDARD":
+      [{"TZOFFSETFROM":{"value":{"sign":"-", "hr":"06", "min":"00"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZNAME":{"value":"MST"},
+        "DTSTART":
+         {"value":
+           {"time":"2007-11-04 08:00:00 UTC", "zone":"America/Denver"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
+            "bymonth":["11"],
+            "byday":[{"weekday":"SU", "ordwk":"1"}]}}},
+       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"06", "min":"00"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZNAME":{"value":"MST"},
+        "DTSTART":
+         {"value":
+           {"time":"1918-10-27 08:00:00 UTC", "zone":"America/Denver"}},
+        "RDATE":
+         [{"value":
+            [{"time":"2003-10-26 08:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":
+            [{"time":"2004-10-31 08:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":
+            [{"time":"2005-10-30 08:00:00 UTC", "zone":"America/Denver"}]},
+          {"value":
+            [{"time":"2006-10-29 08:00:00 UTC",
+              "zone":"America/Denver"}]}]}]}}}

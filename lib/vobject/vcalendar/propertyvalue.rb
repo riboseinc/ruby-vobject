@@ -277,24 +277,24 @@ module PropertyValue
   class DateTimeLocal < Vobject::PropertyValue
     include Comparable
     def <=>(anOther)
-	    self.value <=> anOther.value
+	    self.value[:time] <=> anOther.value[:time]
     end
 
     def initialize val
         self.value = val
+	# val consists of :time and :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
         self.type = 'datetimeLocal'
     end
 
-    def self.<(other)
-	    self.value<(other)
-    end
-    def self.>(other)
-	    self.value>(other)
-    end
-
     def to_s
-	sprintf("%04d%02d%02dT%02d%02d%02d", self.value.year, self.value.month, self.value.day,
-	       self.value.hour, self.value.min, self.value.sec)
+	if !self.value[:zone].empty?
+		tz = TZInfo::Timezone.get(self.value[:zone])
+		localtime = tz.utc_to_local(self.value[:time])
+	else
+		localtime = self.value[:time]
+	end
+	sprintf("%04d%02d%02dT%02d%02d%02d", localtime.year, localtime.month, localtime.day,
+	       localtime.hour, localtime.min, localtime.sec)
     end
 
 
@@ -307,7 +307,7 @@ module PropertyValue
   class DateTimeUTC < Vobject::PropertyValue
     include Comparable
     def <=>(anOther)
-	    self.value <=> anOther.value
+	    self.value[:time] <=> anOther.value[:time]
     end
 
     def initialize val
@@ -317,8 +317,9 @@ module PropertyValue
 
 
     def to_s
-	sprintf("%04d%02d%02dT%02d%02d%02dZ", self.value.year, self.value.month, self.value.day,
-	       self.value.hour, self.value.min, self.value.sec)
+	utc = self.value[:time]
+	sprintf("%04d%02d%02dT%02d%02d%02dZ", utc.year, utc.month, utc.day,
+	       utc.hour, utc.min, utc.sec)
     end
 
     def to_hash
@@ -557,7 +558,7 @@ module PropertyValue
     def to_s
 	    ret = []
 	    self.value.each {|k, v| 
-		ret << "#{k.to_s}=#{valencode(k,v)}"
+		ret << "#{k.to_s.upcase}=#{valencode(k,v)}"
 	    }
 	    ret.join(';')
     end

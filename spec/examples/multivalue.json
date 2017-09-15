@@ -1,72 +1,29 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VEVENT":{
-      "DTSTAMP":{
-        "value":"1996-07-04 12:00:00 UTC"
-      },
-      "UID":{
-        "value":"uid1@example.com"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jsmith@example.com"
-      },
-      "DTSTART":{
-        "value":"1996-09-18 14:30:00 UTC"
-      },
-      "DTEND":{
-        "value":"1996-09-20 22:00:00 UTC"
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "SUMMARY":{
-        "value":"Networld+Interop Conference"
-      },
-      "DESCRIPTION":{
-        "value":"Networld+Interop Conference"
-      },
-      "CATEGORIES":{
-        "value":[
-          "foo",
-          "blue, fish",
-          "woot"
-        ]
-      },
-      "GEO":{
-        "value":{
-          "lat":10.1,
-          "long":10.05
-        }
-      },
-      "REQUEST_STATUS":{
-        "value":{
-          "statcode":"3.1",
-          "statdesc":"Invalid property value",
-          "extdata":"DTSTART:96-Apr-01"
-        }
-      },
-      "RDATE":{
-        "value":[
-          "2012-10-01 00:00:00 UTC",
-          "2012-10-02 00:00:00 UTC",
-          "2012-10-03 00:00:00 UTC"
-        ],
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "EXDATE":{
-        "value":[
-          "2012-09-01 13:00:00 +1000",
-          "2012-09-05 13:00:00 +1000"
-        ]
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
+   "VERSION":{"value":"2.0"},
+   "VEVENT":
+    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+     "UID":{"value":"uid1@example.com"},
+     "ORGANIZER":{"value":"mailto:jsmith@example.com"},
+     "DTSTART":{"value":{"time":"1996-09-18 14:30:00 UTC", "zone":"Z"}},
+     "DTEND":{"value":{"time":"1996-09-20 22:00:00 UTC", "zone":"Z"}},
+     "STATUS":{"value":"CONFIRMED"},
+     "SUMMARY":{"value":"Networld+Interop Conference"},
+     "DESCRIPTION":{"value":"Networld+Interop Conference"},
+     "CATEGORIES":{"value":["foo", "blue, fish", "woot"]},
+     "GEO":{"value":{"lat":10.1, "long":10.05}},
+     "REQUEST_STATUS":
+      {"value":
+        {"statcode":"3.1",
+         "statdesc":"Invalid property value",
+         "extdata":"DTSTART:96-Apr-01"}},
+     "RDATE":
+      {"value":
+        ["2012-10-01 00:00:00 UTC",
+         "2012-10-02 00:00:00 UTC",
+         "2012-10-03 00:00:00 UTC"],
+       "params":{"VALUE":"DATE"}},
+     "EXDATE":
+      {"value":
+        [{"time":"2012-09-01 13:00:00 +1000", "zone":""},
+         {"time":"2012-09-05 13:00:00 +1000", "zone":""}]}}}}

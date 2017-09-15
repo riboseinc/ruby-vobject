@@ -1,37 +1,13 @@
-{
-  "VCALENDAR":{
-    "VERSION":{
-      "value":"2.0"
-    },
-    "PRODID":{
-      "value":"-//ABC Corporation//NONSGML My Product//EN"
-    },
-    "VJOURNAL":{
-      "DTSTAMP":{
-        "value":"1997-03-24 12:00:00 UTC"
-      },
-      "UID":{
-        "value":"uid5@example.com"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jsmith@example.com"
-      },
-      "STATUS":{
-        "value":"DRAFT"
-      },
-      "CLASS":{
-        "value":"PUBLIC"
-      },
-      "CATEGORIES":{
-        "value":[
-          "Project Report",
-          "XYZ",
-          "Weekly Meeting"
-        ]
-      },
-      "DESCRIPTION":{
-        "value":"Project xyz Review Meeting Minutes\nAgenda\n1. Review of project version 1.0 requirements.\n2.    Definitionof project processes.\n3. Review of project schedule.\nParticipants: John Smith, Jane Doe, Jim Dandy\n-It was decided that the requirements need to be signed off by product marketing.\n-Project processes were accepted.\n-Project schedule needs to account for scheduled holidays and employee vacation time. Check with HR for specific dates.\n-New schedule will be distributed by Friday.\n-Next weeks meeting is cancelled. No meeting until 3/23."
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"VERSION":{"value":"2.0"},
+   "PRODID":{"value":"-//ABC Corporation//NONSGML My Product//EN"},
+   "VJOURNAL":
+    {"DTSTAMP":{"value":{"time":"1997-03-24 12:00:00 UTC", "zone":"Z"}},
+     "UID":{"value":"uid5@example.com"},
+     "ORGANIZER":{"value":"mailto:jsmith@example.com"},
+     "STATUS":{"value":"DRAFT"},
+     "CLASS":{"value":"PUBLIC"},
+     "CATEGORIES":{"value":["Project Report", "XYZ", "Weekly Meeting"]},
+     "DESCRIPTION":
+      {"value":
+        "Project xyz Review Meeting Minutes\nAgenda\n1. Review of project version 1.0 requirements.\n2.    Definitionof project processes.\n3. Review of project schedule.\nParticipants: John Smith, Jane Doe, Jim Dandy\n-It was decided that the requirements need to be signed off by product marketing.\n-Project processes were accepted.\n-Project schedule needs to account for scheduled holidays and employee vacation time. Check with HR for specific dates.\n-New schedule will be distributed by Friday.\n-Next weeks meeting is cancelled. No meeting until 3/23."}}}}

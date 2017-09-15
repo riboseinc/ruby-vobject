@@ -1,44 +1,15 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VEVENT":{
-      "DTSTAMP":{
-        "value":"1996-07-04 12:00:00 UTC"
-      },
-      "UID":{
-        "value":"uid1@example.com"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jsmith@example.com"
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "CATEGORIES":{
-        "value":[
-          "CONFERENCE"
-        ]
-      },
-      "SUMMARY":{
-        "value":"Networld+Interop Conference"
-      },
-      "DESCRIPTION":{
-        "value":"Networld+Interop Conference"
-      },
-      "DTSTART":{
-        "value":"2011-10-28 16:00:00 UTC",
-        "params":{
-          "TZID":"GMT +0100"
-        }
-      },
-      "DTEND":{
-        "value":"2012-09-20 22:00:00 UTC"
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
+   "VERSION":{"value":"2.0"},
+   "VEVENT":
+    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+     "UID":{"value":"uid1@example.com"},
+     "ORGANIZER":{"value":"mailto:jsmith@example.com"},
+     "STATUS":{"value":"CONFIRMED"},
+     "CATEGORIES":{"value":["CONFERENCE"]},
+     "SUMMARY":{"value":"Networld+Interop Conference"},
+     "DESCRIPTION":{"value":"Networld+Interop Conference"},
+     "DTSTART":
+      {"value":{"time":"2011-10-28 16:00:00 +1100", "zone":""},
+       "params":{"TZID":"GMT +0100"}},
+     "DTEND":{"value":{"time":"2012-09-20 22:00:00 UTC", "zone":"Z"}}}}}

@@ -20,12 +20,12 @@ module C
                      }
     DATE_TIME  = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-                          z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(Time.local(yy, mm, dd, h, m, s)) :
-				  Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(Time.utc(yy, mm, dd, h, m, s))
+                          z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new({:time => Time.local(yy, mm, dd, h, m, s), :zone => ''}) :
+				  Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({:time => Time.utc(yy, mm, dd, h, m, s), :zone => 'Z'})
                   }
     DATE_TIME_UTC      = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                         /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|yy, mm, dd, _, h, m, s, z|
-                             Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(Time.utc(yy, mm, dd, h, m, s))
+                             Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({:time => Time.utc(yy, mm, dd, h, m, s), :zone => 'Z'})
                      }
     TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) {|h, m, s, z|
 	    			hash = {:hour => h, :min => m, :sec => s}

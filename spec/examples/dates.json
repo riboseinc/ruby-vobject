@@ -1,47 +1,16 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VEVENT":{
-      "DTSTAMP":{
-        "value":"1996-07-04 12:00:00 UTC"
-      },
-      "UID":{
-        "value":"uid1@example.com"
-      },
-      "DTSTART":{
-        "value":"2012-09-01 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "DTEND":{
-        "value":"2012-09-01 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "RDATE":{
-        "value":[
-          "2013-12-10 13:00:00 UTC"
-        ]
-      },
-      "X_MYDATE":{
-        "value":"2012-09-01 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "X_MYDATETIME":{
-        "value":"2012-09-01 13:00:00 +1000",
-        "params":{
-          "VALUE":"DATE-TIME"
-        }
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
+   "VERSION":{"value":"2.0"},
+   "VEVENT":
+    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+     "UID":{"value":"uid1@example.com"},
+     "DTSTART":
+      {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+     "DTEND":
+      {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+     "RDATE":{"value":[{"time":"2013-12-10 13:00:00 UTC", "zone":"Z"}]},
+     "X_MYDATE":
+      {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+     "X_MYDATETIME":
+      {"value":{"time":"2012-09-01 13:00:00 +1000", "zone":""},
+       "params":{"VALUE":"DATE-TIME"}}}}}

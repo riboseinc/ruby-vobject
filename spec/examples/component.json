@@ -1,24 +1,16 @@
-{
-  "VCALENDAR":{
-    "VERSION":{
-      "value":"2.0"
-    },
-    "PRODID":{
-      "value":"-//ABC Corporation//NONSGML My Product//EN"
-    },
-    "VEVENT":{
-      "UID":{
-        "value":"uid1@example.com"
-      },
-      "DTSTAMP":{
-        "value":"2012-09-12 17:15:40 UTC"
-      },
-      "DTSTART":{
-        "value":"1970-03-08 02:00:00 +1000"
-      },
-      "SUMMARY":{
-        "value":"another"
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"VERSION":{"value":"2.0"},
+   "PRODID":{"value":"-//ABC Corporation//NONSGML My Product//EN"},
+   "VEVENT":
+    [{"DTSTART":{"value":{"time":"1970-03-08 02:00:00 +1000", "zone":""}},
+      "UID":{"value":"uid1@example.com"},
+      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
+      "SUMMARY":{"value":"foo \nbar"},
+      "VALARM":
+       {"ACTION":{"value":"AUDIO"},
+        "TRIGGER":{"value":{"time":"1998-04-03 12:00:00 UTC", "zone":"Z"}},
+        "SUMMARY":{"value":"escaped, comma and; semicolon\nnewline"}}},
+     {"UID":{"value":"uid1@example.com"},
+      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
+      "DTSTART":{"value":{"time":"1970-03-08 02:00:00 +1000", "zone":""}},
+      "SUMMARY":{"value":"another"}}]}}

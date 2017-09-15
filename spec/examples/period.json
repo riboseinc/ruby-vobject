@@ -1,58 +1,20 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VEVENT":{
-      "DTSTAMP":{
-        "value":"1996-07-04 12:00:00 UTC"
-      },
-      "UID":{
-        "value":"uid1@example.com"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jsmith@example.com"
-      },
-      "DTSTART":{
-        "value":"1996-09-18 14:30:00 UTC"
-      },
-      "DTEND":{
-        "value":"1996-09-20 22:00:00 UTC"
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "CATEGORIES":{
-        "value":[
-          "CONFERENCE"
-        ]
-      },
-      "SUMMARY":{
-        "value":"Networld+Interop Conference"
-      },
-      "DESCRIPTION":{
-        "value":"Networld+Interop Conference"
-      },
-      "RDATE":{
-        "value":[
-          {
-            "start":"1996-04-03 02:00:00 UTC",
-            "end":"1996-04-03 04:00:00 UTC"
-          },
-          {
-            "start":"1996-04-04 01:00:00 +1000",
-            "duration":{
-              "hours":3
-            }
-          }
-        ],
-        "params":{
-          "VALUE":"PERIOD"
-        }
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
+   "VERSION":{"value":"2.0"},
+   "VEVENT":
+    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+     "UID":{"value":"uid1@example.com"},
+     "ORGANIZER":{"value":"mailto:jsmith@example.com"},
+     "DTSTART":{"value":{"time":"1996-09-18 14:30:00 UTC", "zone":"Z"}},
+     "DTEND":{"value":{"time":"1996-09-20 22:00:00 UTC", "zone":"Z"}},
+     "STATUS":{"value":"CONFIRMED"},
+     "CATEGORIES":{"value":["CONFERENCE"]},
+     "SUMMARY":{"value":"Networld+Interop Conference"},
+     "DESCRIPTION":{"value":"Networld+Interop Conference"},
+     "RDATE":
+      {"value":
+        [{"start":{"time":"1996-04-03 02:00:00 UTC", "zone":"Z"},
+          "end":{"time":"1996-04-03 04:00:00 UTC", "zone":"Z"}},
+         {"start":{"time":"1996-04-04 01:00:00 +1000", "zone":""},
+          "duration":{"hours":3}}],
+       "params":{"VALUE":"PERIOD"}}}}}

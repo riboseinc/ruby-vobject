@@ -1,88 +1,122 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//Google Inc//Google Calendar 70.9054//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "CALSCALE":{
-      "value":"GREGORIAN"
-    },
-    "X_WR_CALNAME":{
-      "value":"Contacts' birthdays and events"
-    },
-    "X_WR_TIMEZONE":{
-      "value":"America/Los_Angeles"
-    },
-    "X_WR_CALDESC":{
-      "value":"Your contacts' birthdays and anniversaries"
-    },
-    "VEVENT":{
-      "DTSTART":{
-        "value":"2014-12-10 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "DTEND":{
-        "value":"2014-12-11 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "DTSTAMP":{
-        "value":"2012-12-07 18:30:41 UTC"
-      },
-      "UID":{
-        "value":"BIRTHDAY_79d389868f96182e@google.com"
-      },
-      "ATTENDEE":{
-        "value":"mailto:4dhmurjkc5hn8sq0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual",
-        "params":{
-          "CUTYPE":"INDIVIDUAL",
+{"VCALENDAR":
+  {"PRODID":{"value":"-//Google Inc//Google Calendar 70.9054//EN"},
+   "VERSION":{"value":"2.0"},
+   "CALSCALE":{"value":"GREGORIAN"},
+   "X_WR_CALNAME":{"value":"Contacts' birthdays and events"},
+   "X_WR_TIMEZONE":{"value":"America/Los_Angeles"},
+   "X_WR_CALDESC":{"value":"Your contacts' birthdays and anniversaries"},
+   "VEVENT":
+    [{"DTSTART":
+       {"value":"2014-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTEND":
+       {"value":"2014-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "RRULE":{"value":{"freq":"DAILY", "interval":"1", "count":"1"}},
+      "RDATE":
+       [{"value":["2013-12-10 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
+        {"value":["2012-12-10 00:00:00 UTC"], "params":{"VALUE":"DATE"}}],
+      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "UID":{"value":"2014_BIRTHDAY_79d389868f96182e@google.com"},
+      "ATTENDEE":
+       {"value":
+         "mailto:4dhmurjkc5hn8sq0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
           "ROLE":"REQ-PARTICIPANT",
           "PARTSTAT":"ACCEPTED",
-          "CN":"CONTACTS",
-          "X_NUM_GUESTS":"0"
-        }
-      },
-      "X_GOOGLE_CALENDAR_CONTENT_ICON":{
-        "value":"https://calendar.google.com/googlecalendar/images/cake.gif"
-      },
-      "X_GOOGLE_CALENDAR_CONTENT_DISPLAY":{
-        "value":"chip"
-      },
-      "RECURRENCE_ID":{
-        "value":"2014-12-10 00:00:00 UTC",
-        "params":{
-          "VALUE":"DATE"
-        }
-      },
-      "CLASS":{
-        "value":"PUBLIC"
-      },
-      "CREATED":{
-        "value":"2012-12-07 18:30:41 UTC"
-      },
-      "DESCRIPTION":{
-        "value":"Today is PErson #2's birthday!"
-      },
-      "LAST_MODIFIED":{
-        "value":"2012-12-07 18:30:41 UTC"
-      },
-      "SEQUENCE":{
-        "value":1
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "SUMMARY":{
-        "value":"PErson #2's birthday"
-      },
-      "TRANSP":{
-        "value":"OPAQUE"
-      }
-    }
-  }
-}
+          "CN":"Contacts",
+          "X_NUM_GUESTS":"0"}},
+      "CLASS":{"value":"PUBLIC"},
+      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "STATUS":{"value":"CONFIRMED"},
+      "SUMMARY":{"value":"PErson #2's birthday"},
+      "TRANSP":{"value":"OPAQUE"}},
+     {"DTSTART":
+       {"value":"2012-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTEND":
+       {"value":"2012-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
+      "ATTENDEE":
+       {"value":
+         "mailto:4dhmurjkc5hn8sq0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"ACCEPTED",
+          "CN":"Contacts",
+          "X_NUM_GUESTS":"0"}},
+      "X_GOOGLE_CALENDAR_CONTENT_ICON":
+       {"value":"https://calendar.google.com/googlecalendar/images/cake.gif"},
+      "X_GOOGLE_CALENDAR_CONTENT_DISPLAY":{"value":"chip"},
+      "RECURRENCE_ID":
+       {"value":"2012-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "CLASS":{"value":"PUBLIC"},
+      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "STATUS":{"value":"CONFIRMED"},
+      "SUMMARY":{"value":"PErson #2's birthday"},
+      "TRANSP":{"value":"OPAQUE"}},
+     {"DTSTART":
+       {"value":"2013-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTEND":
+       {"value":"2013-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
+      "ATTENDEE":
+       {"value":
+         "mailto:4dhmurjkc5hn8sq0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"ACCEPTED",
+          "CN":"Contacts",
+          "X_NUM_GUESTS":"0"}},
+      "X_GOOGLE_CALENDAR_CONTENT_ICON":
+       {"value":"https://calendar.google.com/googlecalendar/images/cake.gif"},
+      "X_GOOGLE_CALENDAR_CONTENT_DISPLAY":{"value":"chip"},
+      "RECURRENCE_ID":
+       {"value":"2013-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "CLASS":{"value":"PUBLIC"},
+      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "STATUS":{"value":"CONFIRMED"},
+      "SUMMARY":{"value":"PErson #2's birthday"},
+      "TRANSP":{"value":"OPAQUE"}},
+     {"DTSTART":
+       {"value":"2014-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTEND":
+       {"value":"2014-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
+      "ATTENDEE":
+       {"value":
+         "mailto:4dhmurjkc5hn8sq0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual",
+        "params":
+         {"CUTYPE":"INDIVIDUAL",
+          "ROLE":"REQ-PARTICIPANT",
+          "PARTSTAT":"ACCEPTED",
+          "CN":"Contacts",
+          "X_NUM_GUESTS":"0"}},
+      "X_GOOGLE_CALENDAR_CONTENT_ICON":
+       {"value":"https://calendar.google.com/googlecalendar/images/cake.gif"},
+      "X_GOOGLE_CALENDAR_CONTENT_DISPLAY":{"value":"chip"},
+      "RECURRENCE_ID":
+       {"value":"2014-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
+      "CLASS":{"value":"PUBLIC"},
+      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "STATUS":{"value":"CONFIRMED"},
+      "SUMMARY":{"value":"PErson #2's birthday"},
+      "TRANSP":{"value":"OPAQUE"}}]}}

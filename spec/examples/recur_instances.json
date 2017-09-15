@@ -1,148 +1,191 @@
-{
-  "VCALENDAR":{
-    "VERSION":{
-      "value":"2.0"
-    },
-    "PRODID":{
-      "value":"Zimbra-Calendar-Provider"
-    },
-    "VTIMEZONE":{
-      "X_INVALID_TIMEZONE":{
-        "value":"TRUE"
-      },
-      "STANDARD":{
-        "DTSTART":{
-          "value":"1971-01-01 02:00:00 +1000"
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
+{"VCALENDAR":
+  {"VERSION":{"value":"2.0"},
+   "PRODID":{"value":"Zimbra-Calendar-Provider"},
+   "VTIMEZONE":
+    [{"TZID":{"value":"America/Los_Angeles"},
+      "STANDARD":
+       {"DTSTART":
+         {"value":
+           {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
             "wkst":"MO",
             "interval":"1",
             "bymonth":["11"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        },
-        "TZNAME":{
-          "value":"PST"
-        }
-      },
-      "DAYLIGHT":{
-        "DTSTART":{
-          "value":"1971-01-01 02:00:00 +1000"
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"07",
-            "min":"00"
-          }
-        },
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"08",
-            "min":"00"
-          }
-        },
-        "RRULE":{
-          "value":{
-            "freq":"YEARLY",
+            "byday":[{"weekday":"SU", "ordwk":"1"}]}},
+        "TZNAME":{"value":"PST"}},
+      "DAYLIGHT":
+       {"DTSTART":
+         {"value":
+           {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
             "wkst":"MO",
             "interval":"1",
             "bymonth":["3"],
-            "byday":[{
-              "weekday":"SU"
-            }]
-          }
-        },
-        "TZNAME":{
-          "value":"PDT"
-        }
-      }
-    },
-    "VEVENT":{
-      "UID":{
-        "value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"
-      },
-      "SUMMARY":{
-        "value":"Crazy Event Thingy!"
-      },
-      "ORGANIZER":{
-        "value":"mailto:jlal@mozilla.com",
-        "params":{
-          "CN":"JAMES LAL"
-        }
-      },
-      "DTSTART":{
-        "value":"2012-11-06 12:00:00 UTC",
-        "params":{
-          "TZID":"America/Los_Angeles"
-        }
-      },
-      "DTEND":{
-        "value":"2012-11-06 12:30:00 UTC",
-        "params":{
-          "TZID":"America/Los_Angeles"
-        }
-      },
-      "STATUS":{
-        "value":"CONFIRMED"
-      },
-      "CLASS":{
-        "value":"PUBLIC"
-      },
-      "TRANSP":{
-        "value":"OPAQUE"
-      },
-      "RECURRENCE_ID":{
-        "value":"2012-11-05 18:00:00 UTC"
-      },
-      "LAST_MODIFIED":{
-        "value":"2012-09-12 17:18:20 UTC"
-      },
-      "DTSTAMP":{
-        "value":"2012-09-12 17:18:20 UTC"
-      },
-      "SEQUENCE":{
-        "value":1
-      },
-      "VALARM":{
-        "ACTION":{
-          "value":"DISPLAY"
-        },
-        "TRIGGER":{
-          "value":{
-            "minutes":5,
-            "sign":"-"
-          },
-          "params":{
-            "RELATED":"START"
-          }
-        },
-        "DESCRIPTION":{
-          "value":"Reminder"
-        }
-      }
-    },
-    "X-UNKNOWN":{
-
-    }
-  }
-}
+            "byday":[{"weekday":"SU", "ordwk":"2"}]}},
+        "TZNAME":{"value":"PDT"}}},
+     {"X_INVALID_TIMEZONE":{"value":"TRUE"},
+      "STANDARD":
+       {"DTSTART":
+         {"value":{"time":"1971-01-01 02:00:00 +1000", "zone":""}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
+            "wkst":"MO",
+            "interval":"1",
+            "bymonth":["11"],
+            "byday":[{"weekday":"SU", "ordwk":"1"}]}},
+        "TZNAME":{"value":"PST"}},
+      "DAYLIGHT":
+       {"DTSTART":
+         {"value":{"time":"1971-01-01 02:00:00 +1000", "zone":""}},
+        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
+        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
+        "RRULE":
+         {"value":
+           {"freq":"YEARLY",
+            "wkst":"MO",
+            "interval":"1",
+            "bymonth":["3"],
+            "byday":[{"weekday":"SU", "ordwk":"2"}]}},
+        "TZNAME":{"value":"PDT"}}}],
+   "VEVENT":
+    [{"UID":{"value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"},
+      "DESCRIPTION":{"value":"IAM FOO"},
+      "RRULE":
+       {"value":
+         {"freq":"MONTHLY",
+          "interval":"1",
+          "byday":[{"weekday":"TU", "ordwk":"1"}]}},
+      "SUMMARY":{"value":"Crazy Event Thingy!"},
+      "ATTENDEE":
+       [{"value":"mailto:calmozilla1@gmail.com",
+         "params":
+          {"CUTYPE":"INDIVIDUAL",
+           "ROLE":"REQ-PARTICIPANT",
+           "PARTSTAT":"ACCEPTED",
+           "CN":"Sahaja Lal",
+           "X_NUM_GUESTS":"0"}},
+        {"value":"mailto:james@lightsofapollo.com",
+         "params":
+          {"CUTYPE":"INDIVIDUAL",
+           "ROLE":"REQ-PARTICIPANT",
+           "PARTSTAT":"NEEDS-ACTION",
+           "CN":"james@lightsofapollo.com",
+           "X_NUM_GUESTS":"0"}},
+        {"value":"mailto:iam.revelation@gmail.com",
+         "params":
+          {"CUTYPE":"INDIVIDUAL",
+           "ROLE":"REQ-PARTICIPANT",
+           "PARTSTAT":"NEEDS-ACTION",
+           "CN":"iam.revelation@gmail.com",
+           "X_NUM_GUESTS":"0"}}],
+      "LOCATION":{"value":"PLACE"},
+      "ORGANIZER":
+       {"value":"mailto:jlal@mozilla.com", "params":{"CN":"James Lal"}},
+      "DTSTART":
+       {"value":
+         {"time":"2012-10-02 17:00:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "DTEND":
+       {"value":
+         {"time":"2012-10-02 17:30:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "STATUS":{"value":"CONFIRMED"},
+      "CLASS":{"value":"PUBLIC"},
+      "TRANSP":{"value":"OPAQUE"},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
+      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":0},
+      "RDATE":
+       [{"value":
+          [{"time":"2012-11-05 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         "params":{"TZID":"America/Los_Angeles"}},
+        {"value":
+          [{"time":"2012-11-10 18:00:00 UTC", "zone":"America/Los_Angeles"},
+           {"time":"2012-11-30 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         "params":{"TZID":"America/Los_Angeles"}}],
+      "EXDATE":
+       [{"value":
+          [{"time":"2013-04-02 17:00:00 UTC", "zone":"America/Los_Angeles"}],
+         "params":{"TZID":"America/Los_Angeles"}},
+        {"value":
+          [{"time":"2012-12-04 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         "params":{"TZID":"America/Los_Angeles"}},
+        {"value":
+          [{"time":"2013-02-05 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         "params":{"TZID":"America/Los_Angeles"}}],
+      "VALARM":
+       {"ACTION":{"value":"DISPLAY"},
+        "TRIGGER":
+         {"value":{"minutes":5, "sign":"-"},
+          "params":{"RELATED":"START"}},
+        "DESCRIPTION":{"value":"Reminder"}}},
+     {"UID":{"value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"},
+      "SUMMARY":{"value":"Crazy Event Thingy!"},
+      "DESCRIPTION":{"value":"I HAZ CHANGED!"},
+      "ORGANIZER":
+       {"value":"mailto:jlal@mozilla.com", "params":{"CN":"James Lal"}},
+      "DTSTART":
+       {"value":
+         {"time":"2012-10-02 22:00:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "DTEND":
+       {"value":
+         {"time":"2012-10-02 22:30:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "STATUS":{"value":"CONFIRMED"},
+      "CLASS":{"value":"PUBLIC"},
+      "TRANSP":{"value":"OPAQUE"},
+      "RECURRENCE_ID":
+       {"value":
+         {"time":"2012-10-02 17:00:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
+      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "VALARM":
+       {"ACTION":{"value":"DISPLAY"},
+        "TRIGGER":
+         {"value":{"minutes":5, "sign":"-"},
+          "params":{"RELATED":"START"}},
+        "DESCRIPTION":{"value":"Reminder"}}},
+     {"UID":{"value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"},
+      "SUMMARY":{"value":"Crazy Event Thingy!"},
+      "ORGANIZER":
+       {"value":"mailto:jlal@mozilla.com", "params":{"CN":"James Lal"}},
+      "DTSTART":
+       {"value":
+         {"time":"2012-11-07 04:00:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "DTEND":
+       {"value":
+         {"time":"2012-11-07 04:30:00 UTC", "zone":"America/Los_Angeles"},
+        "params":{"TZID":"America/Los_Angeles"}},
+      "STATUS":{"value":"CONFIRMED"},
+      "CLASS":{"value":"PUBLIC"},
+      "TRANSP":{"value":"OPAQUE"},
+      "RECURRENCE_ID":
+       {"value":{"time":"2012-11-05 18:00:00 UTC", "zone":"Z"}},
+      "LAST_MODIFIED":
+       {"value":{"time":"2012-09-12 17:18:20 UTC", "zone":"Z"}},
+      "DTSTAMP":{"value":{"time":"2012-09-12 17:18:20 UTC", "zone":"Z"}},
+      "SEQUENCE":{"value":1},
+      "VALARM":
+       {"ACTION":{"value":"DISPLAY"},
+        "TRIGGER":
+         {"value":{"minutes":5, "sign":"-"},
+          "params":{"RELATED":"START"}},
+        "DESCRIPTION":{"value":"Reminder"}}}],
+   "X-UNKNOWN":{}}}

@@ -1,102 +1,24 @@
-{
-  "VCALENDAR":{
-    "PRODID":{
-      "value":"-//ical.js//NONSGML Makebelieve//EN"
-    },
-    "VERSION":{
-      "value":"2.0"
-    },
-    "VTIMEZONE":{
-      "TZID":{
-        "value":"Makebelieve/RDATE_as_date"
-      },
-      "X_LIC_LOCATION":{
-        "value":"Makebelieve/RDATE_as_date"
-      },
-      "STANDARD":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"04",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"05",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"RDATE_as_date_standard"
-        },
-        "DTSTART":{
-          "value":"1970-01-01 02:00:00 +1000"
-        },
-        "RDATE":[
-          {
-            "value":[
-              "1970-01-01 02:00:00 +1000"
-            ]
-          },
-          {
-            "value":[
-              "1980-01-01 00:00:00 UTC"
-            ],
-            "params":{
-              "VALUE":"DATE"
-            }
-          },
-          {
-            "value":[
-              "1990-01-01 07:00:00 UTC"
-            ]
-          }
-        ]
-      },
-      "DAYLIGHT":{
-        "TZOFFSETFROM":{
-          "value":{
-            "sign":"-",
-            "hr":"05",
-            "min":"00"
-          }
-        },
-        "TZOFFSETTO":{
-          "value":{
-            "sign":"-",
-            "hr":"04",
-            "min":"00"
-          }
-        },
-        "TZNAME":{
-          "value":"RDATE_as_date_daylight"
-        },
-        "DTSTART":{
-          "value":"1975-01-01 02:00:00 +1100"
-        },
-        "RDATE":[
-          {
-            "value":[
-              "1975-01-01 02:00:00 +1100"
-            ]
-          },
-          {
-            "value":[
-              "1985-01-01 00:00:00 UTC"
-            ],
-            "params":{
-              "VALUE":"DATE"
-            }
-          },
-          {
-            "value":[
-              "1995-01-01 07:00:00 UTC"
-            ]
-          }
-        ]
-      }
-    }
-  }
-}
+{"VCALENDAR":
+  {"PRODID":{"value":"-//ical.js//NONSGML Makebelieve//EN"},
+   "VERSION":{"value":"2.0"},
+   "VTIMEZONE":
+    {"TZID":{"value":"Makebelieve/RDATE_as_date"},
+     "X_LIC_LOCATION":{"value":"Makebelieve/RDATE_as_date"},
+     "STANDARD":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"04", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"05", "min":"00"}},
+       "TZNAME":{"value":"RDATE_as_date_standard"},
+       "DTSTART":{"value":{"time":"1970-01-01 02:00:00 +1000", "zone":""}},
+       "RDATE":
+        [{"value":[{"time":"1970-01-01 02:00:00 +1000", "zone":""}]},
+         {"value":["1980-01-01 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
+         {"value":[{"time":"1990-01-01 07:00:00 UTC", "zone":"Z"}]}]},
+     "DAYLIGHT":
+      {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"05", "min":"00"}},
+       "TZOFFSETTO":{"value":{"sign":"-", "hr":"04", "min":"00"}},
+       "TZNAME":{"value":"RDATE_as_date_daylight"},
+       "DTSTART":{"value":{"time":"1975-01-01 02:00:00 +1100", "zone":""}},
+       "RDATE":
+        [{"value":[{"time":"1975-01-01 02:00:00 +1100", "zone":""}]},
+         {"value":["1985-01-01 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
+         {"value":[{"time":"1995-01-01 07:00:00 UTC", "zone":"Z"}]}]}}}}

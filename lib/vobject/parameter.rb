@@ -3,8 +3,6 @@ module Vobject
 
   class Parameter
 
-    MAX_LINE_WIDTH = 75
-
     attr_accessor :param_name, :value, :multiple
 
     def initialize key, options
@@ -23,11 +21,11 @@ module Vobject
     end
 
     def to_s
-      line = "#{param_name}"
+      # we made param names have underscore instead of dash as symbols
+      line = "#{param_name.to_s.gsub(/_/,'-')}"
 
-      line << "=#{value}"
-
-      line = fold_line(line) << "\n"
+      # RFC 6868
+      line << "=" + value.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
 
       line
     end
@@ -76,24 +74,6 @@ module Vobject
 
     def raise_invalid_initialization(key, name)
       raise "vObject property initialization failed (#{key}, #{name})"
-    end
-
-    # This implements the line folding as specified in
-    # http://tools.ietf.org/html/rfc6350#section-3.2
-    #
-    # NOTE: the "line" here is not including the trailing \n
-    def fold_line(line)
-      folded_line    = line[0, MAX_LINE_WIDTH]
-      remainder_line = line[MAX_LINE_WIDTH, line.length - MAX_LINE_WIDTH] || ''
-
-      max_width = MAX_LINE_WIDTH - 1
-
-      for i in 0..((remainder_line.length - 1) / max_width)
-        folded_line << "\n "
-        folded_line << remainder_line[i * max_width, max_width]
-      end
-
-      folded_line
     end
 
   end

@@ -4,7 +4,9 @@
    "VTIMEZONE":
     {"TZID":{"value":"America/Los_Angeles"},
      "STANDARD":
-      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+      {"DTSTART":
+        {"value":
+          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "RRULE":
@@ -13,10 +15,12 @@
            "wkst":"MO",
            "interval":"1",
            "bymonth":["11"],
-           "byday":[{"weekday":"SU"}]}},
+           "byday":[{"weekday":"SU", "ordwk":"1"}]}},
        "TZNAME":{"value":"PST"}},
      "DAYLIGHT":
-      {"DTSTART":{"value":"1971-01-01 02:00:00 +1000"},
+      {"DTSTART":
+        {"value":
+          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "RRULE":
@@ -25,7 +29,7 @@
            "wkst":"MO",
            "interval":"1",
            "bymonth":["3"],
-           "byday":[{"weekday":"SU"}]}},
+           "byday":[{"weekday":"SU", "ordwk":"2"}]}},
        "TZNAME":{"value":"PDT"}}},
    "VEVENT":
     {"UID":{"value":"623c13c0-6c2b-45d6-a12b-c33ad61c4868"},
@@ -34,8 +38,8 @@
       {"value":
         {"freq":"MONTHLY",
          "interval":"1",
-         "byday":[{"weekday":"TU"}],
-         "until":"2012-12-31 10:00:00 +1100"}},
+         "byday":[{"weekday":"TU", "ordwk":"1"}],
+         "until":{"time":"2012-12-31 10:00:00 +1100", "zone":""}}},
      "SUMMARY":{"value":"Crazy Event Thingy!"},
      "ATTENDEE":
       [{"value":"mailto:calmozilla1@gmail.com",
@@ -43,41 +47,46 @@
          {"CUTYPE":"INDIVIDUAL",
           "ROLE":"REQ-PARTICIPANT",
           "PARTSTAT":"ACCEPTED",
-          "CN":"SAHAJA LAL",
+          "CN":"Sahaja Lal",
           "X_NUM_GUESTS":"0"}},
        {"value":"mailto:james@lightsofapollo.com",
         "params":
          {"CUTYPE":"INDIVIDUAL",
           "ROLE":"REQ-PARTICIPANT",
           "PARTSTAT":"NEEDS-ACTION",
-          "CN":"JAMES@LIGHTSOFAPOLLO.COM",
+          "CN":"james@lightsofapollo.com",
           "X_NUM_GUESTS":"0"}},
        {"value":"mailto:iam.revelation@gmail.com",
         "params":
          {"CUTYPE":"INDIVIDUAL",
           "ROLE":"REQ-PARTICIPANT",
           "PARTSTAT":"NEEDS-ACTION",
-          "CN":"IAM.REVELATION@GMAIL.COM",
+          "CN":"iam.revelation@gmail.com",
           "X_NUM_GUESTS":"0"}}],
      "LOCATION":{"value":"PLACE"},
      "ORGANIZER":
-      {"value":"mailto:jlal@mozilla.com", "params":{"CN":"JAMES LAL"}},
+      {"value":"mailto:jlal@mozilla.com", "params":{"CN":"James Lal"}},
      "DTSTART":
-      {"value":"2012-10-02 03:00:00 UTC",
+      {"value":
+        {"time":"2012-10-02 17:00:00 UTC", "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "DTEND":
-      {"value":"2012-10-02 03:30:00 UTC",
+      {"value":
+        {"time":"2012-10-02 17:30:00 UTC", "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "TRANSP":{"value":"OPAQUE"},
-     "LAST_MODIFIED":{"value":"2012-09-12 17:15:06 UTC"},
-     "DTSTAMP":{"value":"2012-09-12 17:15:06 UTC"},
+     "LAST_MODIFIED":
+      {"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
+     "DTSTAMP":{"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
      "SEQUENCE":{"value":0},
      "RDATE":
-      [{"value":["2012-11-10 02:00:00 UTC"],
+      [{"value":
+         [{"time":"2012-11-10 18:00:00 UTC", "zone":"America/Los_Angeles"}],
         "params":{"TZID":"America/Los_Angeles"}},
-       {"value":["2012-11-05 02:00:00 UTC"],
+       {"value":
+         [{"time":"2012-11-05 18:00:00 UTC", "zone":"America/Los_Angeles"}],
         "params":{"TZID":"America/Los_Angeles"}}],
      "VALARM":
       {"ACTION":{"value":"DISPLAY"},

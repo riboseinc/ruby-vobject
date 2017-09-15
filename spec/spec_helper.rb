@@ -4,3 +4,4 @@ require "rspec/json_expectations"
 require "json"
 
 require "vobject"
+require "vcalendar"
