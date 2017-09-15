@@ -144,7 +144,7 @@ module Vobject::Vcalendar
   end
 
   def timeT
-	  timeT = C::TIME
+	  timeT = C::TIME.map {|t| Vobject::Vcalendar::PropertyValue::Time.new t }
 	  timeT.eof
   end
   

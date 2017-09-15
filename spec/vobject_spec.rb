@@ -341,11 +341,6 @@ describe Vobject do
     exp_json = JSON.load(File.read "spec/examples/multivalue.json")
     expect(vobj_json).to include_json(exp_json)
   end
-  it 'should roundtrip VCARD with multiple values' do
-    ics = File.read "spec/examples/multivalue.ics"
-    roundtrip = Vcalendar.parse(ics).to_s
-    expect(normalise(roundtrip)).to eql(normalise(ics))
-  end
 
   it 'should parse iCalendar properly with only DTSTART date' do
     ics = File.read "spec/examples/only_dtstart_date.ics"

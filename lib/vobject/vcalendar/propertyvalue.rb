@@ -200,6 +200,10 @@ module PropertyValue
         self.type = 'float'
     end
 
+    def to_s
+	    self.value
+    end
+
     def to_hash
       self.value
     end
@@ -474,6 +478,7 @@ module PropertyValue
 	      ret = m[:start].to_s + "/"
 	      ret += m[:end].to_s if m.has_key? :end
 	      ret += m[:duration].to_s if m.has_key? :duration
+	      ret
       }.join(',')
     end
 
@@ -539,7 +544,7 @@ module PropertyValue
 
     def to_s
 	    ret = "#{self.value[:statcode]};#{self.value[:statdesc]}"
-	    ret += self.value[:extdata] if self.value[:extdata]
+	    ret += ";#{self.value[:extdata]}" if self.value[:extdata]
 	    ret
     end
     
