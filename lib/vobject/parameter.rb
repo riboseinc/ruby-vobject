@@ -26,7 +26,7 @@ module Vobject
       line << "=" 
       if self.multiple
 	        arr = []
-      		self.value.each {|v|
+      		self.multiple.each {|v|
 			arr << to_s_line(v.value.to_s)
 		}
 		line << arr.join(',')
@@ -38,7 +38,11 @@ module Vobject
 
     def to_s_line(val)
       # RFC 6868
-      val.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
+      val = val.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
+      if val =~ /[:;,]/
+	      val = '"' + val + '"'
+      end
+      val
     end
 
   def to_hash
