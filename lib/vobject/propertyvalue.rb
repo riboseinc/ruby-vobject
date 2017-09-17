@@ -10,7 +10,6 @@ module Vobject
      end
 
       #raise_invalid_initialization if key != name
-    end
 
     def to_s
       self.value
@@ -37,4 +36,4 @@ module Vobject
 
 
 end
-
+end
