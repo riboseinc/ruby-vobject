@@ -110,9 +110,10 @@ attr_accessor :strict, :errors
 		      C::VALUE, /(\r|\n|\r\n)/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value, @ctx)
+			hash[key][:value], errors1 = Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value, @ctx)
+			self.errors << errors1
 			hash[key][:group] = group[0]  unless group.empty?
-			Paramcheck.paramcheck(key, params.empty? ? {} : params[0], @ctx)
+			self.errors << Paramcheck.paramcheck(self.strict, key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 		}
@@ -132,7 +133,8 @@ attr_accessor :strict, :errors
 	calprop     = seq(linegroup._?, calpropname, ':', C::VALUE, 	/[\r\n]/) {|group, key, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {} }
-			hash[key][:value] = Typegrammars.typematch(self.strict, key, nil, :VCARD, value, @ctx)
+			hash[key][:value], errors1 = Typegrammars.typematch(self.strict, key, nil, :VCARD, value, @ctx)
+			self.errors << errors1
 			hash[key][:group] = group[0]  unless group.empty?
 			hash
 	}

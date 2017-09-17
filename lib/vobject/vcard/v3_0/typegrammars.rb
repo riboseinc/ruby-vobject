@@ -5,7 +5,6 @@ require "date"
 #require "tzinfo"
 include Rsec::Helpers
 require 'vobject/vcard/version'
-require_relative "./propertyparent"
 require 'vobject'
 require_relative './propertyvalue'
 
@@ -332,7 +331,6 @@ module Vcard::V3_0
   def typematch(strict, key, params, component, value, ctx)
     errors = []
     params[:VALUE] = params[:VALUE].downcase if params and params[:VALUE]
-    property_parent(key, component, value, ctx)
     ctx1 = Rsec::ParseContext.new value, 'source'
     case key
      when :VERSION
@@ -416,11 +414,8 @@ module Vcard::V3_0
     if Rsec::INVALID[ret] 
 	    parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
     end
-    if !strict
-	    ret.errors = errors
-    end
         Rsec::Fail.reset
-    return ret
+    return [ret, errors]
   end
 
 
@@ -434,10 +429,6 @@ def parse_err(strict, errors, msg, ctx)
 								                   errors << ctx.report_error(msg, 'source')
 										              end
 		      end
-
-   #def parse_err(msg, ctx)
-	          #raise ctx.report_error msg, 'source'
-   #end
 
   end
 end

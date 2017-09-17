@@ -156,8 +156,9 @@ attr_accessor :strict, :errors
 		      C::VALUE, /[\r\n]/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			Vcard::V4_0::Paramcheck.paramcheck(key, params.empty?  ? {} : params[0], @ctx)
-			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value)
+			self.errors << Vcard::V4_0::Paramcheck.paramcheck(self.strict, key, params.empty?  ? {} : params[0], @ctx)
+			hash[key][:value], errors1 = Vcard::V4_0::Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value)
+			self.errors << errors1
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -186,7 +187,8 @@ attr_accessor :strict, :errors
 	calprop     = seq(calpropname, ':', C::VALUE, 	/[\r\n]/) {|key, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {} }
-			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(self.strict, key, nil, :VCARD, value)
+			hash[key][:value], errors1 = Vcard::V4_0::Typegrammars.typematch(self.strict, key, nil, :VCARD, value)
+			self.errors << errors1
 			hash
 	}
     vobject 	= seq(/BEGIN:VCARD[\r\n]/i.r, calprop, props, /END:VCARD[\r\n]/i.r) { |(b, v, rest, e)|

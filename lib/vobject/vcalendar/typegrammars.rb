@@ -377,7 +377,7 @@ module Vobject::Vcalendar
   # If successful, return typed interpretation of string
   def typematch(strict, key, params, component, value, ctx)
 	  errors = []
-    property_parent(strict, key, component, value, ctx)
+    errors << property_parent(strict, key, component, value, ctx)
     ctx1 = Rsec::ParseContext.new value, 'source'
     case key
     when :CALSCALE
@@ -576,11 +576,8 @@ module Vobject::Vcalendar
     if Rsec::INVALID[ret] 
         parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
     end
-    if !strict
-	                ret.errors = errors
-   end
     Rsec::Fail.reset
-    return ret
+    return [ret, errors]
   end
   
   

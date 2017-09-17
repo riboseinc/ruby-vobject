@@ -187,7 +187,7 @@ attr_accessor :strict, :errors
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {:value => value} }
 			hash[key][:group] = group[0]  unless group.empty?
-			Vobject::Vcalendar::Paramcheck.paramcheck(self.strict, key, params.empty? ? {} : params[0], @ctx)
+			self.errors << Vobject::Vcalendar::Paramcheck.paramcheck(self.strict, key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 		}
@@ -195,7 +195,8 @@ attr_accessor :strict, :errors
         props	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{props}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :GENERIC, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :GENERIC, c[k][:value], @ctx)
+			self.errors << errors1
 			c.merge( rest ) { | key, old, new|
 				[old,  new].flatten
 				# deal with duplicate properties
@@ -204,7 +205,8 @@ attr_accessor :strict, :errors
         alarmprops	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{alarmprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :ALARM, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :ALARM, c[k][:value], @ctx)
+			self.errors << errors1
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:ALARM].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -215,7 +217,8 @@ attr_accessor :strict, :errors
         fbprops		= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{fbprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :FREEBUSY, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :FREEBUSY, c[k][:value], @ctx)
+			self.errors << errors1
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:FREEBUSY].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -226,7 +229,8 @@ attr_accessor :strict, :errors
         journalprops	= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{journalprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :JOURNAL, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :JOURNAL, c[k][:value], @ctx)
+			self.errors << errors1
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:JOURNAL].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -237,7 +241,8 @@ attr_accessor :strict, :errors
         tzprops		= (''.r & beginend).map {|e| {}   } | 
 		seq(contentline, lazy{tzprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :TZ, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :TZ, c[k][:value], @ctx)
+			self.errors << errors1
 			c.merge( rest ) { | key, old, new|
 				if @cardinality1[:TZ].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -264,7 +269,8 @@ attr_accessor :strict, :errors
 				e.merge(rest) {|key, old, new| {:component => [old[:component], new[:component]].flatten} }
 			} | seq(contentline, lazy{timezoneprops}) {|e, rest|
 			k = e.keys[0]
-			e[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, e[k][:params], :TIMEZONE, e[k][:value], @ctx)
+			e[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, e[k][:params], :TIMEZONE, e[k][:value], @ctx)
+			self.errors << errors1
 			e.merge( rest ) { | key, old, new|
 				if @cardinality1[:TIMEZONE].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -276,7 +282,8 @@ attr_accessor :strict, :errors
         todoprops	= (''.r & beginend).map {|e| {}   } | 
 			seq(contentline, lazy{todoprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :TODO, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :TODO, c[k][:value], @ctx)
+			self.errors << errors1
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:TODO].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -286,7 +293,8 @@ attr_accessor :strict, :errors
 			}
         eventprops	= seq(contentline, lazy{eventprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :EVENT, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :EVENT, c[k][:value], @ctx)
+			self.errors << errors1
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:EVENT].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -377,7 +385,8 @@ attr_accessor :strict, :errors
 	# RFC 7953
         availableprops	= seq(contentline, lazy{availableprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :AVAILABLE, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :AVAILABLE, c[k][:value], @ctx)
+			self.errors << errors1
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:AVAILABLE].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -395,7 +404,8 @@ attr_accessor :strict, :errors
 			}
         availabilityprops	= seq(contentline, lazy{availabilityprops}) {|c, rest|
 			k = c.keys[0]
-			c[k][:value] = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :VAVAILABILITY, c[k][:value], @ctx)
+			c[k][:value], errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, k, c[k][:params], :VAVAILABILITY, c[k][:value], @ctx)
+			self.errors << errors1
 				c.merge( rest ) { | key, old, new|
 				if @cardinality1[:VAVAILABILITY].include?(key.upcase)
 						parse_err("Violated cardinality of property #{key}")
@@ -430,8 +440,10 @@ attr_accessor :strict, :errors
 	                C::XNAME_VCAL | C::IANATOKEN
 	calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
-	    		hash = { key => {:value => Vobject::Vcalendar::Typegrammars.typematch(self.strict, key, params[0], :CALENDAR, value, @ctx) }}
-			Vobject::Vcalendar::Paramcheck.paramcheck(self.strict, key, params.empty? ? {} : params[0], @ctx)
+			val, errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, key, params[0], :CALENDAR, value, @ctx)
+			self.errors << errors1
+	    		hash = { key => {:value => val }}
+			self.errors << Vobject::Vcalendar::Paramcheck.paramcheck(self.strict, key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
 			hash
 			# TODO not doing constraint that each description must be in a different language
@@ -536,11 +548,7 @@ attr_accessor :strict, :errors
 	@ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
 	ret = vobjectGrammar._parse @ctx
 	if !ret or Rsec::INVALID[ret] 
-	      if self.strict
-	      	raise @ctx.generate_error 'source'
-	      else
-		   self.errors << @ctx.generate_error('source')
-	      end
+		parse_err(@ctx.generate_error('source'))
         end
 	Rsec::Fail.reset
 	if self.strict
