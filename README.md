@@ -25,150 +25,48 @@ Or install it yourself as:
 
 ## Usage
 
-Vobject.parse("<ics/vcf file>")
+```
+require 'vcalendar'
+require 'JSON'
+require 'pp'
 
+ics = File.read "spec/examples/vcalendar/timezones/America/Denver.ics"
+# parse VCalendar into native object structure
+pp Vcalendar.parse(ics)
+# convert VCalendar into Ruby hash
+pp Vcalendar.parse(ics).to_hash
+# convert VCalendar into JSON
+pp JSON.parse(Vcalendar.parse(ics).to_json)
+# convert VCalendar into VCalendar text
+print Vcalendar.parse(ics).to_s
+```
+
+```
+require 'vcard'
+require 'JSON'
+require 'pp'
+
+vcf = File.read "spec/examples/vcard/vcard3.vcf"
+# parse Vcard into native object structure (version 3)
+pp Vcard.new('3.0').parse(vcf)
+# parse Vcard into Ruby hash
+pp Vcard.new('3.0').parse(vcf).to_hash
+# parse Vcard into JSON
+pp JSON.parse(Vcard.new('3.0').parse(vcf).to_json)
+# parse Vcard into VCard text
+print Vcard.new('3.0').parse(vcf).to_s
+```
+
+* Recognises all of VCard v3.0, Vcard v4.0, and Vcalendar v2.0
 * Components, properties, and parameters are all objects.
   * Each type of component is a distinct object.
 * The parameters of a property are represented as an array of parameter objects.
 * If a property has multiple values, given on separate lines, they are represented
 as an array of value properties. Each value hash may have its own parameters.
-* The values of properties are native Ruby types wherever possible
-(hashes, dates, integers, doubles).
-
-Example:
-
-A sample ics file (in spec/examples/example2.ics):
-
-```
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//ABC Corporation//NONSGML My Product//EN
-BEGIN:VTODO
-DTSTAMP:19980130T134500Z
-SEQUENCE:2
-UID:uid4@example.com
-ORGANIZER:mailto:unclesam@example.com
-ATTENDEE;PARTSTAT=ACCEPTED:mailto:jqpublic@example.com
-ATTENDEE;DELEGATED-TO="mailto:jdoe@example.com","mailto:j
- qpublic@example.com":mailto:jsmith@example.com
-DUE:19980415T000000
-STATUS:NEEDS-ACTION
-SUMMARY:Submit Income Taxes
-BEGIN:VALARM
-ACTION:AUDIO
-TRIGGER:19980403T120000Z
-ATTACH;FMTTYPE=audio/basic:http://example.com/pub/audio-
- files/ssbanner.aud
-REPEAT:4
-DURATION:PT1H
-END:VALARM
-END:VTODO
-END:VCALENDAR
-```
-
-Parse the ics file into Ruby hash format:
-
-```ruby
-require 'vobject'
-
-ics = File.read "spec/examples/example2.ics"
-Vobject.parse(ics)
-
-#<Vobject::Component:0x007ffc760602f0
- @children=
-  [#<Vobject::Property:0x007ffc7605bb60
-    @group=nil,
-    @prop_name=:VERSION,
-    @value="2.0">,
-   #<Vobject::Property:0x007ffc7605b660
-    @group=nil,
-    @prop_name=:PRODID,
-    @value="-//ABC Corporation//NONSGML My Product//EN">,
-   #<Vobject::Component::ToDo:0x007ffc7605b340
-    @children=
-     [#<Vobject::Property:0x007ffc7605b020
-       @group=nil,
-       @prop_name=:DTSTAMP,
-       @value=1998-01-30 13:45:00 UTC>,
-      #<Vobject::Property:0x007ffc7605ac60
-       @group=nil,
-       @prop_name=:SEQUENCE,
-       @value=2>,
-      #<Vobject::Property:0x007ffc7605a6e8
-       @group=nil,
-       @prop_name=:UID,
-       @value="uid4@example.com">,
-      #<Vobject::Property:0x007ffc7605a170
-       @group=nil,
-       @prop_name=:ORGANIZER,
-       @value="mailto:unclesam@example.com">,
-      #<Vobject::Property:0x007ffc76059ab8
-       @multiple=
-        [#<Vobject::Property:0x007ffc76059888
-          @group=nil,
-          @params=
-           [#<Vobject::Parameter:0x007ffc76059518
-             @param_name=:PARTSTAT,
-             @value="ACCEPTED">],
-          @prop_name=:ATTENDEE,
-          @value="mailto:jqpublic@example.com">,
-         #<Vobject::Property:0x007ffc76058618
-          @group=nil,
-          @params=
-           [#<Vobject::Parameter:0x007ffc760585a0
-             @multiple=
-              [#<Vobject::Parameter:0x007ffc76058500
-                @param_name=:DELEGATED_TO,
-                @value="mailto:jqpublic@example.com">,
-               #<Vobject::Parameter:0x007ffc76058280
-                @param_name=:DELEGATED_TO,
-                @value="mailto:jdoe@example.com">],
-             @param_name=:DELEGATED_TO>],
-          @prop_name=:ATTENDEE,
-          @value="mailto:jsmith@example.com">],
-       @prop_name=:ATTENDEE>,
-      #<Vobject::Property:0x007ffc76053c58
-       @group=nil,
-       @prop_name=:DUE,
-       @value=1998-04-15 00:00:00 +1000>,
-      #<Vobject::Property:0x007ffc760537f8
-       @group=nil,
-       @prop_name=:STATUS,
-       @value="NEEDS-ACTION">,
-      #<Vobject::Property:0x007ffc760532a8
-       @group=nil,
-       @prop_name=:SUMMARY,
-       @value="Submit Income Taxes">],
-    @comp_name=:VTODO>,
-   #<Vobject::Component::Alarm:0x007ffc76052e98
-    @children=
-     [#<Vobject::Property:0x007ffc76052b00
-       @group=nil,
-       @prop_name=:ACTION,
-       @value="AUDIO">,
-      #<Vobject::Property:0x007ffc76052808
-       @group=nil,
-       @prop_name=:TRIGGER,
-       @value=1998-04-03 12:00:00 UTC>,
-      #<Vobject::Property:0x007ffc760524e8
-       @group=nil,
-       @params=
-        [#<Vobject::Parameter:0x007ffc76052498
-          @param_name=:FMTTYPE,
-          @value="audio/basic">],
-       @prop_name=:ATTACH,
-       @value="http://example.com/pub/audio-files/ssbanner.aud">,
-      #<Vobject::Property:0x007ffc76052010
-       @group=nil,
-       @prop_name=:REPEAT,
-       @value=4>,
-      #<Vobject::Property:0x007ffc76051c78
-       @group=nil,
-       @prop_name=:DURATION,
-       @value="PT1H">],
-    @comp_name=:VALARM>],
- @comp_name=:VCALENDAR>
-```
+* The values of properties are also typed objects.
+* Objects can be parsed from text files.
+* Objects can be populated from hashes of property value objects.
+* Objects can be converted to Ruby hashes with native property value types (`.to_hash`), JSON objects with the same value types (`.to_json`), and round-tripped back to ICAL/VCARD string representations (`.to_s`)
 
 Running spec:
 bundle exec rspec
@@ -187,6 +85,11 @@ The tool only parses one object at a time, and does not parse Vobject streams.
 This tool supports v2.0 iCal as specified in RFC 5545, and as updated in RFC 5546 (registry for values of METHOD and REQUEST-STATUS),
 RFC 6868 (caret escapes for parameter values), RFC 7529 (non-Gregorian Calendars), RFC 7953 (VAVAILABILITY component), and
 RFC 7986 (new properties).
+
+This tool supports v3.0 vCard as specified in RFC 2425 and RFC 2426, and as updated in RFC 2739 (calendar attributes) and RFC 4770 (extensions for Instant Messaging). It allows for the VCARD 2.1 style specification of PREF parameters in RFC 2739.
+
+This tool supports v4.0 vCard as specified in RFC 6350, and as updated in RFC 6868 (parameter encoding), RFC 6474 (place of birth, place and date of death), RFC 6715 (OMA CAB extensions), and RF 6473 (KIND:application).
+
 
 ## Contributing
 
