@@ -14,8 +14,12 @@ require_relative "../../../error"
 
 module Vcard::V3_0
 	class Grammar
-
+attr_accessor :strict, :errors
  class << self
+  def unfold(str)
+	         str.gsub(/[\n\r]+[ \t]/, '')
+  end
+ end
 
   def vobjectGrammar
 
@@ -106,7 +110,7 @@ module Vcard::V3_0
 		      C::VALUE, /(\r|\n|\r\n)/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
-			hash[key][:value] = Typegrammars.typematch(key, params[0], :GENERIC, value, @ctx)
+			hash[key][:value] = Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value, @ctx)
 			hash[key][:group] = group[0]  unless group.empty?
 			Paramcheck.paramcheck(key, params.empty? ? {} : params[0], @ctx)
 			hash[key][:params] = params[0] unless params.empty?
@@ -128,7 +132,7 @@ module Vcard::V3_0
 	calprop     = seq(linegroup._?, calpropname, ':', C::VALUE, 	/[\r\n]/) {|group, key, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {} }
-			hash[key][:value] = Typegrammars.typematch(key, nil, :VCARD, value, @ctx)
+			hash[key][:value] = Typegrammars.typematch(self.strict, key, nil, :VCARD, value, @ctx)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash
 	}
@@ -144,27 +148,40 @@ module Vcard::V3_0
     vobject.eof 
   end 
 
+    def initialize(strict)
+	              self.strict = strict
+		                self.errors = []
+  end
+
+
   def parse(vobject)
-	@ctx = Rsec::ParseContext.new unfold(vobject), 'source'
+	@ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
 	ret = vobjectGrammar._parse @ctx
 	if !ret or Rsec::INVALID[ret] 
+	        if self.strict
 	      raise @ctx.generate_error 'source'
+		else
+			self.errors << @ctx.generate_error('source')
+			              end
         end
 	Rsec::Fail.reset
-	return ret
+	        if self.strict
+		                return ret
+		else
+		                return {:vobject => ret, :errors => self.errors}
+ 	       end
+
   end
 
 private
 
-  def unfold(str)
-	         str.gsub(/[\n\r]+[ \t]/, '')
-  end
-
-
    def parse_err(msg)
+	   if self.strict
 	          raise @ctx.report_error msg, 'source'
+ 	   else
+		   self.errors << @ctx.report_error(msg, 'source')
+	   end
    end
 
   end
-end
 end

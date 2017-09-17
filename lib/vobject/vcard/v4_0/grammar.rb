@@ -14,8 +14,19 @@ require_relative "../../../error"
 
 module Vcard::V4_0
 	class Grammar
+attr_accessor :strict, :errors
 
  class << self
+  def unfold(str)
+	                   str.gsub(/[\n\r]+[ \t]/, '')
+			     end
+ end
+
+     # RFC 6868
+    def rfc6868decode(x)
+                 x.gsub(/\^n/, "\n").gsub(/\^\^/, '^').gsub(/\^'/, '"')
+                   end
+ 
 
   def vobjectGrammar
 
@@ -146,7 +157,7 @@ module Vcard::V4_0
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {} }
 			Vcard::V4_0::Paramcheck.paramcheck(key, params.empty?  ? {} : params[0], @ctx)
-			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(key, params[0], :GENERIC, value)
+			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value)
 			hash[key][:group] = group[0]  unless group.empty?
 			hash[key][:params] = params[0] unless params.empty?
 			hash
@@ -175,7 +186,7 @@ module Vcard::V4_0
 	calprop     = seq(calpropname, ':', C::VALUE, 	/[\r\n]/) {|key, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {} }
-			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(key, nil, :VCARD, value)
+			hash[key][:value] = Vcard::V4_0::Typegrammars.typematch(self.strict, key, nil, :VCARD, value)
 			hash
 	}
     vobject 	= seq(/BEGIN:VCARD[\r\n]/i.r, calprop, props, /END:VCARD[\r\n]/i.r) { |(b, v, rest, e)|
@@ -188,32 +199,40 @@ module Vcard::V4_0
     vobject.eof 
   end 
 
-    # RFC 6868
-  def rfc6868decode(x)
-             x.gsub(/\^n/, "\n").gsub(/\^\^/, '^').gsub(/\^'/, '"')
-  end
-  
+      def initialize(strict)
+	                            self.strict = strict
+				                                    self.errors = []
+      end
+
+
   def parse(vobject)
-	@ctx = Rsec::ParseContext.new unfold(vobject), 'source'
+	@ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
 	ret = vobjectGrammar._parse @ctx
 	if !ret or Rsec::INVALID[ret] 
+		                if self.strict
 	      raise @ctx.generate_error 'source'
+	       else
+		                               self.errors << @ctx.generate_error('source')
+					                                             end
+
         end
 	Rsec::Fail.reset
-	return ret
+	if self.strict
+                            return ret
+               else
+                               return {:vobject => ret, :errors => self.errors}
+              end
   end
 
 private
 
-  def unfold(str)
-	         str.gsub(/[\n\r]+[ \t]/, '')
-  end
-
-
    def parse_err(msg)
-	          raise @ctx.report_error msg, 'source'
+	    if self.strict
+	                    raise @ctx.report_error msg, 'source'
+              else
+                   self.errors << @ctx.report_error(msg, 'source')
+             end
    end
 
   end
-end
 end

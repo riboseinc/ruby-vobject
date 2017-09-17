@@ -400,7 +400,8 @@ module Vcard::V4_0
 
   # Enforce type restrictions on values of particular properties.
   # If successful, return typed interpretation of string
-  def typematch(key, params, component, value)
+  def typematch(strict, key, params, component, value)
+	  errors = []
     ctx1 = Rsec::ParseContext.new value, 'source'
     case key
      when :VERSION
@@ -422,12 +423,12 @@ module Vcard::V4_0
     when :BDAY, :ANNIVERSARY
 	    if params and params[:VALUE] == 'text'
 		    if params[:CALSCALE]
-		        raise ctx1.report_error "Specified CALSCALE within property #{key} as text", 'source'
+		        parse_err(strict, errors,  "Specified CALSCALE within property #{key} as text", ctx1)
 		    end
 		    ret = textT._parse ctx1
 	    else
 		    if params and params[:CALSCALE] and /^T/ =~ value
-		        raise ctx1.report_error "Specified CALSCALE within property #{key} as time", 'source'
+		        parse_err(strict, errors, "Specified CALSCALE within property #{key} as time", ctx1)
 		    end
 		    ret = date_and_or_time._parse ctx1
 	    end
@@ -442,7 +443,7 @@ module Vcard::V4_0
 		    typestr = params[:TYPE].kind_of?(Array) ? params[:TYPE].join(',') : params[:TYPE]
 		    ret1 = typeparamtel1list.parse typestr
 		    if !ret1 or Rsec::INVALID[ret1]
-	      		raise ctx1.report_error "Specified illegal TYPE parameter #{typestr} within property #{key}", 'source'
+	      		parse_err(strict, errors, "Specified illegal TYPE parameter #{typestr} within property #{key}", ctx1)
 		    end
 	    end
 	    if params and params[:VALUE] == 'uri'
@@ -461,7 +462,7 @@ module Vcard::V4_0
 		    typestr = params[:TYPE].kind_of?(Array) ? params[:TYPE].join(';') : params[:TYPE]
 		    ret1 = typerelatedlist.parse typestr
 		    if !ret1 or Rsec::INVALID[ret1]
-	      		raise ctx1.report_error "Specified illegal TYPE parameter #{typestr} within property #{key}", 'source'
+	      		parse_err(strict, errors, "Specified illegal TYPE parameter #{typestr} within property #{key}", ctx1)
 		    end
 	    end
 	    if params and params[:VALUE] == 'uri'
@@ -491,7 +492,7 @@ module Vcard::V4_0
 	      ret = timestamp._parse ctx1
      when :CLIENTPIDMAP
 	     if params and params[:PID]
-	      		raise @ctx.report_error "Specified PID parameter in CLIENTPIDMAP property", 'source'
+	      		parse_err(strict, errors, "Specified PID parameter in CLIENTPIDMAP property", @ctx)
 	     end
 	     ret = clientpidmap._parse ctx1
     else
@@ -499,10 +500,10 @@ module Vcard::V4_0
 	    ret = Vobject::PropertyValue.new value
     end
     if ret.kind_of?(Hash) and ret[:error]
-        raise ctx1.report_error "#{ret[:error]} for property #{key}, value #{value}", 'source'
+        parse_err(strict, errors, "#{ret[:error]} for property #{key}, value #{value}", ctx1)
     end
     if Rsec::INVALID[ret] 
-        raise ctx1.report_error "Type mismatch for property #{key}, value #{value}", 'source'
+        parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx1)
     end
     return ret
   end
@@ -512,9 +513,13 @@ module Vcard::V4_0
 private
 
 
-   def parse_err(msg, ctx)
-	          raise ctx.report_error msg, 'source'
-   end
+   def parse_err(strict, errors, msg, ctx)
+	              if strict
+			                        raise ctx.report_error msg, 'source'
+						           else
+								                      errors << ctx.report_error(msg, 'source')
+										                 end
+		         end
 
   end
 end

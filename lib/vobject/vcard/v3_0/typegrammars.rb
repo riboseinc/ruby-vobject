@@ -329,7 +329,8 @@ module Vcard::V3_0
 
   # Enforce type restrictions on values of particular properties.
   # If successful, return typed interpretation of string
-  def typematch(key, params, component, value, ctx)
+  def typematch(strict, key, params, component, value, ctx)
+    errors = []
     params[:VALUE] = params[:VALUE].downcase if params and params[:VALUE]
     property_parent(key, component, value, ctx)
     ctx1 = Rsec::ParseContext.new value, 'source'
@@ -403,17 +404,22 @@ module Vcard::V3_0
 		#value = value.gsub(/\\:/,':')
 		value = value.gsub(/BEGIN:VCARD\n/, "BEGIN:VCARD\nVERSION:3.0\n") unless value =~ /\nVERSION:3\.0/
     		ctx1 = Rsec::ParseContext.new value, 'source' 
-		ret = Vcard::V3_0::PropertyValue::Agent.new(Vcard::V3_0::Grammar.vobjectGrammar._parse ctx1)
+		ret = Vcard::V3_0::PropertyValue::Agent.new(Vcard::V3_0::Grammar.new(strict).vobjectGrammar._parse ctx1)
+		# TODO same strictness as grammar
 	    end
     else
 	    ret = textT._parse ctx1
     end
     if ret.kind_of?(Hash) and ret[:error]
-        raise ctx1.report_error "#{ret[:error]} for property #{key}, value #{value}", 'source'
+	    parse_err(strict, errors, "#{ret[:error]} for property #{key}, value #{value}", ctx)
     end
     if Rsec::INVALID[ret] 
-        raise ctx1.report_error "Type mismatch for property #{key}, value #{value}", 'source'
+	    parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
     end
+    if !strict
+	    ret.errors = errors
+    end
+        Rsec::Fail.reset
     return ret
   end
 
@@ -421,10 +427,17 @@ module Vcard::V3_0
 
 private
 
+def parse_err(strict, errors, msg, ctx)
+	           if strict
+			                     raise ctx.report_error msg, 'source'
+					                else
+								                   errors << ctx.report_error(msg, 'source')
+										              end
+		      end
 
-   def parse_err(msg, ctx)
-	          raise ctx.report_error msg, 'source'
-   end
+   #def parse_err(msg, ctx)
+	          #raise ctx.report_error msg, 'source'
+   #end
 
   end
 end

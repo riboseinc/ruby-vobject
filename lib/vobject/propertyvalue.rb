@@ -2,7 +2,7 @@ module Vobject
       	class PropertyValue
 
 
-		attr_accessor :value, :type
+		attr_accessor :value, :type, :errors
 
     def initialize val
         self.value = val

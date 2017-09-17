@@ -375,8 +375,9 @@ module Vobject::Vcalendar
 
   # Enforce type restrictions on values of particular properties.
   # If successful, return typed interpretation of string
-  def typematch(key, params, component, value, ctx)
-    property_parent(key, component, value, ctx)
+  def typematch(strict, key, params, component, value, ctx)
+	  errors = []
+    property_parent(strict, key, component, value, ctx)
     ctx1 = Rsec::ParseContext.new value, 'source'
     case key
     when :CALSCALE
@@ -392,16 +393,16 @@ module Vobject::Vcalendar
 		    ret = uri._parse ctx1
 	    end
     when :IMAGE
-        raise ctx1.report_error "No VALUE parameter specified for property #{key}", 'source' if params.empty?
-        raise ctx1.report_error "No VALUE parameter specified for property #{key}", 'source' unless params[:VALUE]
+        parse_err(strict, errors, "No VALUE parameter specified for property #{key}", ctx1) if params.empty?
+        parse_err(strict, errors, "No VALUE parameter specified for property #{key}", ctx1) unless params[:VALUE]
 	    if params[:VALUE] == 'BINARY'
-		raise ctx1.report_error "No ENCODING parameter specified for property #{key}", 'source' unless params[:ENCODING]
-		raise ctx1.report_error "Incorrect ENCODING parameter specified for property #{key}", 'source' unless params[:ENCODING] == 'BASE64'
+		parse_err(strict, errors, "No ENCODING parameter specified for property #{key}", ctx1) unless params[:ENCODING]
+		parse_err(strict, errors, "Incorrect ENCODING parameter specified for property #{key}", ctx1) unless params[:ENCODING] == 'BASE64'
 		    ret = binary._parse ctx1
 	    elsif params[:VALUE] == 'URI'
 		    ret = uri._parse ctx1
 	    else
-	raise ctx1.report_error "Incorrect VALUE parameter specified for property #{key}", 'source' 
+	parse_err(strict, errors,  "Incorrect VALUE parameter specified for property #{key}", ctx1)
 	    end
     when :CATEGORIES, :RESOURCES
 	    ret = textlist._parse ctx1
@@ -437,7 +438,7 @@ module Vobject::Vcalendar
 		else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
+					parse_err(strict, errors,  "Specified TZID within property #{key} in #{component}", ctx1)
 				end
 				begin
 					tz = TZInfo::Timezone.get(params[:TZID])
@@ -459,7 +460,7 @@ module Vobject::Vcalendar
 	    else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
+					parse_err(strict, errors, "Specified TZID within property #{key} in #{component}", ctx1)
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_timelist._parse ctx1
@@ -478,7 +479,7 @@ module Vobject::Vcalendar
 	    else
 			if params and params[:TZID]
 				if component == :STANDARD or component == :DAYLIGHT
-					raise ctx1.report_error "Specified TZID within property #{key} in #{component}", 'source'
+					parse_err(strict, errors,  "Specified TZID within property #{key} in #{component}", ctx1)
 				end
 				tz = TZInfo::Timezone.get(params[:TZID])
 	    			ret = date_timelist._parse ctx1
@@ -492,7 +493,7 @@ module Vobject::Vcalendar
     when :TRIGGER
 	    if params and params[:VALUE] == 'DATE-TIME' or /^\d{8}T/.match(value)
 	        if params and params[:RELATED]
-				raise ctx1.report_error "Specified RELATED within property #{key} as date-time", 'source'	        
+				parse_err(strict, errors,  "Specified RELATED within property #{key} as date-time", ctx1)
 			end
 	    	ret = date_time_utcT._parse ctx1
 	    else
@@ -506,9 +507,9 @@ module Vobject::Vcalendar
 	    ret = utc_offset._parse ctx1
 	when :TZURI, :URL, :SOURCE, :CONFERENCE
 	    if key == :CONFERENCE
-		    raise ctx1.report_error "Missing URI VALUE parameter" if params.empty?
-		    raise ctx1.report_error "Missing URI VALUE parameter" if !params[:VALUE]
-		raise ctx1.report_error "Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}" if params[:VALUE]  != 'URI'
+		    parse_err(strict, errors,  "Missing URI VALUE parameter", ctx1) if params.empty?
+		    parse_err(strict, errors,  "Missing URI VALUE parameter", ctx1) if !params[:VALUE]
+		parse_err(strict, errors, "report_error Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}", ctx1) if params[:VALUE]  != 'URI'
 	    end
 	    ret = uri._parse ctx1
 	when :ATTENDEE, :ORGANIZER
@@ -526,9 +527,9 @@ module Vobject::Vcalendar
 		ret = busytype._parse ctx1
 	# RFC 7986
 	when :REFRESH_INTERVAL
-		raise ctx1.report_error "Missing VALUE parameter for property #{key}" if params.empty?
-		raise ctx1.report_error "Missing VALUE parameter for property #{key}" if !params[:VALUE] 
-		raise ctx1.report_error "Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}" if params[:VALUE]  != 'DURATION'
+		parse_err(strict, errors, "Missing VALUE parameter for property #{key}", ctx1) if params.empty?
+		parse_err(strict, errors, "Missing VALUE parameter for property #{key}", ctx1) if !params[:VALUE] 
+		parse_err(strict, errors, "Type mismatch of VALUE parameter #{params[:VALUE]} for property #{key}", ctx1) if params[:VALUE]  != 'DURATION'
 		ret = durationT._parse ctx1
 	# RFC 7986
 	when :COLOR
@@ -570,11 +571,14 @@ module Vobject::Vcalendar
 	    end
     end
     if ret.kind_of?(Hash) and ret[:error]
-	raise  "#{ret[:error]} for property #{key}, value #{value}"
+	parse_err(strict, errors, "#{ret[:error]} for property #{key}, value #{value}", ctx)
     end
     if Rsec::INVALID[ret] 
-        raise "Type mismatch for property #{key}, value #{value}"
+        parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
     end
+    if !strict
+	                ret.errors = errors
+   end
     Rsec::Fail.reset
     return ret
   end
@@ -586,8 +590,12 @@ module Vobject::Vcalendar
 
 private
 
-   def parse_err(msg, ctx)
+   def parse_err(strict, errors, msg, ctx)
+	   if strict
 	          raise ctx.report_error msg, 'source'
+ 	   else
+		   errors << ctx.report_error(msg, 'source')
+	   end
    end
 
   end

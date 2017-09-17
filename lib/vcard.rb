@@ -17,6 +17,10 @@ class Vcard < Vobject::Component
 	  return self.blank(version_str).parse(vcard_str)
   end
 
+  def parse vcf, version, strict
+	  return version == '3.0' ? Vcard::V3_0::Component.parse(vcf, strict) : Vcard::V4_0::Component.parse(vcf, strict)
+  end
+
 
     private
 
@@ -29,25 +33,6 @@ class Vcard < Vobject::Component
   def encode version
 	  return self.to_s
   end
-
-  def parse vcf
-	  return self.version == '3.0' ? Vcard::V3_0::Component.parse(vcf) : Vcard::V4_0::Component.parse(vcf)
-  end
-
-=begin
-  def initialize cs
-    begin
-      #version_key = cs.first.keys.first
-      #self.version = cs.first[version_key][:value]
-      cs[:VERSION] = {:value => '4.0'} unless cs.has_key?(:VERSION)
-      self.version = cs[:VERSION][:value]
-    rescue
-      self.class.raise_invalid_parsing
-    end
-
-    super :VCARD, cs
-  end
-=end
 
   def initialize version
 	  self.version = version

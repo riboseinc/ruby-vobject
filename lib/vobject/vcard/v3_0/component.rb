@@ -9,8 +9,8 @@ class Component < Vobject::Component
 
   class << self
 
-    def parse(vcf)
-          hash = Vcard::V3_0::Grammar.parse(vcf)
+    def parse(vcf, strict)
+          hash = Vcard::V3_0::Grammar.new(strict).parse(vcf)
           comp_name = hash.keys.first
           self.new comp_name, hash[comp_name]
     end
