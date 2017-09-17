@@ -1,0 +1,21 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"jabber.org IM service"},
+   "URL":{"value":"http://www.jabber.org/"},
+   "LANG":{"value":"en", "params":{"PREF":"1"}},
+   "EMAIL":{"value":"xmpp@jabber.org"},
+   "IMPP":{"value":"xmpp:jabber.org"},
+   "LOGO":{"value":"http://www.jabber.org/images/logo.png"},
+   "GEO":{"value":"geo:42.25\\,-91.05"},
+   "TZ":{"value":"America/Chicago"},
+   "SOURCE":{"value":"xmpp:jabber.org?vcard"},
+   "REV":
+    {"value":
+      {"year":"1999",
+       "month":"01",
+       "day":"04",
+       "hour":"12",
+       "min":"21",
+       "sec":"00",
+       "zone":"Z"}},
+   "KIND":{"value":"application"}}}

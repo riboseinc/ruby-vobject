@@ -1,0 +1,137 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "N":
+    {"value":
+      {"surname":"LastName",
+       "givenname":"FirstName",
+       "additionalname":"MiddleName",
+       "honprefix":"Prefix",
+       "honsuffix":"Suffix"}},
+   "FN":{"value":"Prefix FirstName MiddleName LastName Suffix"},
+   "TEL":
+    [{"value":"555-555-1111", "params":{"TYPE":["HOME", "VOICE"]}},
+     {"value":"555-555-1112", "params":{"TYPE":["WORK", "VOICE"]}},
+     {"value":"555-555-1113", "params":{"TYPE":["CELL", "VOICE"]}},
+     {"value":"555-555-1114", "params":{"TYPE":["CELL", "VOICE"]}},
+     {"value":"555-555-1115", "params":{"TYPE":["VOICE"]}},
+     {"value":"555-555-1116", "params":{"TYPE":["HOME", "FAX"]}},
+     {"value":"555-555-1117", "params":{"TYPE":["WORK", "FAX"]}},
+     {"value":"555-555-1118", "params":{"TYPE":["VOICE"]}},
+     {"value":"555-555-1119", "params":{"TYPE":["VOICE"]}}],
+   "EMAIL":
+    [{"value":"home@example.com", "params":{"TYPE":["HOME"]}},
+     {"value":"work@example.com", "params":{"TYPE":["WORK"]}},
+     {"value":"school@example.com", "params":{"TYPE":["SCHOOL"]}},
+     {"value":"other@example.com", "params":{"TYPE":["OTHER"]}},
+     {"value":"custom@example.com", "params":{"TYPE":["CUSTOMTYPE"]}}],
+   "PHOTO":
+    [{"value":
+       "https://d3m0kzytmr41b1.cloudfront.net/c335e945d1b60edd9d75eb4837c432f637e95c8a"},
+     {"value":
+       "https://d3m0kzytmr41b1.cloudfront.net/c335e945d1b60edd9d75eb4837c432f637e95c8a"},
+     {"value":
+       "https://d2ojpxxtu63wzl.cloudfront.net/static/aa915d1f29f19baf560e5491decdd30a_67c95da9133249fde8b0da7ceebc298bf680117e6f52054f7f5f7a95e8377238"}],
+   "ORG":
+    [{"value":["Organization1", "Department1"]},
+     {"value":["Organization2", "Department2"]}],
+   "TITLE":[{"value":"Title1"}, {"value":"Title2"}],
+   "BDAY":
+    [{"value":{"year":"2016", "month":"08", "day":"01"},
+      "params":{"ALTID":"1"}},
+     {"value":"2016-08-01", "params":{"ALTID":"1", "VALUE":"text"}}],
+   "GENDER":{"value":{"sex":"M", "gender":""}},
+   "X_GENDER":{"value":"male"},
+   "X_ID":{"value":"14f9aba0c9422da9ae376fe28bd89c2a.0"},
+   "X_ETAG":
+    {"value":"fffffea9056d8166e2b7a427977e570c87dd51279d11d9b137c593eb"},
+   "X_FC_TAGS":{"value":"579c773f-736d-11e6-8dff-0ac8448704fb"},
+   "X_FC_LIST_ID":{"value":"8ad23200aa3e1984736b11e688dc0add41994b95"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A4D6F74686572":
+    {"value":"Mother"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A466174686572":
+    {"value":"Father"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A506172656E74":
+    {"value":"Parent"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A42726F74686572":
+    {"value":"Brother"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A536973746572":
+    {"value":"Sister"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A4368696C64":
+    {"value":"Child"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A467269656E64":
+    {"value":"Friend"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A53706F757365":
+    {"value":"Spouse"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A4669616E63C3A9":
+    {"value":"Fiance"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A506172746E6572":
+    {"value":"Partner"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A417373697374616E74":
+    {"value":"Assistant"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A4D616E61676572":
+    {"value":"Manager"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A4F74686572":
+    {"value":"Other"},
+   "X_FCENCODED_582D46432D52656C617465644E616D65733A437573746F6D54595045":
+    {"value":"Custom"},
+   "X_FCENCODED_582D46432D4F7468657244617465733A416E6E6976657273617279":
+    {"value":"2016-08-02"},
+   "X_FCENCODED_582D46432D4F7468657244617465733A4F74686572":
+    {"value":"2016-08-03"},
+   "X_FCENCODED_582D46432D4F7468657244617465733A437573746F6D54595045":
+    {"value":"2016-08-04"},
+   "NOTE":{"value":"Notes line 1\nNotes line 2"},
+   "URL":
+    [{"value":"http://www.homepage.com"},
+     {"value":"http://www.blog.com"},
+     {"value":"http://www.other.com"},
+     {"value":"http://www.custom.com"}],
+   "ADR":
+    [{"value":
+       {"pobox":"",
+        "ext":"HomeExtended",
+        "street":"HomeStreet",
+        "locality":"HomeCity",
+        "region":"HomeState",
+        "code":"HomePostal",
+        "country":"HomeCountry"},
+      "params":{"TYPE":["HOME"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"WorkExtended",
+        "street":"WorkStreet",
+        "locality":"WorkCity",
+        "region":"WorkState",
+        "code":"WorkPostal",
+        "country":"WorkCountry"},
+      "params":{"TYPE":["WORK"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"OtherExtended",
+        "street":"OtherStreet",
+        "locality":"OtherCity",
+        "region":"OtherState",
+        "code":"OtherPostal",
+        "country":"OtherCountry"},
+      "params":{"TYPE":["OTHER"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"CustomExtended",
+        "street":"CustomStreet",
+        "locality":"CustomCity",
+        "region":"CustomState",
+        "code":"CustomPostal",
+        "country":"CustomCountry"},
+      "params":{"TYPE":["CUSTOMTYPE"]}}],
+   "NICKNAME":{"value":["NickName"]},
+   "IMPP":
+    [{"value":"xmpp:gtalk", "params":{"X_SERVICE_TYPE":"GTALK"}},
+     {"value":"skype:skype", "params":{"X_SERVICE_TYPE":"SKYPE"}},
+     {"value":"ymsgr:yahoo", "params":{"X_SERVICE_TYPE":"YAHOO"}},
+     {"value":"aim:aim", "params":{"X_SERVICE_TYPE":"AIM"}},
+     {"value":"xmpp:jabber", "params":{"X_SERVICE_TYPE":"JABBER"}},
+     {"value":"other:other", "params":{"X_SERVICE_TYPE":"OTHER"}},
+     {"value":"customtype:custom",
+      "params":{"X_SERVICE_TYPE":"CUSTOMTYPE"}}],
+   "CATEGORIES":{"value":["Tag"]},
+   "PRODID":{"value":"ez-vcard 0.9.14-fc"}}}

@@ -1,0 +1,13 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"Simon Perreault"},
+   "N":
+    {"value":
+      {"surname":"Perreault",
+       "givenname":"Simon",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":["ing. jr", "M.Sc."]}},
+   "BIRTHPLACE":{"value":"Babies'R'Us Hospital"},
+   "DEATHPLACE":{"value":"Aboard the Titanic, near Newfoundland"},
+   "DEATHDATE":{"value":{"month":"04", "day":"15"}}}}

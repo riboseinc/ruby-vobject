@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:4.0
+FN:jabber.org IM service
+URL:http://www.jabber.org/
+LANG;PREF=1:en
+EMAIL:xmpp@jabber.org
+IMPP:xmpp:jabber.org
+LOGO:http://www.jabber.org/images/logo.png
+GEO:geo:42.25\,-91.05
+TZ:America/Chicago
+SOURCE:xmpp:jabber.org?vcard
+REV:19990104T122100Z
+KIND:application
+END:VCARD

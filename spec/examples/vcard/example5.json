@@ -1,0 +1,29 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "N":
+    {"value":
+      {"surname":"Dawson",
+       "givenname":"Frank",
+       "middlename":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "FN":{"value":"Frank Dawson"},
+   "ORG":{"value":["Lotus Development Corporation"]},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"6544 Battleford Drive",
+       "locality":"Raleigh",
+       "region":"NC",
+       "code":"27613-3502",
+       "country":"U.S.A."},
+     "params":{"TYPE":["WORK","POSTAL","PARCEL"]}},
+   "TEL":
+    [{"value":"+1-919-676-9515", "params":{"TYPE":["VOICE","MSG","WORK"]}},
+     {"value":"+1-919-676-9564", "params":{"TYPE":["FAX","WORK"]}}],
+   "EMAIL":
+    [{"value":"Frank_Dawson@Lotus.com",
+      "params":{"TYPE":["INTERNET","PREF"]}},
+     {"value":"fdawson@earthlink.net", "params":{"TYPE":["INTERNET"]}}],
+   "URL":{"value":"http://home.earthlink.net/~fdawson"}}}

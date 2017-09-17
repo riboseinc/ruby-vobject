@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:4.0
+UID:urn:uuid:4fbe8971-0bc3-424c-9c26-36c3e1eff6b1
+FN:J. Doe
+N:Doe;J.;;;
+EMAIL;PID=1.1:jdoe@ex
+	ample.com
+EMAIL;PID=2.1:boss@example.com
+EMAIL;PID=2.2:ceo@example.com
+TEL;PID=1.1;VALUE=uri:tel:+1-555-555-5555
+TEL;PID=2.1,2.2;VALUE=uri:tel:+1-666-666-6666
+CLIENTPIDMAP:1;urn:uuid:53e374d9-337e-4727-8803-a1e9c14e0556
+CLIENTPIDMAP:2;urn:uuid:1f762d2b-03c4-4a83-9a03-75ff658a6eee
+END:VCARD

@@ -51,37 +51,37 @@ module Vobject::Vcalendar
 			/MEMBER/i.r | /PARTSTAT/i.r | /RANGE/i.r | /RELATED/i.r | /RELTYPE/i.r |
 			/ROLE/i.r | /RSVP/i.r | /SENT-BY/i.r | /TZID/i.r | /RSCALE/i.r | /DISPLAY/i.r |
 			/FEATURE/i.r | /LABEL/i.r | /EMAIL/i.r
-    otherparamname = C::XNAME | seq(''.r ^ paramname, C::IANATOKEN )[1]
-    paramvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } | C::PTEXT.map {|s| (rfc6868decode(s)) }
-    quotedparamvalue 	= C::QUOTEDSTRING.map {|s| rfc6868decode s } 
+    otherparamname = C::XNAME_VCAL | seq(''.r ^ paramname, C::IANATOKEN )[1]
+    paramvalue 	= C::QUOTEDSTRING_VCAL.map {|s| rfc6868decode s } | C::PTEXT_VCAL.map {|s| (rfc6868decode(s)) }
+    quotedparamvalue 	= C::QUOTEDSTRING_VCAL.map {|s| rfc6868decode s } 
     cutypevalue	= /INDIVIDUAL/i.r | /GROUP/i.r | /RESOURCE/i.r | /ROOM/i.r | /UNKNOWN/i.r |
-	    		C::XNAME | C::IANATOKEN.map 
+	    		C::XNAME_VCAL | C::IANATOKEN.map 
     encodingvalue = /8BIT/i.r | /BASE64/i.r
     fbtypevalue	= /FREE/i.r | /BUSY/i.r | /BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | 
-	    		C::XNAME | C::IANATOKEN
+	    		C::XNAME_VCAL | C::IANATOKEN
     partstatevent = /NEEDS-ACTION/i.r | /ACCEPTED/i.r | /DECLINED/i.r | /TENTATIVE/i.r |
-	    		/DELEGATED/i.r | C::XNAME | C::IANATOKEN
+	    		/DELEGATED/i.r | C::XNAME_VCAL | C::IANATOKEN
     partstattodo = /NEEDS-ACTION/i.r | /ACCEPTED/i.r | /DECLINED/i.r | /TENTATIVE/i.r |
-	    		/DELEGATED/i.r | /COMPLETED/i.r | /IN-PROCESS/i.r | C::XNAME | C::IANATOKEN
-    partstatjour = /NEEDS-ACTION/i.r | /ACCEPTED/i.r | /DECLINED/i.r | C::XNAME | C::IANATOKEN
+	    		/DELEGATED/i.r | /COMPLETED/i.r | /IN-PROCESS/i.r | C::XNAME_VCAL | C::IANATOKEN
+    partstatjour = /NEEDS-ACTION/i.r | /ACCEPTED/i.r | /DECLINED/i.r | C::XNAME_VCAL | C::IANATOKEN
     partstatvalue = partstatevent | partstattodo | partstatjour
     rangevalue 	= /THISANDFUTURE/i.r
     relatedvalue = /START/i.r | /END/i.r
-    reltypevalue = /PARENT/i.r | /CHILD/i.r | /SIBLING/i.r | C::XNAME | C::IANATOKEN
-    tzidvalue 	= seq("/".r._?, C::PTEXT).map {|_, val| val}
+    reltypevalue = /PARENT/i.r | /CHILD/i.r | /SIBLING/i.r | C::XNAME_VCAL | C::IANATOKEN
+    tzidvalue 	= seq("/".r._?, C::PTEXT_VCAL).map {|_, val| val}
     valuetype 	= /BINARY/i.r | /BOOLEAN/i.r | /CAL-ADDRESS/i.r | /DATE-TIME/i.r | /DATE/i.r |
 	    	/DURATION/i.r | /FLOAT/i.r | /INTEGER/i.r | /PERIOD/i.r | /RECUR/i.r | /TEXT/i.r |
-		/TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | C::XNAME | C::IANATOKEN
+		/TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | C::XNAME_VCAL | C::IANATOKEN
     rolevalue 	= /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r | 
-	    		C::XNAME | C::IANATOKEN
+	    		C::XNAME_VCAL | C::IANATOKEN
     pvalueList 	= (seq(paramvalue, ','.r, lazy{pvalueList}) & /[;:]/.r).map {|e, _, list|
 			[e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n") , list].flatten
 		} | (paramvalue & /[;:]/.r).map {|e|
                         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
                }
-    quotedStringList = (seq(C::QUOTEDSTRING, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
+    quotedStringList = (seq(C::QUOTEDSTRING_VCAL, ','.r, lazy{quotedStringList}) & /[;:]/.r).map {|e, _, list|
                          [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")), list].flatten
-		} | (C::QUOTEDSTRING & /[;:]/.r).map {|e|
+		} | (C::QUOTEDSTRING_VCAL & /[;:]/.r).map {|e|
                         [rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
                 }
 
@@ -91,12 +91,12 @@ module Vobject::Vcalendar
     fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
 
     # RFC 7986
-    displayval		= /BADGE/i.r | /GRAPHIC/i.r | /FULLSIZE/i.r | /THUMBNAIL/i.r | C::XNAME | C::IANATOKEN
+    displayval		= /BADGE/i.r | /GRAPHIC/i.r | /FULLSIZE/i.r | /THUMBNAIL/i.r | C::XNAME_VCAL | C::IANATOKEN
     displayvallist	= seq(displayval, ',', lazy{displayvallist}) {|d,_,l|
 	    			[d, l].flatten
 			} | displayval.map {|d| [d] }
     featureval		= /AUDIO/i.r | /CHAT/i.r | /FEED/i.r | /MODERATOR/i.r | /PHONE/i.r | /SCREEN/i.r |
-	    			/VIDEO/i.r | C::XNAME | C::IANATOKEN
+	    			/VIDEO/i.r | C::XNAME_VCAL | C::IANATOKEN
     featurevallist	= seq(featureval, ',', lazy{featurevallist}) {|d,_,l|
 	    			[d, l].flatten
 			} | featureval.map {|d| [d] }
@@ -172,7 +172,7 @@ module Vobject::Vcalendar
 		} |
 	    	seq(';'.r >> param ).map {|e| e[0] } 
 
-    contentline = seq(linegroup._?, C::NAME, params._?, ':', 
+    contentline = seq(linegroup._?, C::NAME_VCAL, params._?, ':', 
 		      C::VALUE, /(\r|\n|\r\n)/) {|group, name, params, _, value, _|
 			key =  name.upcase.gsub(/-/,"_").to_sym
 			hash = { key => {:value => value} }
@@ -352,7 +352,7 @@ module Vobject::Vcalendar
 				end
 				{ :VEVENT => {:component => [e] }}
 			}
-	xcomp		= seq(/BEGIN:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
+	xcomp		= seq(/BEGIN:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r) {|_, n, _, p, _, n1, _|
 				n = n.upcase
 				n1 = n1.upcase
 				parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
@@ -417,7 +417,7 @@ module Vobject::Vcalendar
 	calpropname = /CALSCALE/i.r | /METHOD/i.r | /PRODID/i.r | /VERSION/i.r |
 			/UID/i.r | /LAST-MOD/i.r | /URL/i.r | /REFRESH/i.r | /SOURCE/i.r | /COLOR/i.r | # RFC 7986
 			/NAME/i.r | /DESCRIPTION/i.r | /CATEGORIES/i.r | /IMAGE/i.r | # RFC 7986
-	                C::XNAME | C::IANATOKEN
+	                C::XNAME_VCAL | C::IANATOKEN
 	calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) {|key, params, _, value, _|
 	    		key = key.upcase.gsub(/-/,"_").to_sym
 	    		hash = { key => {:value => Vobject::Vcalendar::Typegrammars.typematch(key, params[0], :CALENDAR, value, @ctx) }}

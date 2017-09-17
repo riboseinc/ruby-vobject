@@ -1,0 +1,25 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "N":
+    {"value":
+      {"surname":"Howes",
+       "givenname":"Tim",
+       "middlename":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "FN":{"value":"Tim Howes"},
+   "ORG":{"value":["Netscape Communications Corp."]},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"501 E. Middlefield Rd.",
+       "locality":"Mountain View",
+       "region":"CA",
+       "code":" 94043",
+       "country":"U.S.A."},
+     "params":{"TYPE":["WORK"]}},
+   "TEL":
+    [{"value":"+1-415-937-3419", "params":{"TYPE":["VOICE","MSG","WORK"]}},
+     {"value":"+1-415-528-4164", "params":{"TYPE":["FAX","WORK"]}}],
+   "EMAIL":{"value":"howes@netscape.com", "params":{"TYPE":["INTERNET"]}}}}

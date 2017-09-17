@@ -1,0 +1,25 @@
+BEGIN:VCARD
+VERSION:4.0
+PRODID:-//Apple Inc.//Mac OS X 10.8.4//EN
+N:Surnom;Nom;;;
+FN:Apple Inc.
+ORG:Apple Inc.;
+IMPP;X-SERVICE-TYPE=AIM;type=HOME;type=pref:aim:aimuser
+IMPP;X-SERVICE-TYPE=AIM;type=WORK:aim:workaimuser
+item7.IMPP;X-SERVICE-TYPE=Facebook:xmpp:facebookuser
+item7.X-ABLabel:other tag
+item8.IMPP;X-SERVICE-TYPE=GaduGadu:x-apple:gadugaduser
+item8.X-ABLabel:_$!<Other>!$_
+item9.IMPP;X-SERVICE-TYPE=GoogleTalk:xmpp:googleuser
+item9.X-ABLabel:other tag
+item10.IMPP;X-SERVICE-TYPE=ICQ:aim:i%20seek%20you
+item10.X-ABLabel:other tag
+item11.IMPP;X-SERVICE-TYPE=QQ:x-apple:QQmoar
+item11.X-ABLabel:other tag
+item12.IMPP;X-SERVICE-TYPE=Skype:skype:skypie
+item12.X-ABLabel:other tag
+item13.IMPP;X-SERVICE-TYPE=MSN:msnim:msnisnomore
+item13.X-ABLabel:other tag
+X-ABShowAs:COMPANY
+X-ABUID:904132B1-9C20-4D38-A1B9-32DE9A621DB8:ABPerson
+END:VCARD

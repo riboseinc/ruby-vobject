@@ -1,0 +1,40 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "FN":{"value":"Mr. John Richter, James Doe Sr."},
+   "N":
+    {"value":
+      {"surname":"Doe",
+       "givenname":"John",
+       "middlename":"Richter, James",
+       "honprefix":"Mr.",
+       "honsuffix":"Sr."}},
+   "X_PHONETIC_FIRST_NAME":{"value":"Jon"},
+   "X_PHONETIC_LAST_NAME":{"value":"Dow"},
+   "EMAIL":
+    {"value":"john.doe@ibm.com", "params":{"TYPE":["INTERNET", "HOME"]}},
+   "TEL":
+    [{"value":"905-555-1234", "params":{"TYPE":["CELL"]}},
+     {"value":"905-666-1234", "params":{"TYPE":["HOME"]}}],
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":
+        "Crescent moon drive\n555-asd\nNice Area, Albaney, New York 12345\nUnited States of America",
+       "street":"",
+       "locality":"",
+       "region":"",
+       "code":"",
+       "country":""},
+     "params":{"TYPE":["HOME"]}},
+   "ORG":{"value":["IBM"]},
+   "TITLE":{"value":"Money Counter"},
+   "BDAY":{"value":{"year":"1980", "month":"03", "day":"22"}},
+   "URL":{"value":"http://www.ibm.com"},
+   "X_ABDATE":{"value":"1975-03-01", "group":"item1"},
+   "X_ABLABEL":
+    [{"value":"_$!<Anniversary>!$_", "group":"item1"},
+     {"value":"_$!<Spouse>!$_", "group":"item2"}],
+   "X_ABRELATEDNAMES":{"value":"Jenny", "group":"item2"},
+   "NOTE":
+    {"value":
+      "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \\\"AS IS\\\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\nFavotire Color: Blue"}}}

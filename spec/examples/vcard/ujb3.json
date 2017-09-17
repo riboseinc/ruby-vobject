@@ -1,0 +1,32 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "PRODID":{"value":"Microsoft-MacOutlook/14.10.0.110310"},
+   "FN":{"value":"Jane Q Blogg"},
+   "N":
+    {"value":
+      {"surname":"Q Blogg",
+       "givenname":"Jane",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "TITLE":{"value":"messiah"},
+   "OFFICE":{"value":"aowi"},
+   "ORG":{"value":["oi", "oiwgo"]},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"aweg223",
+       "locality":"323",
+       "region":"",
+       "code":"",
+       "country":"223"},
+     "params":{"TYPE":["WORK", "PREF"]}},
+   "TEL":
+    [{"value":"23g23", "params":{"TYPE":["WORK"]}},
+     {"value":"aweg", "params":{"TYPE":["CELL"]}}],
+   "EMAIL":
+    {"value":"hahahahahaahhajaneqblogg@asdf.example.com",
+     "params":{"TYPE":["INTERNET", "PREF", "WORK"]}},
+   "X_MS_IMADDRESS":
+    {"value":"mehemehehe@asdf.example.com", "params":{"TYPE":["PREF"]}}}}

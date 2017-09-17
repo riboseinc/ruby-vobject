@@ -1,0 +1,71 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "ADR":
+    {"value":
+      {"pobox":"pobox",
+       "ext":"apt",
+       "street":"street",
+       "locality":"city",
+       "region":"state",
+       "code":"zipcode",
+       "country":"country"},
+     "params":{"TYPE":["WORK"]}},
+   "ANNIVERSARY":{"value":{"year":"1996", "month":"04", "day":"15"}},
+   "BDAY":{"value":{"month":"02", "day":"03"}},
+   "CALADRURI":{"value":"http://example.com/calendar/jdoe"},
+   "CALURI":
+    {"value":"ftp://ftp.example.com/calA.ics",
+     "params":{"MEDIATYPE":"text/calendar"}},
+   "CLIENTPIDMAP":
+    {"value":
+      {"pid":"1", "uri":"urn:uuid:3df403f4-5924-4bb7-b077-3c711d9eb34b"}},
+   "EMAIL":
+    {"value":"jqpublic@xyz.example.com", "params":{"TYPE":["WORK"]}},
+   "FBURL":
+    {"value":"ftp://example.com/busy/project-a.ifb",
+     "params":{"MEDIATYPE":"text/calendar"}},
+   "FN":{"value":"J. Doe"},
+   "GENDER":{"value":{"sex":"M", "gender":"Fellow"}},
+   "GEO":{"value":"geo:37.386013\\,-122.082932"},
+   "IMPP":{"value":"xmpp:alice@example.com", "params":{"PREF":"1"}},
+   "KEY":{"value":"http://www.example.com/keys/jdoe.cer"},
+   "KIND":{"value":"individual"},
+   "LANG":{"value":"fr", "params":{"PREF":"1"}},
+   "LOGO":{"value":"http://www.example.com/pub/logos/abccorp.jpg"},
+   "MEMBER":{"value":"urn:uuid:03a0e51f-d1aa-4385-8a53-e29025acd8af"},
+   "N":
+    {"value":
+      {"surname":"Stevenson",
+       "givenname":"John",
+       "additionalname":["Philip", "Paul"],
+       "honprefix":"Dr.",
+       "honsuffix":["Jr.", "M.D.", "A.C.P."]}},
+   "NICKNAME":{"value":["Boss"], "params":{"TYPE":["WORK"]}},
+   "NOTE":
+    {"value":"This fax number is operational 0800 to 1715 EST, Mon-Fri"},
+   "ORG":{"value":["ABC, Inc.", "North American Division", "Marketing"]},
+   "PHOTO":{"value":"http://www.example.com/pub/photos/jqpublic.gif"},
+   "RELATED":
+    {"value":"urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+     "params":{"TYPE":["FRIEND"]}},
+   "REV":
+    {"value":
+      {"year":"1995",
+       "month":"10",
+       "day":"31",
+       "hour":"22",
+       "min":"27",
+       "sec":"10",
+       "zone":"Z"}},
+   "ROLE":{"value":"Project Leader"},
+   "SOUND":
+    {"value":"CID:JOHNQPUBLIC.part8.19960229T080000.xyzMail@example.com"},
+   "SOURCE":
+    {"value":
+      "ldap://ldap.example.com/cn=Babs%20Jensen\\,%20o=Babsco\\,%20c=US"},
+   "TEL":
+    {"value":"tel:+33-01-23-45-67",
+     "params":{"VALUE":"uri", "TYPE":["HOME"]}},
+   "TITLE":{"value":"Research Scientist"},
+   "TZ":{"value":"-0500", "params":{"VALUE":"utc-offset"}},
+   "XML":{"value":"<html xmlns=\"http://www.w3.org/1999/xhtml\"></html>"}}}

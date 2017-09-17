@@ -5,3 +5,5 @@ require "json"
 
 require "vobject"
 require "vcalendar"
+require "vcard"
+

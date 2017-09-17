@@ -360,7 +360,7 @@ module PropertyValue
     def to_s
 	    ret = "P"
 	    ret = self.value[:sign] + ret if self.value[:sign]
-	    ret = ret + "#{self.value[:weeks]}D" if self.value[:weeks]
+	    ret = ret + "#{self.value[:weeks]}W" if self.value[:weeks]
 	    ret = ret + "#{self.value[:days]}D" if self.value[:days]
 	    ret = ret + "T" if self.value[:hours] or self.value[:minutes] or self.value[:seconds]
 	    ret = ret + "#{self.value[:hours]}H" if self.value[:hours]

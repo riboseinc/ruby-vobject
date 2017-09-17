@@ -1,0 +1,56 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "FN":{"value":"Greg Dartmouth"},
+   "N":
+    {"value":
+      {"surname":"Dartmouth",
+       "givenname":"Greg",
+       "middlename":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "NICKNAME":{"value":["Gman"]},
+   "X_PHONETIC_FIRST_NAME":{"value":"Grregg"},
+   "X_PHONETIC_LAST_NAME":{"value":"Dart-mowth"},
+   "EMAIL":
+    {"value":"gdartmouth@hotmail.com", "params":{"TYPE":["INTERNET"]}},
+   "X_ICQ":{"value":"123456789"},
+   "TEL":
+    [{"value":"555 555 1111", "params":{"TYPE":["CELL"]}},
+     {"value":"555 555 2222", "group":"item1"}],
+   "X_ABLABEL":
+    [{"value":"GRAND_CENTRAL", "group":"item1"},
+     {"value":"CustomAdrType", "group":"item2"},
+     {"value":"PROFILE", "group":"item3"},
+     {"value":"_$!<Anniversary>!$_", "group":"item4"},
+     {"value":"_$!<Spouse>!$_", "group":"item5"},
+     {"value":"CustomRelationship", "group":"item6"}],
+   "ADR":
+    [{"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"123 Home St\nHome City, HM 12345",
+        "locality":"",
+        "region":"",
+        "code":"",
+        "country":""},
+      "params":{"TYPE":["HOME"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"321 Custom St",
+        "locality":"Custom City",
+        "region":"TX",
+        "code":"98765",
+        "country":"USA"},
+      "group":"item2"}],
+   "ORG":{"value":["TheCompany"]},
+   "TITLE":{"value":"TheJobTitle"},
+   "BDAY":{"value":{"year":"1960", "month":"09", "day":"10"}},
+   "URL":{"value":"http://TheProfile.com", "group":"item3"},
+   "X_ABDATE":{"value":"1970-06-02", "group":"item4"},
+   "X_ABRELATEDNAMES":
+    [{"value":"MySpouse", "group":"item5"},
+     {"value":"MyCustom", "group":"item6"}],
+   "NOTE":
+    {"value":
+      "This is GMail's note field.\nIt should be added as a NOTE type.\nACustomField: CustomField"}}}

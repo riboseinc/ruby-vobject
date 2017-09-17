@@ -1,0 +1,48 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"Simon Perreault"},
+   "N":
+    {"value":
+      {"surname":"Perreault",
+       "givenname":"Simon",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":["ing. jr", "M.Sc."]}},
+   "BDAY":{"value":{"month":"02", "day":"03"}},
+   "ANNIVERSARY":
+    {"value":
+      {"year":"2009",
+       "month":"08",
+       "day":"08",
+       "hour":"14",
+       "min":"30",
+       "zone": {"sign":"-", "hour":"05", "min":"00"}}},
+   "GENDER":{"value":{"sex":"M", "gender":""}},
+   "LANG":
+    [{"value":"fr", "params":{"PREF":"1"}},
+     {"value":"en", "params":{"PREF":"2"}}],
+   "ORG":{"value":["Viagenie"], "params":{"TYPE":["WORK"]}},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"Suite D2-630",
+       "street":"2875 Laurier",
+       "locality":"Quebec",
+       "region":"QC",
+       "code":"G1V 2M2",
+       "country":"Canada"},
+     "params":{"TYPE":["WORK"]}},
+   "TEL":
+    [{"value":"tel:+1-418-656-9254;ext=102",
+      "params":{"VALUE":"uri", "TYPE":["WORK","VOICE"], "PREF":"1"}},
+     {"value":"tel:+1-418-262-6501",
+      "params":{"VALUE":"uri", "TYPE":["WORK","CELL","VOICE","VIDEO","TEXT"]}}],
+   "EMAIL":
+    {"value":"simon.perreault@viagenie.ca", "params":{"TYPE":["WORK"]}},
+   "GEO":
+    {"value":"geo:46.772673\\,-71.282945", "params":{"TYPE":["WORK"]}},
+   "KEY":
+    {"value":"http://www.viagenie.ca/simon.perreault/simon.asc",
+     "params":{"TYPE":["WORK"], "VALUE":"uri"}},
+   "TZ":{"value":"-0500", "params":{"VALUE":"utc-offset"}},
+   "URL":{"value":"http://nomis80.org", "params":{"TYPE":["HOME"]}}}}

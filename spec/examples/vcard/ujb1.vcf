@@ -1,0 +1,18 @@
+begin:vcard
+version:3.0
+prodid:Microsoft-MacOutlook/14.10.0.110310
+UID:6007423F-C463-45C7-A533-A7FE6C0B77D2
+fn;charset=utf-8:Jane Q Blogg
+n;charset=utf-8:Q Blogg;Jane;;;
+title;charset=utf-8:messiah
+office;charset=utf-8:aowi
+org;charset=utf-8:oi;oiwgo
+adr;charset=utf-8;type=work;type=pref:;;aweg223;323;;;223
+label;charset=utf-8;type=work;type=pref:aweg223\n323\n223
+tel;charset=utf-8;type=work:23g23
+tel;charset=utf-8;type=cell:aweg
+email;charset=utf-8;type=internet;type=pref;type=work:hahahahahaahhajaneqbl
+ ogg@asdf.example.com
+X-ms-imaddress;charset=utf-8;type=pref:mehemehehe@asdf.example.com
+end:vcard
+

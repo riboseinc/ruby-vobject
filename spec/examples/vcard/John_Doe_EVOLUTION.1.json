@@ -1,0 +1,53 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "X_COUCHDB_APPLICATION_ANNOTATIONS":
+    {"value":"{\"Evolution\":{\"revision\":\"2012-03-05T13:32:54Z\"}}"},
+   "X_AIM":
+    {"value":"johnny5@aol.com",
+     "params":{"X_COUCHDB_UUID":"cb9e11fc-bb97-4222-9cd8-99820c1de454"}},
+   "URL":{"value":"http://www.ibm.com"},
+   "TEL":
+    [{"value":"905-666-1234", "params":{"TYPE":["CELL"]}},
+     {"value":"905-555-1234", "params":{"TYPE":["WORK", "VOICE"]}}],
+   "UID":{"value":"477343c8e6bf375a9bac1f96a5000837"},
+   "N":
+    {"value":
+      {"surname":"Doe",
+       "givenname":"John",
+       "middlename":"Richter, James",
+       "honprefix":"Mr.",
+       "honsuffix":"Sr."}},
+   "X_EVOLUTION_FILE_AS":{"value":"Doe, John"},
+   "FN":{"value":"Mr. John Richter, James Doe Sr."},
+   "NICKNAME":{"value":["Johny"]},
+   "X_EVOLUTION_SPOUSE":{"value":"Maria"},
+   "ORG":{"value":["IBM", "Accounting", "Dungeon"]},
+   "TITLE":{"value":"Money Counter"},
+   "X_EVOLUTION_MANAGER":{"value":"Big Blue"},
+   "X_EVOLUTION_ASSISTANT":{"value":"Little Red"},
+   "CATEGORIES":{"value":["VIP"]},
+   "NOTE":
+    {"value":
+      "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."},
+   "EMAIL":{"value":"john.doe@ibm.com", "params":{"TYPE":["WORK"]}},
+   "ADR":
+    {"value":
+      {"pobox":"ASB-123",
+       "ext":"",
+       "street":"15 Crescent moon drive",
+       "locality":"Albaney",
+       "region":"New York",
+       "code":"12345",
+       "country":"United States of America"},
+     "params":{"TYPE":["HOME"]}},
+   "BDAY":{"value":{"year":"1980", "month":"03", "day":"22"}},
+   "X_EVOLUTION_ANNIVERSARY":{"value":"1980-03-22"},
+   "REV":
+    {"value":
+      {"year":"2012",
+       "month":"03",
+       "day":"05",
+       "hour":"13",
+       "min":"32",
+       "sec":"54",
+       "zone":"Z"}}}}

@@ -1,0 +1,103 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "FN":{"value":"Mr. John Q. Public, Esq."},
+   "N":
+    {"value":
+      {"surname":"Stevenson",
+       "givenname":"John",
+       "middlename":["Philip", "Paul"],
+       "honprefix":"Dr.",
+       "honsuffix":["Jr.", "M.D.", "A.C.P."]}},
+   "NICKNAME":[{"value":["Robbie"]}, {"value":["Jim", "Jimmie"]}],
+   "PHOTO":
+    [{"value":"http://www.abc.com/pub/photos/jqpublic.gif",
+      "params":{"VALUE":"uri"}},
+     {"value":"SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBpbWFnZSBqdXN0IGEgdGVzdC4=",
+      "params":{"ENCODING":"b", "TYPE":["JPEG"]}}],
+   "BDAY":
+    {"value":
+      {"year":"1987",
+       "month":"09",
+       "day":"27",
+       "hour":"08",
+       "min":"30",
+       "sec":"00",
+       "zone":{"sign":"-", "hour":"06", "min":"00"}}},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"123 Main Street",
+       "locality":"Any Town",
+       "region":"CA",
+       "code":"91921-1234",
+       "country":""},
+     "params":{"TYPE":["DOM","HOME","POSTAL","PARCEL"]}},
+   "LABEL":
+    {"value":
+      "Mr.John Q. Public, Esq.\nMail Drop: TNE QB\n123 Main Street\nAny Town, CA  91921-1234\nU.S.A.",
+     "params":{"TYPE":["DOM","HOME","POSTAL","PARCEL"]}},
+   "TEL":
+    {"value":"+1-213-555-1234", "params":{"TYPE":["WORK","VOICE","PREF","MSG"]}},
+   "EMAIL":
+    [{"value":"jqpublic@xyz.dom1.com", "params":{"TYPE":["INTERNET"]}},
+     {"value":"jdoe@isp.net", "params":{"TYPE":["INTERNET"]}},
+     {"value":"jane_doe@abc.com", "params":{"TYPE":["INTERNET","PREF"]}}],
+   "MAILER":{"value":"PigeonMail 2.1"},
+   "TZ":
+    [{"value":{"sign":"-", "hour":"05", "min":"00"}},
+     {"value":
+       "-05:00; EST; Raleigh/North America;This example has a single value, not a structure text value.",
+      "params":{"VALUE":"text"}}],
+   "GEO":{"value":{"lat":37.386013, "long":-122.082932}},
+   "TITLE":{"value":"Director, Research and Development"},
+   "ROLE":{"value":"Programmer"},
+   "LOGO":
+    [{"value":"http://www.abc.com/pub/logos/abccorp.jpg",
+      "params":{"VALUE":"uri"}},
+     {"value":"SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBpbWFnZSBqdXN0IGEgdGVzdC4=",
+      "params":{"ENCODING":"b", "TYPE":["JPEG"]}}],
+   "AGENT":
+    [{"value":"CID:JQPUBLIC.part3.960129T083020.xyzMail@host3.com",
+      "params":{"VALUE":"uri"}},
+     {"value":
+       {"VCARD":
+         {
+          "N":
+           {"value":
+             {"surname":"Thomas",
+              "givenname":"Susan",
+              "middlename":"",
+              "honprefix":"",
+              "honsuffix":""}},
+          "FN":{"value":"Susan Thomas"},
+          "TEL":{"value":"+1-919-555-1234"},
+          "EMAIL":
+           {"value":"sthomas@host.com", "params":{"TYPE":["INTERNET"]}}}}}],
+   "ORG":{"value":["ABC, Inc.", "North American Division", "Marketing"]},
+   "CATEGORIES":
+    [{"value":["TRAVEL AGENT"]},
+     {"value":["INTERNET", "IETF", "INDUSTRY", "INFORMATION TECHNOLOGY"]}],
+   "NOTE":
+    {"value":"This fax number is operational 0800 to 1715 EST, Mon-Fri."},
+   "PRODID":{"value":"-//ONLINE DIRECTORY//NONSGML Version 1//EN"},
+   "REV":
+    {"value":
+      {"year":"1995",
+       "month":"10",
+       "day":"31",
+       "hour":"22",
+       "min":"27",
+       "sec":"10",
+       "zone":"Z"}},
+   "SORT_STRING":{"value":"Harten"},
+   "SOUND":
+    [{"value":"CID:JOHNQPUBLIC.part8.19960229T080000.xyzMail@host1.com",
+      "params":{"TYPE":["BASIC"], "VALUE":"uri"}},
+     {"value":"VGhlcmUgaXMgbm8gc291bmQgaW4gc3BhY2U=",
+      "params":{"TYPE":["BASIC"], "ENCODING":"b"}}],
+   "CLASS":
+    [{"value":"PUBLIC"}, {"value":"PRIVATE"}, {"value":"CONFIDENTIAL"}],
+   "KEY":
+    {"value":"Tm90IHRoZSBrZXkgeW91IGFyZSBsb29raW5nIGZvcg==",
+     "params":{"ENCODING":"b"}}}}

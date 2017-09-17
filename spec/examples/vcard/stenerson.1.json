@@ -1,0 +1,29 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "BDAY":
+    {"value":{"year":"1963", "month":"09", "day":"21"},
+     "params":{"VALUE":"date"}},
+   "N":
+    {"value":
+      {"surname":"Stenerson",
+       "givenname":"Derik",
+       "middlename":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "FN":{"value":"Derik Stenerson"},
+   "ORG":{"value":["Microsoft Corporation"]},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"One Microsoft Way",
+       "locality":"Redmond",
+       "region":"WA",
+       "code":"98052-6399",
+       "country":"USA"},
+     "params":{"TYPE":["WORK", "POSTAL", "PARCEL"]}},
+   "TEL":
+    [{"value":"+1-425-936-5522", "params":{"TYPE":["WORK", "MSG"]}},
+     {"value":"+1-425-936-7329", "params":{"TYPE":["WORK", "FAX"]}}],
+   "EMAIL":
+    {"value":"deriks@Microsoft.com", "params":{"TYPE":["INTERNET"]}}}}

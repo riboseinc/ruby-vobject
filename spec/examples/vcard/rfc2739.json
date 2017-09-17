@@ -1,0 +1,35 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "N":
+    {"value":
+      {"surname":"Dun",
+       "givenname":"Alec",
+       "middlename":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "FN":{"value":"Alec Dun"},
+   "ORG":{"value":["Microsoft Corporation"]},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"One Microsoft Way",
+       "locality":"Redmond",
+       "region":"WA",
+       "code":"98052-6399",
+       "country":"USA"},
+     "params":{"TYPE":["WORK", "POSTAL", "PARCEL"]}},
+   "TEL":
+    [{"value":"+1-425-936-4544", "params":{"TYPE":["WORK", "MSG"]}},
+     {"value":"+1-425-936-7329", "params":{"TYPE":["WORK", "FAX"]}}],
+   "EMAIL":{"value":"user@host1.com", "params":{"TYPE":["INTERNET"]}},
+   "CALADRURI":
+    {"value":"mailto:user@host1.com", "params":{"TYPE":["PREF"]}},
+   "CALURI":
+    [{"value":"http://cal.host1.com/user/cal.ics",
+      "params":{"TYPE":["PREF"]}},
+     {"value":"http://cal.company.com/projectA/pjtA.ics"}],
+   "FBURL":
+    [{"value":"http://cal.host1.com/user/fb.ifb",
+      "params":{"TYPE":["PREF"]}},
+     {"value":"http://cal.company.com/projectA/pjtAfb.ifb"}]}}

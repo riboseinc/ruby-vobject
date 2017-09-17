@@ -1,0 +1,25 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "UID":{"value":"urn:uuid:4fbe8971-0bc3-424c-9c26-36c3e1eff6b1"},
+   "FN":{"value":"J. Doe"},
+   "N":
+    {"value":
+      {"surname":"Doe",
+       "givenname":"J.",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "EMAIL":
+    [{"value":"jdoe@example.com", "params":{"PID":["1.1"]}},
+     {"value":"boss@example.com", "params":{"PID":["2.1"]}},
+     {"value":"ceo@example.com", "params":{"PID":["2.2"]}}],
+   "TEL":
+    [{"value":"tel:+1-555-555-5555",
+      "params":{"PID":["1.1"], "VALUE":"uri"}},
+     {"value":"tel:+1-666-666-6666",
+      "params":{"PID":["2.1", "2.2"], "VALUE":"uri"}}],
+   "CLIENTPIDMAP":
+    [{"value":
+       {"pid":"1", "uri":"urn:uuid:53e374d9-337e-4727-8803-a1e9c14e0556"}},
+     {"value":
+       {"pid":"2", "uri":"urn:uuid:1f762d2b-03c4-4a83-9a03-75ff658a6eee"}}]}}

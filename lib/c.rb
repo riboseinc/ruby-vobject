@@ -11,10 +11,15 @@ module C
     SIGN        = /[+-]/i.r
     BOOLEAN = ( /TRUE/i.r.map{|x| true} | /FALSE/i.r.map{|x| false} )
     IANATOKEN =  /[a-zA-Z\d\-]+/.r
-    vendorid   = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-    XNAME = seq( '[xX]-', vendorid, '-', IANATOKEN).map(&:join)
+    vendorid_vcal   = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
+    XNAME_VCAL = seq( '[xX]-', vendorid_vcal, '-', IANATOKEN).map(&:join)
+    vendorid_vcard   = /[a-zA-Z0-9]+/.r # different from iCal
+    XNAME_VCARD = seq( '[xX]-', vendorid_vcard, '-', IANATOKEN).map(&:join)
     #TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[nN;,\\])*/.r   
     TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r   
+    TEXT3 = 		/([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\]?)*/.r   
+    TEXT4 = 		/([ \t\u0021\u0023-\u002b\u002d-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,\\])*/.r   
+    COMPONENT4 = 	/([ \t\u0021\u0023-\u002b\u002d-\u003a\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,;\\])*/.r   
     DATE       = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) {|yy, mm, dd|
                              Vobject::Vcalendar::PropertyValue::Date.new Time.utc(yy, mm, dd)
                      }
@@ -43,8 +48,25 @@ module C
 		/TZURI/i.r | /URL/i.r | /SOURCE/i.r | /CONFERENCE/i.r | /ATTENDEE/i.r |
 		/ORGANIZER/i.r | /RRULE/i.r | /ACTION/i.r | /REPEAT/i.r | /SEQUENCE/i.r |
 		/REQUEST-STATUS/i.r | /BUSYTYPE/i.r | /REFRESH-INTERVAL/i.r | /COLOR/i.r
+    VCARD3PROPNAMES	= /BEGIN/i.r | /END/i.r | /SOURCE/i.r | /NAME/i.r | /PROFILE/i.r | 
+	    		/VERSION/i.r | /URL/i.r | /FN/i.r | /NICKNAME/i.r | /LABEL/i.r | /EMAIL/i.r |
+			/MAILER/i.r | /TITLE/i.r | /ROLE/i.r | /NOTE/i.r | /PRODID/.r | /SORT-STRING/i.r |
+			/UID/i.r | /CLASS/i.r | /ORG/i.r | /CATEGORIES/i.r | /N/i.r | /PHOTO/i.r |
+			/LOGO/i.r | /SOUND/i.r | /KEY/i.r | /BDAY/i.r | /REV/i.r | /ADR/i.r |
+			/TEL/i.r | /TZ/i.r | /GEO/i.r | /AGENT/i.r | /IMPP/i.r |
+			/FBURL/i.r | /CALADRURI/i.r | /CALURI/i.r | /CAPURI/i.r
+    VCARD4PROPNAMES	= /SOURCE/i.r | /KIND/i.r | /FN/i.r | /NICKNAME/i.r | /NOTE/i.r | /N/i.r |
+	    	   	/PHOTO/i.r | /BDAY/i.r | /ANNIVERSARY/i.r | /GENDER/i.r | /ADR/i.r |
+			/TEL/i.r | /EMAIL/i.r | /IMPP/i.r | /LANG/i.r | /TZ/i.r |
+			/GEO/i.r | /TITLE/i.r | /ROLE/i.r | /LOGO/i.r | /ORG/i.r |
+			/MEMBER/i.r | /RELATED/i.r | /CATEGORIES/i.r | /PRODID/i.r |
+			/REV/i.r | /SOUND/i.r | /UID/i.r | /CLIENTPIDMAP/i.r | /URL/i.r |
+			/KEY/i.r | /FBURL/i.r | /CALADRURI/i.r | /CALURI/i.r | /XML/i.r |
+			/BIRTHPLACE/i.r | /DEATHPLACE/i.r | /DEATHDATE/i.r | /EXPERTISE/i.r |
+			/HOBBY/i.r | /INTEREST/i.r | /ORG-DIRECTORY/i.r | 
     beginend	= /BEGIN/i.r | /END/i.r
-    NAME        = C::XNAME | seq( ''.r ^ beginend, C::IANATOKEN )[1]
+    NAME_VCAL        = C::XNAME_VCAL | seq( ''.r ^ beginend, C::IANATOKEN )[1]
+    NAME_VCARD        = C::XNAME_VCARD | seq( ''.r ^ beginend, C::IANATOKEN )[1]
     durday      = seq(/[0-9]+/.r, 'D') {|d, _| {:days => d.to_i }}
     dursecond   = seq(/[0-9]+/.r, 'S')  {|d, _| {:seconds => d.to_i }}
     durminute   = seq(/[0-9]+/.r, 'M', dursecond._?)  {|d, _, s| 
@@ -67,7 +89,7 @@ module C
     duration1   = durdate | durtime | durweek
     DURATION    = seq(SIGN._?, 'P', duration1) {|s, _, d|
 			d[:sign] = s[0] unless s.empty?
-			Vobject::Vcalendar::PropertyValue::Duration.new d
+			d
 		}
 
     utf8_tail   = /[\u0080-\u00bf]/.r
@@ -78,17 +100,23 @@ module C
     #nonASCII    = utf8_2 | utf8_3 | utf8_4
     nonASCII    = /[\u0080-\u3ffff]/
     wsp         = /[ \t]/.r
-    qSafeChar   = wsp | /[\u0021\u0023-\u007e]/ | nonASCII
-    safeChar    = wsp | /[\u0021\u0023-\u0039\u003c-\u007e]/  | nonASCII
+    qSafeChar_vcal   = wsp | /[\u0021\u0023-\u007e]/ | nonASCII
+    safeChar_vcal    = wsp | /[\u0021\u0023-\u0039\u003c-\u007e]/  | nonASCII
+    qSafeChar_vcard   = wsp | /[!\u0023-\u007e]/ | nonASCII
+    safeChar_vcard    = wsp | /[!\u0023-\u0039\u003c-\u007e]/  | nonASCII
     vChar       = /[\u0021-\u007e]/.r
     valueChar   = wsp | vChar | nonASCII
     dQuote      = /"/.r
 
 
-    QUOTEDSTRING = seq(dQuote, qSafeChar.star, dQuote) {|_, qSafe, _|
+    QUOTEDSTRING_VCAL = seq(dQuote, qSafeChar_vcal.star, dQuote) {|_, qSafe, _|
                             qSafe.join('')
                     }
-    PTEXT       = safeChar.star.map(&:join)
+    PTEXT_VCAL       = safeChar_vcal.star.map(&:join)
+    QUOTEDSTRING_VCARD = seq(dQuote, qSafeChar_vcard.star, dQuote) {|_, qSafe, _|
+                            qSafe.join('')
+                    }
+    PTEXT_VCARD       = safeChar_vcard.star.map(&:join)
     VALUE       = valueChar.star.map(&:join)
 
 
@@ -143,5 +171,13 @@ module C
 		  /Silver/i.r | /SkyBlue/i.r | /SlateBlue/i.r | /SlateGray/i.r | /SlateGrey/i.r | /Snow/i.r | 
 		  /SpringGreen/i.r | /SteelBlue/i.r | /Tan/i.r | /Teal/i.r | /Thistle/i.r | /Tomato/i.r | 
 		  /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r 
+
+    UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) {|s, h, m, z|
+                        h = {:sign => s, :hour => h, :min => m}
+                        h[:sec] = z[0] unless z.empty?
+                        h
+	                }
+        ZONE	= UTC_OFFSET.map {|u| u } | 
+                    /Z/i.r.map {|z| 'Z'}
 
 end

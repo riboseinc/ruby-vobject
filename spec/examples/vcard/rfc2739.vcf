@@ -1,0 +1,15 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Dun;Alec
+FN:Alec Dun
+ORG:Microsoft Corporation
+ADR;TYPE=WORK,POSTAL,PARCEL:;;One Microsoft Way;Redmond;WA;98052-6399;USA
+TEL;TYPE=WORK,MSG:+1-425-936-4544
+TEL;TYPE=WORK,FAX:+1-425-936-7329
+EMAIL;TYPE=INTERNET:user@host1.com
+CALADRURI;PREF:mailto:user@host1.com
+CALURI;PREF:http://cal.host1.com/user/cal.ics
+FBURL;PREF:http://cal.host1.com/user/fb.ifb
+CALURI:http://cal.company.com/projectA/pjtA.ics
+FBURL:http://cal.company.com/projectA/pjtAfb.ifb
+END:VCARD

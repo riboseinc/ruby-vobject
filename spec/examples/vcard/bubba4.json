@@ -1,0 +1,50 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "N":
+    {"value":
+      {"surname":"Forrest",
+       "givenname":"Gump",
+       "additionalname":"",
+       "honprefix":"Mr.",
+       "honsuffix":""}},
+   "FN":{"value":"Forrest Gump"},
+   "ORG":{"value":["Bubba Gump Shrimp Co."]},
+   "TITLE":{"value":"Shrimp Man"},
+   "PHOTO":
+    {"value":"http://www.example.com/dir_photos/my_photo.gif",
+     "params":{"MEDIATYPE":"image/gif"}},
+   "TEL":
+    [{"value":"tel:+1-111-555-1212",
+      "params":{"TYPE":["WORK", "VOICE"], "VALUE":"uri"}},
+     {"value":"tel:+1-404-555-1212",
+      "params":{"TYPE":["HOME", "VOICE"], "VALUE":"uri"}}],
+   "ADR":
+    [{"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"100 Waters Edge",
+        "locality":"Baytown",
+        "region":"LA",
+        "code":"30314",
+        "country":"United States of America"},
+      "params":{"TYPE":["WORK", "PREF"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"42 Plantation St.",
+        "locality":"Baytown",
+        "region":"LA",
+        "code":"30314",
+        "country":"United States of America"},
+      "params":{"TYPE":["HOME"]}}],
+   "EMAIL":{"value":"forrestgump@example.com"},
+   "REV":
+    {"value":
+      {"year":"2008",
+       "month":"04",
+       "day":"24",
+       "hour":"19",
+       "min":"52",
+       "sec":"43",
+       "zone":"Z"}},
+   "X_QQ":{"value":"21588891"}}}

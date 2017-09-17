@@ -1,0 +1,25 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"Simon Perreault"},
+   "N":
+    {"value":
+      {"surname":"Perreault",
+       "givenname":"Simon",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":["ing. jr", "M.Sc."]}},
+   "BIRTHPLACE":
+    {"value":"http://example.com/hospitals/babiesrus.vcf",
+     "params":{"VALUE":"uri"}},
+   "DEATHPLACE":
+    {"value":"http://example.com/ships/titanic.vcf",
+     "params":{"VALUE":"uri"}},
+   "DEATHDATE":
+    {"value":
+      {"year":"1953",
+       "month":"10",
+       "day":"15",
+       "hour":"23",
+       "min":"10",
+       "sec":"00",
+       "zone":"Z"}}}}

@@ -1,0 +1,33 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "N":
+    {"value":
+      {"surname":"Bloggs",
+       "givenname":"Joe",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":""}},
+   "FN":{"value":"Joe Bloggs"},
+   "EMAIL":
+    {"value":"me@joebloggs.com", "params":{"TYPE":["HOME"], "PREF":"1"}},
+   "TEL":
+    {"value":"tel:+44 20 1234 5678",
+     "params":{"TYPE":["CELL", "HOME"], "PREF":"1"}},
+   "ADR":
+    {"value":
+      {"pobox":"",
+       "ext":"",
+       "street":"1 Trafalgar Square",
+       "locality":"London",
+       "region":"",
+       "code":"WC2N",
+       "country":"United Kingdom"},
+     "params":{"TYPE":["HOME"], "PREF":"1"}},
+   "URL":
+    {"value":"http://joebloggs.com",
+     "params":{"TYPE":["HOME"], "PREF":"1"}},
+   "IMPP":
+    {"value":"skype:joe.bloggs", "params":{"TYPE":["HOME"], "PREF":"1"}},
+   "X_SOCIALPROFILE":
+    {"value":"twitter:https://twitter.com/joebloggs",
+     "params":{"TYPE":["HOME"], "PREF":"1"}}}}

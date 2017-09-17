@@ -1,0 +1,26 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"Simon Perreault"},
+   "N":
+    {"value":
+      {"surname":"Perreault",
+       "givenname":"Simon",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":["ing. jr", "M.Sc."]}},
+   "EXPERTISE":
+    [{"value":"chinese literature",
+      "params":{"LEVEL":"BEGINNER", "INDEX":2}},
+     {"value":"chemistry", "params":{"INDEX":1, "LEVEL":"EXPERT"}}],
+   "HOBBY":
+    [{"value":"reading", "params":{"INDEX":1, "LEVEL":"HIGH"}},
+     {"value":"sewing", "params":{"INDEX":2, "LEVEL":"HIGH"}}],
+   "INTEREST":
+    [{"value":"r&b music", "params":{"INDEX":1, "LEVEL":"MEDIUM"}},
+     {"value":"rock 'n' roll music",
+      "params":{"INDEX":2, "LEVEL":"HIGH"}}],
+   "ORG_DIRECTORY":
+    [{"value":"http://directory.mycompany.example.com",
+      "params":{"INDEX":1}},
+     {"value":"ldap://ldap.tech.example/o=Example%20Tech,ou=Engineering",
+      "params":{"PREF":"1"}}]}}

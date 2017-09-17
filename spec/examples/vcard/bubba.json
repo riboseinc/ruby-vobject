@@ -1,0 +1,53 @@
+{"VCARD":
+  {"VERSION":{"value":"3.0"},
+   "N":
+    {"value":
+      {"surname":"Gump",
+       "givenname":"Forrest",
+       "middlename":"",
+       "honprefix":"Mr.",
+       "honsuffix":""}},
+   "FN":{"value":"Forrest Gump"},
+   "ORG":{"value":["Bubba Gump Shrimp Co."]},
+   "TITLE":{"value":"Shrimp Man"},
+   "PHOTO":
+    {"value":"http://www.example.com/dir_photos/my_photo.gif",
+     "params":{"VALUE":"uri", "TYPE":["GIF"]}},
+   "TEL":
+    [{"value":"(111) 555-1212", "params":{"TYPE":["WORK","VOICE"]}},
+     {"value":"(404) 555-1212", "params":{"TYPE":["HOME","VOICE"]}}],
+   "ADR":
+    [{"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"100 Waters Edge",
+        "locality":"Baytown",
+        "region":"LA",
+        "code":"30314",
+        "country":"United States of America"},
+      "params":{"TYPE":["WORK","PREF"]}},
+     {"value":
+       {"pobox":"",
+        "ext":"",
+        "street":"42 Plantation St.",
+        "locality":"Baytown",
+        "region":"LA",
+        "code":"30314",
+        "country":"United States of America"},
+      "params":{"TYPE":["HOME"]}}],
+   "LABEL":
+    [{"value":"100 Waters Edge\nBaytown, LA 30314\nUnited States of America",
+      "params":{"TYPE":["WORK","PREF"]}},
+     {"value":
+       "42 Plantation St.\nBaytown, LA 30314\nUnited States of America",
+      "params":{"TYPE":["HOME"]}}],
+   "EMAIL":{"value":"forrestgump@example.com"},
+   "REV":
+    {"value":
+      {"year":"2008",
+       "month":"04",
+       "day":"24",
+       "hour":"19",
+       "min":"52",
+       "sec":"43",
+       "zone":"Z"}}}}

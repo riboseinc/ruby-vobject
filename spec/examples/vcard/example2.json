@@ -1,0 +1,10 @@
+{
+  "VCARD":{
+    "VERSION":{
+      "value":"4.0"
+    },
+    "FN"    :    {
+      "value"      : "Testing Vcard"
+    }
+  }
+}

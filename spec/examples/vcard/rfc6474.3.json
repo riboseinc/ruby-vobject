@@ -1,0 +1,15 @@
+{"VCARD":
+  {"VERSION":{"value":"4.0"},
+   "FN":{"value":"Simon Perreault"},
+   "N":
+    {"value":
+      {"surname":"Perreault",
+       "givenname":"Simon",
+       "additionalname":"",
+       "honprefix":"",
+       "honsuffix":["ing. jr", "M.Sc."]}},
+   "BIRTHPLACE":
+    {"value":"geo:46.769307\\,-71.283079", "params":{"VALUE":"uri"}},
+   "DEATHPLACE":
+    {"value":"geo:41.731944\\,-49.945833", "params":{"VALUE":"uri"}},
+   "DEATHDATE":{"value":"circa 1800", "params":{"VALUE":"text"}}}}

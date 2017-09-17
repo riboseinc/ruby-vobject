@@ -85,7 +85,7 @@ module Vobject::Vcalendar
 	    		[s, l].flatten
 		} | setposday.map {|s| [s]}
     # http://www.unicode.org/repos/cldr/tags/latest/common/bcp47/calendar.xml
-    rscale	= C::XNAME | /buddhist/i.r | /chinese/i.r | /coptic/i.r | /dangi/i.r |
+    rscale	= C::XNAME_VCAL | /buddhist/i.r | /chinese/i.r | /coptic/i.r | /dangi/i.r |
 	    	/ethioaa/i.r | /ethiopic-amete-alem/i.r | /ethiopic/i.r |
 		/gregory/i.r | /hebrew/i.r | /indian/i.r | /islamic/i.r |
 		/islamic-umalqura/i.r | /islamic-tbla/i.r | /islamic-civil/i.r |
@@ -220,7 +220,7 @@ module Vobject::Vcalendar
   end
 
   def classvalue
-	classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | C::XNAME | C::IANATOKEN).map {|m|
+	classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | C::XNAME_VCAL | C::IANATOKEN).map {|m|
 		Vobject::Vcalendar::PropertyValue::ClassValue.new m }
 	classvalue.eof
   end
@@ -287,7 +287,7 @@ module Vobject::Vcalendar
   end
 
   def durationT
-    duration = C::DURATION
+    duration = C::DURATION.map {|d| Vobject::Vcalendar::PropertyValue::Duration.new d}
     duration.eof
   end
   
@@ -296,7 +296,7 @@ module Vobject::Vcalendar
                         {:start => s, :end => e}
                     }
     period_start    = seq(C::DATE_TIME, "/".r, C::DURATION) {|s, _, d|
-                        {:start => s, :duration => d}
+                        {:start => s, :duration => Vobject::Vcalendar::PropertyValue::Duration.new(d)}
                     }
     period 	        = period_explicit | period_start
     periodlist1      = seq(period, ",".r, lazy{periodlist1}) {|p, _, l|
@@ -323,7 +323,7 @@ module Vobject::Vcalendar
   end
 
   def actionvalue
-	  actionvalue	= (/AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | C::IANATOKEN | C::XNAME).map {|m|
+	  actionvalue	= (/AUDIO/i.r | /DISPLAY/i.r | /EMAIL/i.r | C::IANATOKEN | C::XNAME_VCAL).map {|m|
 		Vobject::Vcalendar::PropertyValue::ActionValue.new m }
 	  actionvalue.eof
   end
@@ -343,7 +343,7 @@ module Vobject::Vcalendar
 
   # RFC 7953
   def busytype
-	  busytype = (/BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | /BUSY/i.r |  C::IANATOKEN | C::XNAME).map {|m|
+	  busytype = (/BUSY-UNAVAILABLE/i.r | /BUSY-TENTATIVE/i.r | /BUSY/i.r |  C::IANATOKEN | C::XNAME_VCAL).map {|m|
 		Vobject::Vcalendar::PropertyValue::BusyType.new m }
 	  busytype.eof
   end
@@ -363,7 +363,7 @@ module Vobject::Vcalendar
   end
   
   def registered_propname
-    registered_propname = C::NAME
+    registered_propname = C::NAME_VCAL
     registered_propname.eof
   end
   
