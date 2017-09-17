@@ -566,7 +566,7 @@ module Vobject::Vcalendar
 			ret = utc_offset._parse ctx1
 		end
 	    else 
-	        ret = Vobject::Vcalendar::PropertyValue::Text.new value
+	        ret = textT._parse ctx1
 	    end
     end
     if ret.kind_of?(Hash) and ret[:error]

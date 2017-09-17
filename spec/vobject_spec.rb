@@ -385,6 +385,10 @@ describe Vobject do
     expect(normalise(roundtrip)).to eql(normalise(ics))
   end
 
+  it 'should not allow non-Text characters in xname property with default value of text' do
+    ics = File.read "spec/examples/property_params.1.ics"
+    expect { Vcalendar.parse(ics)}.to raise_error(/Type mismatch for property X_BAZ2, value BAZ;BAR/)
+  end
   it 'should parse iCalendar properly with property params' do
     ics = File.read "spec/examples/property_params.ics"
     vobj_json = Vcalendar.parse(ics).to_json
