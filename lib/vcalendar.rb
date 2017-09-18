@@ -11,7 +11,8 @@ class Vcalendar < Vobject::Component
   class << self
 
     def parse(vcf, strict)
-      hash = Vobject::Vcalendar::Grammar.new(strict).parse(vcf)
+      #hash = Vobject::Vcalendar::Grammar.new(strict).parse(vcf)
+      hash = Vobject::Component::Vcalendar.parse(vcf, strict)
       #comp_name = hash.keys.first
 
       #self.new(comp_name, hash[comp_name], hash[:errors] )
