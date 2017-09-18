@@ -31,8 +31,12 @@ require 'JSON'
 require 'pp'
 
 ics = File.read "spec/examples/vcalendar/timezones/America/Denver.ics"
-# parse VCalendar into native object structure
-pp Vcalendar.parse(ics)
+# parse VCalendar into native object structure, with strict validation (crashes on any error)
+pp Vcalendar.parse(ics, true)
+# parse VCalendar into native object structure, without strict validation (errors other than syntax errors are tracked)
+pp Vcalendar.parse(ics, false)
+# list any errors
+pp Vcalendar.parse(ics, false).get_errors
 # convert VCalendar into Ruby hash
 pp Vcalendar.parse(ics).to_hash
 # convert VCalendar into JSON
@@ -47,14 +51,20 @@ require 'JSON'
 require 'pp'
 
 vcf = File.read "spec/examples/vcard/vcard3.vcf"
-# parse Vcard into native object structure (version 3)
-pp Vcard.new('3.0').parse(vcf)
+# parse Vcard into native object structure (version 3), strict vslidation
+pp Vcard.parse(vcf, '3.0', true)
 # parse Vcard into Ruby hash
-pp Vcard.new('3.0').parse(vcf).to_hash
+pp Vcard.parse(vcf, '3.0', true).to_hash
 # parse Vcard into JSON
-pp JSON.parse(Vcard.new('3.0').parse(vcf).to_json)
+pp JSON.parse(Vcard.parse(vcf, '3.0', true).to_json)
 # parse Vcard into VCard text
-print Vcard.new('3.0').parse(vcf).to_s
+print Vcard.parse(vcf, '3.0', true).to_s
+vcf = File.read "spec/examples/vcard/example61.vcf"
+# parse Vcard into native object structure (version 4), lax vslidation
+pp Vcard.parse(vcf, '4.0', false)
+# list anu errors
+pp Vcard.parse(vcf, '4.0', false).get_errors
+
 ```
 
 * Recognises all of VCard v3.0, Vcard v4.0, and Vcalendar v2.0
@@ -67,6 +77,9 @@ as an array of value properties. Each value hash may have its own parameters.
 * Objects can be parsed from text files.
 * Objects can be populated from hashes of property value objects.
 * Objects can be converted to Ruby hashes with native property value types (`.to_hash`), JSON objects with the same value types (`.to_json`), and round-tripped back to ICAL/VCARD string representations (`.to_s`)
+* Validation can be strict or lax. 
+  * If strict, an exception is raised on any syntax error, type mismatch, or other mismatch to the specification, such as mandatory elements.
+  * If lax, an exception is still raised on syntax errors, but other issues are listed in an error field of the resulting object.
 
 Running spec:
 bundle exec rspec
