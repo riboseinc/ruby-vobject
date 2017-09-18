@@ -31,9 +31,11 @@ require 'JSON'
 require 'pp'
 
 ics = File.read "spec/examples/vcalendar/timezones/America/Denver.ics"
-# parse VCalendar into native object structure, with strict validation (crashes on any error)
+# parse VCalendar into native object structure, with strict validation 
+# (raises exception on any deviation from the spec)
 pp Vcalendar.parse(ics, true)
-# parse VCalendar into native object structure, without strict validation (errors other than syntax errors are tracked)
+# parse VCalendar into native object structure, without strict validation 
+# (errors other than syntax errors are logged, but object still parses)
 pp Vcalendar.parse(ics, false)
 # list any errors
 pp Vcalendar.parse(ics, false).get_errors
@@ -51,7 +53,7 @@ require 'JSON'
 require 'pp'
 
 vcf = File.read "spec/examples/vcard/vcard3.vcf"
-# parse Vcard into native object structure (version 3), strict vslidation
+# parse Vcard into native object structure (version 3), strict validation
 pp Vcard.parse(vcf, '3.0', true)
 # parse Vcard into Ruby hash
 pp Vcard.parse(vcf, '3.0', true).to_hash
@@ -60,11 +62,10 @@ pp JSON.parse(Vcard.parse(vcf, '3.0', true).to_json)
 # parse Vcard into VCard text
 print Vcard.parse(vcf, '3.0', true).to_s
 vcf = File.read "spec/examples/vcard/example61.vcf"
-# parse Vcard into native object structure (version 4), lax vslidation
+# parse Vcard into native object structure (version 4), lax validation
 pp Vcard.parse(vcf, '4.0', false)
-# list anu errors
+# list any errors
 pp Vcard.parse(vcf, '4.0', false).get_errors
-
 ```
 
 * Recognises all of VCard v3.0, Vcard v4.0, and Vcalendar v2.0
