@@ -195,7 +195,7 @@ attr_accessor :strict, :errors
 			parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
 			parse_err("Missing FN attribute") unless rest.has_key?(:FN)
 			rest.delete(:END)
-	            	hash = { :VCARD => v.merge( rest ) }
+	            	hash = { :VCARD => v.merge( rest ) , :errors => self.errors.flatten }
 		        hash
 		}
     vobject.eof 
@@ -215,15 +215,12 @@ attr_accessor :strict, :errors
 	      raise @ctx.generate_error 'source'
 	       else
 		                               self.errors << @ctx.generate_error('source')
+					       ret = { :VCARD => nil, :errors => self.errors.flatten }
 					                                             end
 
         end
 	Rsec::Fail.reset
-	if self.strict
                             return ret
-               else
-                               return {:vobject => ret, :errors => self.errors}
-              end
   end
 
 private

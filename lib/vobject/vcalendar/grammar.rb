@@ -466,7 +466,7 @@ attr_accessor :strict, :errors
 					parse_err("Missing DTSTART property from VEVENT component")  if ( !e.has_key?(:DTSTART) )
 				}
 			end
-	            	tidyup({ :VCALENDAR => v.merge( rest ) })
+	            	tidyup({ :VCALENDAR => v.merge( rest ), :errors => self.errors.flatten })
 		}
     vobject.eof 
   end 
@@ -549,13 +549,10 @@ attr_accessor :strict, :errors
 	ret = vobjectGrammar._parse @ctx
 	if !ret or Rsec::INVALID[ret] 
 		parse_err(@ctx.generate_error('source'))
+		ret = { :VCALENDAR => nil, :errors => self.errors.flatten }
         end
 	Rsec::Fail.reset
-	if self.strict
 		return ret
-	else
-		return {:vobject => ret, :errors => self.errors}
-	end
   end
 
 private

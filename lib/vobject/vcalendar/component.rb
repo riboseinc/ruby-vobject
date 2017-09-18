@@ -13,7 +13,7 @@ class Vobject::Component::Vcalendar < Vobject::Component
       hash = Vobject::Vcalendar::Grammar.new(strict).parse(vcf)
       comp_name = hash.keys.first
 
-      self.new comp_name, hash[comp_name]
+                ret = self.new comp_name, hash[comp_name], hash[:errors]
     end
 
 

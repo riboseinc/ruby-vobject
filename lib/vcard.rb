@@ -18,7 +18,10 @@ class Vcard < Vobject::Component
   end
 
   def parse vcf, version, strict
-	  return version == '3.0' ? Vcard::V3_0::Component.parse(vcf, strict) : Vcard::V4_0::Component.parse(vcf, strict)
+	  hash = version == '3.0' ? Vcard::V3_0::Component.parse(vcf, strict) : Vcard::V4_0::Component.parse(vcf, strict)
+	  #comp_name = hash.keys.first
+	  #return self.new(comp_name, hash[:vobject][comp_name], hash[:errors] )
+	  hash
   end
 
 

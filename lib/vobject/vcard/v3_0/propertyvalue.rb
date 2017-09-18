@@ -407,17 +407,21 @@ module PropertyValue
 	    self.value.each{|k, v| 
 		ret[k] = {}
 		v.each{|k1, v1|
-			ret[k][k1] = {}
+			if v1.kind_of?(Hash)
+			ret[k][k1] = {	}
 			v1.each {|k2, v2|
 				ret[k][k1][k2] = v2.to_hash
 			}
+			else
+				ret[k][k1] = v1
+			end
 		}
 	    }
 	    ret
     end
 
     def to_s
-	ret = Vobject::Component.new(:VCARD, self.value[:VCARD]).to_s
+	ret = Vobject::Component.new(:VCARD, self.value[:VCARD], []).to_s
 	# spec says that colons must be expected, but none of the examples do
 	ret.gsub(/\n/,"\\n").gsub(/,/,"\\,").gsub(/;/,"\\;")
 	#ret.gsub(/\n/,"\\n").gsub(/:/,"\\:")

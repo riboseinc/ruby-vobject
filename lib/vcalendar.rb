@@ -9,21 +9,19 @@ class Vcalendar < Vobject::Component
   attr_accessor :comp_name, :children, :version
 
   class << self
-	  def blank version
-	  return self.new :VCALENDAR, {:VERSION => {:value => version}}
-	  end
 
     def parse(vcf, strict)
       hash = Vobject::Vcalendar::Grammar.new(strict).parse(vcf)
-      comp_name = hash.keys.first
+      #comp_name = hash.keys.first
 
-      return self.new comp_name, hash[comp_name]
+      #self.new(comp_name, hash[comp_name], hash[:errors] )
+      hash
     end
 
   end
 
-    def initialize key, cs
-	    super key, cs  
+    def initialize key, cs, err
+	    super key, cs, err
     end
 
   def child_class key, val

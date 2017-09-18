@@ -5,18 +5,19 @@ require 'json'
 
 class Vobject::Component
 
-  attr_accessor :comp_name, :children, :multiple_components
+  attr_accessor :comp_name, :children, :multiple_components, :errors
 
   def blank version
 		        return self.ingest :VOBJECT, {:VERSION => {:value => version}}
   end
 
 
-  def initialize key, cs
+  def initialize key, cs, err
     self.comp_name = key
     raise_invalid_initialization if key != name
-
     self.children = []
+    		if cs.nil?
+		else
     		cs.each_key do |key|
       			val = cs[key]
       			# iteration of array or hash values is making the value a key!
@@ -25,13 +26,18 @@ class Vobject::Component
         		cc = child_class(key, val)
 			if val.is_a?(Hash) and val.has_key?(:component)
 				val[:component].each do |x|
-        				self.children << cc.new(key, x)
+        				self.children << cc.new(key, x, [])
 				end
-				
 			else
         			self.children << cc.new(key, val)
 			end
     		end
+		end
+	self.errors = err
+  end
+
+  def get_errors
+	  self.errors
   end
 
   def child_class key, val
