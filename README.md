@@ -25,7 +25,7 @@ Or install it yourself as:
 
 ## Usage
 
-```
+```ruby
 require 'vcalendar'
 require 'JSON'
 require 'pp'
@@ -45,7 +45,7 @@ pp JSON.parse(Vcalendar.parse(ics).to_json)
 print Vcalendar.parse(ics).to_s
 ```
 
-```
+```ruby
 require 'vcard'
 require 'JSON'
 require 'pp'
