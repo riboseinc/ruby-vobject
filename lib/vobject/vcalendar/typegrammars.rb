@@ -92,23 +92,23 @@ module Vobject::Vcalendar
           /islamic-rgsa/i.r | /iso8601/i.r | /japanese/i.r | /persian/i.r |
           /roc/i.r | /islamicc/i.r | /gregorian/i.r
         skip	= /OMIT/i.r | /BACKWARD/i.r | /FORWARD/i.r
-        recur_rule_part = 	seq(/FREQ/i.r, '=', freq) { |k, _, v| {:freq => v} } |
-          seq(/UNTIL/i.r, '=', enddate) { |k, _, v| {:until => v} } |
-          seq(/COUNT/i.r, '=', /[0-9]+/i.r) { |k, _, v| {:count => v} } |
-          seq(/INTERVAL/i.r, '=', /[0-9]+/i.r) { |k, _, v| {:interval => v} } |
-          seq(/BYSECOND/i.r, '=', byseclist) { |k, _, v| {:bysecond => v} } |
-          seq(/BYMINUTE/i.r, '=', byminlist) { |k, _, v| {:byminute => v} } |
-          seq(/BYHOUR/i.r, '=', byhrlist) { |k, _, v| {:byhour => v} } |
-          seq(/BYDAY/i.r, '=', bywdaylist) { |k, _, v| {:byday => v} } |
-          seq(/BYMONTHDAY/i.r, '=', bymodaylist) { |k, _, v| {:bymonthday => v} } |
-          seq(/BYYEARDAY/i.r, '=', byyrdaylist) { |k, _, v| {:byyearday => v} } |
-          seq(/BYWEEKNO/i.r, '=', bywknolist)  { |k, _, v| {:byweekno => v} } |
-          seq(/BYMONTH/i.r, '=', bymolist)  { |k, _, v| {:bymonth => v} } |
-          seq(/BYSETPOS/i.r, '=', bysplist)  { |k, _, v| {:bysetpos => v} } |
-          seq(/WKST/i.r, '=', weekday)  { |k, _, v| {:wkst => v} } |
+        recur_rule_part = 	seq(/FREQ/i.r, "=", freq) { |k, _, v| {:freq => v} } |
+          seq(/UNTIL/i.r, "=", enddate) { |k, _, v| {:until => v} } |
+          seq(/COUNT/i.r, "=", /[0-9]+/i.r) { |k, _, v| {:count => v} } |
+          seq(/INTERVAL/i.r, "=", /[0-9]+/i.r) { |k, _, v| {:interval => v} } |
+          seq(/BYSECOND/i.r, "=", byseclist) { |k, _, v| {:bysecond => v} } |
+          seq(/BYMINUTE/i.r, "=", byminlist) { |k, _, v| {:byminute => v} } |
+          seq(/BYHOUR/i.r, "=", byhrlist) { |k, _, v| {:byhour => v} } |
+          seq(/BYDAY/i.r, "=", bywdaylist) { |k, _, v| {:byday => v} } |
+          seq(/BYMONTHDAY/i.r, "=", bymodaylist) { |k, _, v| {:bymonthday => v} } |
+          seq(/BYYEARDAY/i.r, "=", byyrdaylist) { |k, _, v| {:byyearday => v} } |
+          seq(/BYWEEKNO/i.r, "=", bywknolist)  { |k, _, v| {:byweekno => v} } |
+          seq(/BYMONTH/i.r, "=", bymolist)  { |k, _, v| {:bymonth => v} } |
+          seq(/BYSETPOS/i.r, "=", bysplist)  { |k, _, v| {:bysetpos => v} } |
+          seq(/WKST/i.r, "=", weekday)  { |k, _, v| {:wkst => v} } |
           # RFC 7529
-          seq(/RSCALE/i.r, '=', rscale)  { |k, _, v| {:rscale => v} } |
-          seq(/SKIP/i.r, '=', skip)  { |k, _, v| {:skip => v} }
+          seq(/RSCALE/i.r, "=", rscale)  { |k, _, v| {:rscale => v} } |
+          seq(/SKIP/i.r, "=", skip)  { |k, _, v| {:skip => v} }
         recur1 	= seq(recur_rule_part, ";", lazy{recur1}) { |h, _, r| h.merge r } |
           recur_rule_part
         recur	= recur1.map { |r| Vobject::Vcalendar::PropertyValue::Recur.new r }
@@ -378,7 +378,7 @@ module Vobject::Vcalendar
       def typematch(strict, key, params, component, value, ctx)
         errors = []
         errors << property_parent(strict, key, component, value, ctx)
-        ctx1 = Rsec::ParseContext.new value, 'source'
+        ctx1 = Rsec::ParseContext.new value, "source"
         case key
         when :CALSCALE
           ret = calscalevalue._parse ctx1
@@ -584,9 +584,9 @@ module Vobject::Vcalendar
 
       def parse_err(strict, errors, msg, ctx)
         if strict
-          raise ctx.report_error msg, 'source'
+          raise ctx.report_error msg, "source"
         else
-          errors << ctx.report_error(msg, 'source')
+          errors << ctx.report_error(msg, "source")
         end
       end
 

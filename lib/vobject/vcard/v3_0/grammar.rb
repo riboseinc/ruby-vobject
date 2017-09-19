@@ -43,7 +43,7 @@ module Vcard::V3_0
       valuetype 	= /URI/i.r | /DATE/i.r | /DATE-TIME/i.r | /BINARY/i.r | /PTEXT/i.r 
       mediaattr	= /[!\"#$%&'*+.^A-Z0-9a-z_`i{}|~-]+/.r
       mediavalue	=	mediaattr | C::QUOTEDSTRING_VCARD
-      mediatail   = seq(";", mediaattr, '=', mediavalue).map { |_, a, _, v|
+      mediatail   = seq(";", mediaattr, "=", mediavalue).map { |_, a, _, v|
         ";#{a}=#{v}"
       }
       rfc4288regname      = /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
@@ -70,29 +70,29 @@ module Vcard::V3_0
 
       fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
       rfc1766primarytag 	= /[A-Za-z]{1,8}/.r
-      rfc1766subtag 	= seq('-', /[A-Za-z]{1,8}/.r) { |a, b| a + b }
+      rfc1766subtag 	= seq("-", /[A-Za-z]{1,8}/.r) { |a, b| a + b }
       rfc1766language	= seq(rfc1766primarytag, rfc1766subtag.star) { |a, b|
         a += b[0] unless b.empty?
         a
       }
 
-      param 	= seq(/ENCODING/i.r, '=', /b/.r) { |name, _, val|
+      param 	= seq(/ENCODING/i.r, "=", /b/.r) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/LANGUAGE/i.r, '=', rfc1766language) { |name, _, val|
+      } | seq(/LANGUAGE/i.r, "=", rfc1766language) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/CONTEXT/i.r, '=', /word/.r) { |name, _, val|
+      } | seq(/CONTEXT/i.r, "=", /word/.r) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/TYPE/i.r, '=', typevaluelist) { |name, _, val|
+      } | seq(/TYPE/i.r, "=", typevaluelist) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/VALUE/i.r, '=', valuetype) { |name, _, val|
+      } | seq(/VALUE/i.r, "=", valuetype) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
       } | /PREF/i.r.map { |name|
         # this is likely erroneous use of VCARD 2.1 convention in RFC2739; converting to canonical TYPE=PREF
         {:TYPE => ["PREF"]}
-      } | seq(otherparamname, '=', pvalueList) { |name, _, val|
+      } | seq(otherparamname, "=", pvalueList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(paramname, '=', pvalueList) { |name, _, val|
+      } | seq(paramname, "=", pvalueList) { |name, _, val|
         parse_err("Violated format of parameter value #{name} = #{val}")
       }
 
@@ -157,13 +157,13 @@ module Vcard::V3_0
 
 
     def parse(vobject)
-      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
+      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
       ret = vobjectGrammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
         if self.strict
-          raise @ctx.generate_error 'source'
+          raise @ctx.generate_error "source"
         else
-          self.errors << @ctx.generate_error('source')
+          self.errors << @ctx.generate_error("source")
           ret = { :VCARD => nil, :errors => self.errors.flatten }
         end
       end
@@ -176,9 +176,9 @@ module Vcard::V3_0
 
     def parse_err(msg)
       if self.strict
-        raise @ctx.report_error msg, 'source'
+        raise @ctx.report_error msg, "source"
       else
-        self.errors << @ctx.report_error(msg, 'source')
+        self.errors << @ctx.report_error(msg, "source")
       end
     end
 

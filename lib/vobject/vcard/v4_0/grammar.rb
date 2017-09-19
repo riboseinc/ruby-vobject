@@ -79,7 +79,7 @@ module Vcard::V4_0
         /LANGUAGE-TAG/i.r | C::IANATOKEN | C::XNAME_VCARD
       mediaattr	= /[!\"#$%&'*+.^A-Z0-9a-z_`i{}|~-]+/.r
       mediavalue	=	mediaattr | C::QUOTEDSTRING_VCARD
-      mediatail	= seq(";", mediaattr, '=', mediavalue).map { |_, a, _, v|
+      mediatail	= seq(";", mediaattr, "=", mediavalue).map { |_, a, _, v|
         ";#{a}=#{v}"
       }
       rfc4288regname      = /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
@@ -104,39 +104,39 @@ module Vcard::V4_0
       fmttypevalue 	= seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
       levelvalue	= /beginner/i.r | /average/i.r | /expert/i.r | /high/i.r | /medium/i.r | /low/i.r
 
-      param 	= seq(/ALTID/i.r, '=', paramvalue) { |name, _, val|
+      param 	= seq(/ALTID/i.r, "=", paramvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/LANGUAGE/i.r, '=', C::RFC5646LANGVALUE) { |name, _, val|
+      } | seq(/LANGUAGE/i.r, "=", C::RFC5646LANGVALUE) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/PREF/i.r, '=', prefvalue) { |name, _, val|
+      } | seq(/PREF/i.r, "=", prefvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/TYPE/i.r, '=', "\"".r >> typevaluelist << "\"".r) { |name, _, val|
+      } | seq(/TYPE/i.r, "=", "\"".r >> typevaluelist << "\"".r) { |name, _, val|
         # not in spec but in examples. Errata ID 3488, "Held for Document Update": acknwoledged as error requiring an updated spec. With this included, TYPE="x,y,z" is a list of values; the proper ABNF behaviour is that "x,y,z" is interpreted as a single value
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/TYPE/i.r, '=', typevaluelist) { |name, _, val|
+      } | seq(/TYPE/i.r, "=", typevaluelist) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/MEDIATYPE/i.r, '=', mediavalue) { |name, _, val|
+      } | seq(/MEDIATYPE/i.r, "=", mediavalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/CALSCALE/i.r, '=', calscalevalue) { |name, _, val|
+      } | seq(/CALSCALE/i.r, "=", calscalevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/SORT-AS/i.r, '=', pvalueList) { |name, _, val|
+      } | seq(/SORT-AS/i.r, "=", pvalueList) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/TZ/i.r, '=', tzvalue) { |name, _, val|
+      } | seq(/TZ/i.r, "=", tzvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/GEO/i.r, '=', geourlvalue) { |name, _, val|
+      } | seq(/GEO/i.r, "=", geourlvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/VALUE/i.r, '=', valuetype) { |name, _, val|
+      } | seq(/VALUE/i.r, "=", valuetype) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/PID/i.r, '=', pidvaluelist) { |name, _, val|
+      } | seq(/PID/i.r, "=", pidvaluelist) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/INDEX/i.r, '=', prim(:int32)) { |name, _, val|
+      } | seq(/INDEX/i.r, "=", prim(:int32)) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/LEVEL/i.r, '=', levelvalue) { |name, _, val|
+      } | seq(/LEVEL/i.r, "=", levelvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(otherparamname, '=', pvalueList) { |name, _, val|
+      } | seq(otherparamname, "=", pvalueList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(paramname, '=', pvalueList) { |name, _, val|
+      } | seq(paramname, "=", pvalueList) { |name, _, val|
         parse_err("Violated format of parameter value #{name} = #{val}")
       }
 
@@ -208,13 +208,13 @@ module Vcard::V4_0
 
 
     def parse(vobject)
-      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
+      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
       ret = vobjectGrammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
         if self.strict
-          raise @ctx.generate_error 'source'
+          raise @ctx.generate_error "source"
         else
-          self.errors << @ctx.generate_error('source')
+          self.errors << @ctx.generate_error("source")
           ret = { :VCARD => nil, :errors => self.errors.flatten }
         end
 
@@ -227,9 +227,9 @@ module Vcard::V4_0
 
     def parse_err(msg)
       if self.strict
-        raise @ctx.report_error msg, 'source'
+        raise @ctx.report_error msg, "source"
       else
-        self.errors << @ctx.report_error(msg, 'source')
+        self.errors << @ctx.report_error(msg, "source")
       end
     end
 

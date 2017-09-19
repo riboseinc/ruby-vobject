@@ -331,7 +331,7 @@ module Vcard::V3_0
       def typematch(strict, key, params, component, value, ctx)
         errors = []
         params[:VALUE] = params[:VALUE].downcase if params && params[:VALUE]
-        ctx1 = Rsec::ParseContext.new value, 'source'
+        ctx1 = Rsec::ParseContext.new value, "source"
         case key
         when :VERSION
           ret = versionvalue._parse ctx1
@@ -401,7 +401,7 @@ module Vcard::V3_0
             # spec says that colons need to be escaped, but none of the examples do so
             #value = value.gsub(/\\:/,':')
             value = value.gsub(/BEGIN:VCARD\n/, "BEGIN:VCARD\nVERSION:3.0\n") unless value =~ /\nVERSION:3\.0/
-            ctx1 = Rsec::ParseContext.new value, 'source'
+            ctx1 = Rsec::ParseContext.new value, "source"
             ret = Vcard::V3_0::PropertyValue::Agent.new(Vcard::V3_0::Grammar.new(strict).vobjectGrammar._parse ctx1)
             # TODO same strictness as grammar
           end
@@ -424,9 +424,9 @@ module Vcard::V3_0
 
       def parse_err(strict, errors, msg, ctx)
         if strict
-          raise ctx.report_error msg, 'source'
+          raise ctx.report_error msg, "source"
         else
-          errors << ctx.report_error(msg, 'source')
+          errors << ctx.report_error(msg, "source")
         end
       end
 

@@ -9,20 +9,20 @@ module Vcard::V4_0
           # temporarily escape \\ as \u007f, which is banned from text
           x.tr("\\", "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/\u007f/, "\\\\")
         end
-        
+
         def escape_component(x)
           # temporarily escape \\ as \u007f, which is banned from text
           x.tr("\\", "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;").gsub(/\u007f/, "\\\\")
         end
-        
+
         def listencode(x)
-          if x.is_a?(Array)
-            ret = x.map { |m| Text.escape_component m }.join(",")
-          elsif x.nil? || x.empty?
-            ret = ""
-          else
-            ret = Text.escape_component x
-          end
+          ret = if x.is_a?(Array)
+                  x.map { |m| Text.escape_component m }.join(",")
+                elsif x.nil? || x.empty?
+                  ""
+                else
+                  Text.escape_component x
+                end
           ret
         end
       end
@@ -96,7 +96,7 @@ module Vcard::V4_0
       end
 
       def to_s
-        "#{self.value[:pid]};#{self.value[:uri]}"
+        "#{value[:pid]};#{value[:uri]}"
       end
 
       def to_hash
@@ -106,8 +106,8 @@ module Vcard::V4_0
 
     class Float < Vobject::PropertyValue
       include Comparable
-      def <=>(anOther)
-        self.value <=> anOther.value
+      def <=>(another)
+        value <=> another.value
       end
 
       def initialize(val)
@@ -126,8 +126,8 @@ module Vcard::V4_0
 
     class Integer < Vobject::PropertyValue
       include Comparable
-      def <=>(anOther)
-        self.value <=> anOther.value
+      def <=>(another)
+        value <=> another.value
       end
 
       def initialize(val)
@@ -136,7 +136,7 @@ module Vcard::V4_0
       end
 
       def to_s
-        self.value.to_s
+        value.to_s
       end
 
       def to_hash
@@ -146,30 +146,30 @@ module Vcard::V4_0
 
     class Date < Vobject::PropertyValue
       include Comparable
-      def <=>(anOther)
-        self.value[:date] <=> anOther.value[:date]
+      def <=>(another)
+        value[:date] <=> another.value[:date]
       end
 
       def initialize(val)
         self.value = val.clone
         self.type = "date"
         # fill in unspecified month && year && date; only for purposes of comparison
-        val[:year] = sprintf("%04d", ::Date.today().year) unless val.has_key?(:year)
-        val[:month] = sprintf("%02d",::Date.today().month) unless val.has_key?(:month)
-        val[:day] = sprintf("%02d",::Date.today().day) unless val.has_key?(:day)
-        self.value[:date] = ::Time.utc(val[:year], val[:month], val[:day])
+        val[:year] = sprintf("%04d", ::Date.today.year) unless val.has_key?(:year)
+        val[:month] = sprintf("%02d", ::Date.today.month) unless val.has_key?(:month)
+        val[:day] = sprintf("%02d", ::Date.today.day) unless val.has_key?(:day)
+        value[:date] = ::Time.utc(val[:year], val[:month], val[:day])
       end
 
       def to_s
         ret = ""
-        if value[:year]
-          ret << value[:year]
-        else
-          ret << "--"
-        end
+        ret << if value[:year]
+                 value[:year]
+               else
+                 "--"
+               end
         if value[:month]
           ret << value[:month]
-        elsif self.value[:day]
+        elsif value[:day]
           ret << "-"
         end
         if value[:day]
@@ -189,8 +189,8 @@ module Vcard::V4_0
 
     class DateTimeLocal < Vobject::PropertyValue
       include Comparable
-      def <=>(anOther)
-        self.value[:time] <=> anOther.value[:time]
+      def <=>(another)
+        value[:time] <=> another.value[:time]
       end
 
       def initialize(val)
@@ -198,35 +198,35 @@ module Vcard::V4_0
         # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
         self.type = "datetimeLocal"
         # fill in unspecified month && year && date; only for purposes of comparison
-        val[:year] = sprintf("%04d",::Date.today().year) unless val.has_key?(:year)
-        val[:month] = sprintf("%02d",::Date.today().month) unless val.has_key?(:month)
-        val[:day] = sprintf("%02d",::Date.today().day) unless val.has_key?(:day)
+        val[:year] = sprintf("%04d", ::Date.today.year) unless val.has_key?(:year)
+        val[:month] = sprintf("%02d", ::Date.today.month) unless val.has_key?(:month)
+        val[:day] = sprintf("%02d", ::Date.today.day) unless val.has_key?(:day)
         val[:hour] = 0 unless val.has_key?(:hour)
         val[:min] = 0 unless val.has_key?(:min)
         val[:sec] = 0 unless val.has_key?(:sec)
-        if val[:zone].empty?
-          self.value[:time] = ::Time.utc(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
-        else
-          self.value[:time] = ::Time.local(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
-        end
+        value[:time] = if val[:zone].empty?
+                         ::Time.utc(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
+                       else
+                         ::Time.local(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
+                       end
         if val[:zone] && val[:zone] != "Z"
-          offset = val[:zone][:hour]*3600 + val[:zone][:min]*60
+          offset = val[:zone][:hour] * 3600 + val[:zone][:min] * 60
           offset += val[:zone][:sec] if val[:zone][:sec]
-          offset = -offset if val[:sign] == '-'
-          self.value[:time] += offset.to_i
+          offset = -offset if val[:sign] == "-"
+          value[:time] += offset.to_i
         end
       end
 
       def to_s
         ret = ""
-        if value[:year]
-          ret << value[:year]
-        else
-          ret << "--"
-        end
+        ret << if value[:year]
+                 value[:year]
+               else
+                 "--"
+               end
         if value[:month]
           ret << value[:month]
-        elsif self.value[:day]
+        elsif value[:day]
           ret << "-"
         end
         if value[:day]
@@ -241,7 +241,7 @@ module Vcard::V4_0
           ret << value[:zone][:sign]
           ret << value[:zone][:hour]
           ret << value[:zone][:min]
-          ret << value[:zone][:sec]  if value[:zone][:sec]
+          ret << value[:zone][:sec] if value[:zone][:sec]
         end
         ret
       end
@@ -260,7 +260,6 @@ module Vcard::V4_0
     end
 
     class Time < Vobject::PropertyValue
-
       def initialize(val)
         self.value = val
         self.type = "time"
@@ -281,14 +280,13 @@ module Vcard::V4_0
     end
 
     class Utcoffset < Vobject::PropertyValue
-
       def initialize(val)
         self.value = val
         self.type = "utcoffset"
       end
 
       def to_s
-        ret = "#{self.value[:sign]}#{self.value[:hr]}#{self.value[:min]}"
+        ret = "#{value[:sign]}#{value[:hr]}#{value[:min]}"
         ret += value[:sec] if value[:sec]
         ret
       end
@@ -299,7 +297,6 @@ module Vcard::V4_0
     end
 
     class Version < Vobject::PropertyValue
-
       def initialize(val)
         self.value = val
         self.type = "version"
@@ -315,7 +312,6 @@ module Vcard::V4_0
     end
 
     class Gender < Vobject::PropertyValue
-
       def initialize(val)
         self.value = val
         self.type = "gender"
@@ -323,7 +319,7 @@ module Vcard::V4_0
 
       def to_s
         ret = value[:sex]
-        ret << ";#{self.value[:gender]}" if !self.value[:gender].empty?
+        ret << ";#{value[:gender]}" if !value[:gender].empty?
         ret
       end
 
@@ -339,7 +335,7 @@ module Vcard::V4_0
       end
 
       def to_s
-        self.value.map { |m| Text.escape m }.join(",")
+        value.map { |m| Text.escape m }.join(",")
       end
 
       def to_hash
@@ -354,14 +350,13 @@ module Vcard::V4_0
       end
 
       def to_s
-        self.value.map { |m| Text.escape_component m }.join(";")
+        value.map { |m| Text.escape_component m }.join(";")
       end
 
       def to_hash
         value
       end
     end
-
 
     class Fivepartname < Vobject::PropertyValue
       def initialize(val)

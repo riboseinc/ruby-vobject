@@ -112,9 +112,9 @@ module Vcard::V3_0
 
       def parse_err(strict, errors, msg, ctx)
         if strict
-          raise ctx.report_error msg, 'source'
+          raise ctx.report_error msg, "source"
         else
-          errors << ctx.report_error(msg, 'source')
+          errors << ctx.report_error(msg, "source")
         end
       end
 

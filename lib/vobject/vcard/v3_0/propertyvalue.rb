@@ -210,7 +210,7 @@ module Vcard::V3_0
         if val[:zone] && val[:zone] != "Z"
           offset = val[:zone][:hour].to_i*3600 + val[:zone][:min].to_i*60
           offset += val[:zone][:sec].to_i if val[:zone][:sec]
-          offset = -offset if val[:sign] == '-'
+          offset = -offset if val[:sign] == "-"
           self.value[:time] += offset.to_i
         end
       end

@@ -111,62 +111,62 @@ module Vobject::Vcalendar
         [d, l].flatten
       } | featureval.map { |d| [d] }
 
-      param 	= seq(/ALTREP/i.r, '=', quotedparamvalue) { |name, _, val|
+      param 	= seq(/ALTREP/i.r, "=", quotedparamvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/CN/i.r, '=', paramvalue) { |name, _, val|
+      } | seq(/CN/i.r, "=", paramvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/CUTYPE/i.r, '=', cutypevalue) { |name, _, val|
+      } | seq(/CUTYPE/i.r, "=", cutypevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/DELEGATED-FROM/i.r, '=', quotedStringList) { |name, _, val|
+      } | seq(/DELEGATED-FROM/i.r, "=", quotedStringList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/DELEGATED-TO/i.r, '=', quotedStringList) { |name, _, val|
+      } | seq(/DELEGATED-TO/i.r, "=", quotedStringList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/DIR/i.r, '=', quotedparamvalue) { |name, _, val|
+      } | seq(/DIR/i.r, "=", quotedparamvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/ENCODING/i.r, '=', encodingvalue) { |name, _, val|
+      } | seq(/ENCODING/i.r, "=", encodingvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/FMTTYPE/i.r, '=', fmttypevalue) { |name, _, val|
+      } | seq(/FMTTYPE/i.r, "=", fmttypevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.downcase}
-      } | seq(/FBTYPE/i.r, '=', fbtypevalue) { |name, _, val|
+      } | seq(/FBTYPE/i.r, "=", fbtypevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/LANGUAGE/i.r, '=', C::RFC5646LANGVALUE) { |name, _, val|
+      } | seq(/LANGUAGE/i.r, "=", C::RFC5646LANGVALUE) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/MEMBER/i.r, '=', quotedStringList) { |name, _, val|
+      } | seq(/MEMBER/i.r, "=", quotedStringList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/PARTSTAT/i.r, '=', partstatvalue) { |name, _, val|
+      } | seq(/PARTSTAT/i.r, "=", partstatvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/RANGE/i.r, '=', rangevalue) { |name, _, val|
+      } | seq(/RANGE/i.r, "=", rangevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/RELATED/i.r, '=', relatedvalue) { |name, _, val|
+      } | seq(/RELATED/i.r, "=", relatedvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/RELTYPE/i.r, '=', reltypevalue) { |name, _, val|
+      } | seq(/RELTYPE/i.r, "=", reltypevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/ROLE/i.r, '=', rolevalue) { |name, _, val|
+      } | seq(/ROLE/i.r, "=", rolevalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
-      } | seq(/RSVP/i.r, '=', C::BOOLEAN) { |name, _, val|
+      } | seq(/RSVP/i.r, "=", C::BOOLEAN) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/SENT-BY/i.r, '=', quotedparamvalue) { |name, _, val|
+      } | seq(/SENT-BY/i.r, "=", quotedparamvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/TZID/i.r, '=', tzidvalue) { |name, _, val|
+      } | seq(/TZID/i.r, "=", tzidvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/VALUE/i.r, '=', valuetype) { |name, _, val|
+      } | seq(/VALUE/i.r, "=", valuetype) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
         # RFC 7986
-      } | seq(/DISPLAY/i.r, '=', displayvallist) { |name, _, val|
+      } | seq(/DISPLAY/i.r, "=", displayvallist) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/FEATURE/i.r, '=', featurevallist) { |name, _, val|
+      } | seq(/FEATURE/i.r, "=", featurevallist) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/EMAIL/i.r, '=', paramvalue) { |name, _, val|
+      } | seq(/EMAIL/i.r, "=", paramvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(/LABEL/i.r, '=', paramvalue) { |name, _, val|
+      } | seq(/LABEL/i.r, "=", paramvalue) { |name, _, val|
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(otherparamname, '=', pvalueList) { |name, _, val|
+      } | seq(otherparamname, "=", pvalueList) { |name, _, val|
         val = val[0] if val.length == 1
         {name.upcase.gsub(/-/,"_").to_sym => val}
-      } | seq(paramname, '=', pvalueList) { |name, _, val|
+      } | seq(paramname, "=", pvalueList) { |name, _, val|
         parse_err("Violated format of parameter value #{name} = #{val}")
       }
 
@@ -545,10 +545,10 @@ module Vobject::Vcalendar
     end
 
     def parse(vobject)
-      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), 'source'
+      @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
       ret = vobjectGrammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
-        parse_err(@ctx.generate_error('source'))
+        parse_err(@ctx.generate_error("source"))
         ret = { :VCALENDAR => nil, :errors => self.errors.flatten }
       end
       Rsec::Fail.reset
@@ -560,9 +560,9 @@ module Vobject::Vcalendar
 
     def parse_err(msg)
       if self.strict
-        raise @ctx.report_error msg, 'source'
+        raise @ctx.report_error msg, "source"
       else
-        self.errors << @ctx.report_error(msg, 'source')
+        self.errors << @ctx.report_error(msg, "source")
       end
     end
 
