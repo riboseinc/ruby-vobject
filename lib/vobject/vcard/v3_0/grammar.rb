@@ -21,7 +21,7 @@ module Vcard::V3_0
       end
     end
 
-    def vobjectGrammar
+    def vobject_grammar
 
       # properties with value cardinality 1
       @cardinality1 = {}
@@ -54,7 +54,7 @@ module Vcard::V3_0
         ret = ret . tail[0] unless tail.empty?
         ret
       }
-      pvalueList 	=  (seq(paramvalue, ",".r, lazy{pvalueList}) & /[;:]/.r).map { |e, _, list|
+      pvalueList 	=  (seq(paramvalue, ",".r, lazy {pvalueList}) & /[;:]/.r).map { |e, _, list|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n") , list].flatten
       } | (paramvalue & /[;:]/.r).map { |e|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
@@ -62,7 +62,7 @@ module Vcard::V3_0
       typevaluelist = seq(C::IANATOKEN, ",".r >> lazy { typevaluelist }).map { |t, l|
         [t.upcase, l].flatten
       } | C::IANATOKEN.map { |t| [t.upcase] }
-      quotedStringList = (seq(C::QUOTEDSTRING_VCARD, ",".r, lazy{quotedStringList}) & /[;:]/.r).map { |e, _, list|
+      quotedStringList = (seq(C::QUOTEDSTRING_VCARD, ",".r, lazy {quotedStringList}) & /[;:]/.r).map { |e, _, list|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"), list].flatten
       } | (C::QUOTEDSTRING_VCARD & /[;:]/.r).map { |e|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
@@ -106,7 +106,7 @@ module Vcard::V3_0
         }
       } |  seq(";".r >> param ).map { |e| e[0] }
 
-      contentline = seq(linegroup._?, C::NAME_VCARD, params._?, ':',
+      contentline = seq(linegroup._?, C::NAME_VCARD, params._?, ":",
                         C::VALUE, /(\r|\n|\r\n)/) do |group, name, params, _, value, _|
         key =  name.upcase.gsub(/-/,"_").to_sym
         hash = { key => {} }
@@ -130,7 +130,7 @@ module Vcard::V3_0
       }
 
       calpropname = /VERSION/i.r
-      calprop     = seq(linegroup._?, calpropname, ':', C::VALUE, 	/[\r\n]/) { |group, key, _, value, _|
+      calprop     = seq(linegroup._?, calpropname, ":", C::VALUE, 	/[\r\n]/) { |group, key, _, value, _|
         key = key.upcase.gsub(/-/,"_").to_sym
         hash = { key => {} }
         hash[key][:value], errors1 = Typegrammars.typematch(self.strict, key, nil, :VCARD, value, @ctx)
@@ -158,7 +158,7 @@ module Vcard::V3_0
 
     def parse(vobject)
       @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
-      ret = vobjectGrammar._parse @ctx
+      ret = vobject_grammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
         if self.strict
           raise @ctx.generate_error "source"

@@ -26,7 +26,7 @@ module Vobject::Vcalendar
       end
 
     end
-    def vobjectGrammar
+    def vobject_grammar
       #attr_accessor :ctx
 
       # properties with value cardinality 1
@@ -84,12 +84,12 @@ module Vobject::Vcalendar
         /TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | C::XNAME_VCAL | C::IANATOKEN
       rolevalue 	= /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r |
         C::XNAME_VCAL | C::IANATOKEN
-      pvalueList 	= (seq(paramvalue, ",".r, lazy{pvalueList}) & /[;:]/.r).map { |e, _, list|
+      pvalueList 	= (seq(paramvalue, ",".r, lazy {pvalueList}) & /[;:]/.r).map { |e, _, list|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n") , list].flatten
       } | (paramvalue & /[;:]/.r).map { |e|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
       }
-      quotedStringList = (seq(C::QUOTEDSTRING_VCAL, ",".r, lazy{quotedStringList}) & /[;:]/.r).map { |e, _, list|
+      quotedStringList = (seq(C::QUOTEDSTRING_VCAL, ",".r, lazy {quotedStringList}) & /[;:]/.r).map { |e, _, list|
         [self.class.rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")), list].flatten
       } | (C::QUOTEDSTRING_VCAL & /[;:]/.r).map { |e|
         [self.class.rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"))]
@@ -182,7 +182,7 @@ module Vobject::Vcalendar
       } |
       seq(";".r >> param ).map { |e| e[0] }
 
-      contentline = seq(linegroup._?, C::NAME_VCAL, params._?, ':',
+      contentline = seq(linegroup._?, C::NAME_VCAL, params._?, ":",
                         C::VALUE, /(\r|\n|\r\n)/) do |group, name, params, _, value, _|
         key =  name.upcase.gsub(/-/,"_").to_sym
         hash = { key => {value: value} }
@@ -438,7 +438,7 @@ module Vobject::Vcalendar
         /UID/i.r | /LAST-MOD/i.r | /URL/i.r | /REFRESH/i.r | /SOURCE/i.r | /COLOR/i.r | # RFC 7986
         /NAME/i.r | /DESCRIPTION/i.r | /CATEGORIES/i.r | /IMAGE/i.r | # RFC 7986
         C::XNAME_VCAL | C::IANATOKEN
-      calprop     = seq(calpropname, params._?, ':', C::VALUE, /(\r|\n|\r\n)/) { |key, params, _, value, _|
+      calprop     = seq(calpropname, params._?, ":", C::VALUE, /(\r|\n|\r\n)/) { |key, params, _, value, _|
         key = key.upcase.gsub(/-/,"_").to_sym
         val, errors1 = Vobject::Vcalendar::Typegrammars.typematch(self.strict, key, params[0], :CALENDAR, value, @ctx)
         self.errors << errors1
@@ -546,7 +546,7 @@ module Vobject::Vcalendar
 
     def parse(vobject)
       @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
-      ret = vobjectGrammar._parse @ctx
+      ret = vobject_grammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
         parse_err(@ctx.generate_error("source"))
         ret = { :VCALENDAR => nil, errors: self.errors.flatten }

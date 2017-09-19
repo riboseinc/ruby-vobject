@@ -17,7 +17,7 @@ module Vcard::V3_0
 
       def binary
         binary  = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) { |b, q|
-          ( (b.length + q.length) % 4 == 0 ) ? Vcard::V3_0::PropertyValue::Binary.new(b + q)
+          ( (b.length + q.length) % 4 == 0 ) ? PropertyValue::Binary.new(b + q)
           : {error: 'Malformed binary coding'}
         }
         binary.eof
@@ -26,7 +26,7 @@ module Vcard::V3_0
       def phoneNumber
         # This is on the lax side; there should be up to 15 digits
         # Will allow letters
-        phoneNumber = /[0-9() +A-Z-]+/i.r.map { |p| Vcard::V3_0::PropertyValue::Phonenumber.new p}
+        phoneNumber = /[0-9() +A-Z-]+/i.r.map { |p| PropertyValue::Phonenumber.new p}
         phoneNumber.eof
       end
 
@@ -34,7 +34,7 @@ module Vcard::V3_0
         float           = prim(:double)
         geovalue    = seq(float, ";", float) { |a, _, b|
           ( a <= 180.0 && a >= -180.0 && b <= 180 && b > -180 ) ?
-            Vcard::V3_0::PropertyValue::Geovalue.new({lat: a, long: b}) :
+            PropertyValue::Geovalue.new({lat: a, long: b}) :
             {error: 'Latitude/Longitude outside of range -180..180'}
         }
         geovalue.eof
@@ -45,69 +45,69 @@ module Vcard::V3_0
         ianaToken 	= /[a-zA-Z\d\-]+/.r
         xname 	= seq( '[xX]-', /[a-zA-Z0-9-]+/.r).map(&:join)
         classvalue 	= (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | ianaToken | xname).map { |m|
-          Vcard::V3_0::PropertyValue::ClassValue.new m }
+          PropertyValue::ClassValue.new m }
         classvalue.eof
       end
 
       def integer 
-        integer 	= prim(:int32).map { |i| Vcard::V3_0::PropertyValue::Integer.new i }
+        integer 	= prim(:int32).map { |i| PropertyValue::Integer.new i }
         integer.eof
       end
 
       def floatT
-        floatT 	    = prim(:double).map { |f| Vcard::V3_0::PropertyValue::Float.new f }
+        floatT 	    = prim(:double).map { |f| PropertyValue::Float.new f }
         floatT.eof
       end
 
       def ianaToken
-        ianaToken 	= /[a-zA-Z\d\-]+/.r.map { |x| Vcard::V3_0::PropertyValue::Ianatoken.new x }
+        ianaToken 	= /[a-zA-Z\d\-]+/.r.map { |x| PropertyValue::Ianatoken.new x }
         ianaToken.eof
       end
 
       def versionvalue
-        versionvalue = "3.0".r.map { |v| Vcard::V3_0::PropertyValue::Version.new v}
+        versionvalue = "3.0".r.map { |v| PropertyValue::Version.new v}
         versionvalue.eof
       end
 
       def profilevalue
-        profilevalue = /VCARD/i.r.map { |v| Vcard::V3_0::PropertyValue::Profilevalue.new v}
+        profilevalue = /VCARD/i.r.map { |v| PropertyValue::Profilevalue.new v}
         profilevalue.eof
       end
 
       def uri
         uri         = /\S+/.r.map { |s|
-          s =~ URI::regexp ? Vcard::V3_0::PropertyValue::Uri.new(s) :
+          s =~ URI::regexp ? PropertyValue::Uri.new(s) :
             {error: 'Invalid URI'}
         }
         uri.eof
       end
 
       def textT
-        textT	= C::TEXT3.map { |t| Vcard::V3_0::PropertyValue::Text.new(unescape t) }
+        textT	= C::TEXT3.map { |t| PropertyValue::Text.new(unescape t) }
         textT.eof
       end
 
       def textlist
         text	= C::TEXT3
         textlist1	=
-          seq(text << ",".r, lazy{textlist1}) { |a, b| [unescape(a), b].flatten } |
+          seq(text << ",".r, lazy {textlist1}) { |a, b| [unescape(a), b].flatten } |
           text.map { |t| [unescape(t)]}
-        textlist	= textlist1.map { |m| Vcard::V3_0::PropertyValue::Textlist.new m }
+        textlist	= textlist1.map { |m| PropertyValue::Textlist.new m }
         textlist.eof
       end
 
       def org
         text	= C::TEXT3
         org1	=
-          seq(text, ";", lazy{org1}) { |a, _, b| [unescape(a), b].flatten } |
+          seq(text, ";", lazy {org1}) { |a, _, b| [unescape(a), b].flatten } |
           text.map { |t| [unescape(t)]}
-        org		= org1.map { |o| Vcard::V3_0::PropertyValue::Org.new o }
+        org		= org1.map { |o| PropertyValue::Org.new o }
         org.eof
       end
 
       def dateT
         dateT	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
-          Vcard::V3_0::PropertyValue::Date.new({year: yy, month: mm, day: dd})
+          PropertyValue::Date.new({year: yy, month: mm, day: dd})
         }
         dateT.eof
       end
@@ -126,7 +126,7 @@ module Vcard::V3_0
           h = {hour: h, min: m, sec: s}
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
-          Vcard::V3_0::PropertyValue::Time.new(h)
+          PropertyValue::Time.new(h)
         }
         time_t.eof
       end
@@ -158,7 +158,7 @@ module Vcard::V3_0
           #d = d.merge t
           #res = {time: Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), zone: d[:zone]}
           #res[:secfrac] = h[:secfrac] if h[:secfrac]
-          Vcard::V3_0::PropertyValue::DateTimeLocal.new(d.merge t)
+          PropertyValue::DateTimeLocal.new(d.merge t)
         }
         date_time.eof
       end
@@ -186,17 +186,17 @@ module Vcard::V3_0
           #d = d.merge t
           #res = {time: Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), zone: d[:zone]}
           #res[:secfrac] = d[:secfrac] if d[:secfrac]
-          Vcard::V3_0::PropertyValue::DateTimeLocal.new(d.merge t)
+          PropertyValue::DateTimeLocal.new(d.merge t)
         } | date.map { |d|
           #res = {time: Time.local(d[:year], d[:month], d[:day], 0, 0, 0), zone: d[:zone]}
-          Vcard::V3_0::PropertyValue::Date.new(d)
+          PropertyValue::Date.new(d)
         }
         date_or_date_time.eof
       end
 
       def utc_offset
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
-          Vcard::V3_0::PropertyValue::Utcoffset.new({sign: s, hour: h, min: m})
+          PropertyValue::Utcoffset.new({sign: s, hour: h, min: m})
         }
         utc_offset.eof
       end
@@ -205,7 +205,7 @@ module Vcard::V3_0
         ianaToken 	= /[a-zA-Z\d\-]+/.r
         xname 	= seq( '[xX]-', /[a-zA-Z0-9-]+/.r).map(&:join)
         kindvalue = (/individual/i.r | /group/i.r | /org/i.r | /location/i.r |
-                     ianaToken | xname).map { |k| Vcard::V3_0::PropertyValue::Kindvalue.new(k)}
+                     ianaToken | xname).map { |k| PropertyValue::Kindvalue.new(k)}
         kindvalue.eof
       end
 
@@ -243,7 +243,7 @@ module Vcard::V3_0
             a = a[0] if a.length == 1
             {surname: 'a', givenname: "", middlename: "", honprefix: "", honsuffix: ""}
           }
-          fivepartname 	= fivepartname1.map { |n| Vcard::V3_0::PropertyValue::Fivepartname.new(n)}
+          fivepartname 	= fivepartname1.map { |n| PropertyValue::Fivepartname.new(n)}
           fivepartname.eof
       end
 
@@ -306,7 +306,7 @@ module Vcard::V3_0
             {pobox: a, ext: "", street: "",
              locality: "", region: "", code: "", country: ""}
           }
-          address 	= address1.map { |n| Vcard::V3_0::PropertyValue::Address.new(n)}
+          address 	= address1.map { |n| PropertyValue::Address.new(n)}
           address.eof
       end
 
@@ -397,12 +397,12 @@ module Vcard::V3_0
             ret = uri._parse ctx1
           else
             # unescape
-            value = value.gsub(/\\n/,"\n").gsub(/\\;/,";").gsub(/\\,/,",").gsub(/\\:/,':')
+            value = value.gsub(/\\n/,"\n").gsub(/\\;/,";").gsub(/\\,/,",").gsub(/\\:/,":")
             # spec says that colons need to be escaped, but none of the examples do so
-            #value = value.gsub(/\\:/,':')
+            #value = value.gsub(/\\:/,":")
             value = value.gsub(/BEGIN:VCARD\n/, "BEGIN:VCARD\nVERSION:3.0\n") unless value =~ /\nVERSION:3\.0/
             ctx1 = Rsec::ParseContext.new value, "source"
-            ret = Vcard::V3_0::PropertyValue::Agent.new(Vcard::V3_0::Grammar.new(strict).vobjectGrammar._parse ctx1)
+            ret = PropertyValue::Agent.new(Grammar.new(strict).vobject_grammar._parse ctx1)
             # TODO same strictness as grammar
           end
         else
@@ -418,8 +418,6 @@ module Vcard::V3_0
         return [ret, errors]
       end
 
-
-
       private
 
       def parse_err(strict, errors, msg, ctx)
@@ -429,7 +427,6 @@ module Vcard::V3_0
           errors << ctx.report_error(msg, "source")
         end
       end
-
     end
   end
 end

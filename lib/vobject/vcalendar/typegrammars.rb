@@ -109,7 +109,7 @@ module Vobject::Vcalendar
           # RFC 7529
           seq(/RSCALE/i.r, "=", rscale)  { |k, _, v| {rscale: v} } |
           seq(/SKIP/i.r, "=", skip)  { |k, _, v| {skip: v} }
-        recur1 	= seq(recur_rule_part, ";", lazy{recur1}) { |h, _, r| h.merge r } |
+        recur1 	= seq(recur_rule_part, ";", lazy {recur1}) { |h, _, r| h.merge r } |
           recur_rule_part
         recur	= recur1.map { |r| Vobject::Vcalendar::PropertyValue::Recur.new r }
         recur.eof
@@ -201,7 +201,7 @@ module Vobject::Vcalendar
 
       def textlist
         textlist1	= 
-          seq(C::TEXT, ",".r, lazy{textlist1}) { |a, _, b| [unescape(a), b].flatten }  |
+          seq(C::TEXT, ",".r, lazy {textlist1}) { |a, _, b| [unescape(a), b].flatten }  |
           C::TEXT.map { |t| [unescape(t)]}
         textlist	= textlist1.map { |m| Vobject::Vcalendar::PropertyValue::Textlist.new m }
         textlist.eof
@@ -250,7 +250,7 @@ module Vobject::Vcalendar
 
       def datelist
         datelist1   =
-          seq(C::DATE, ",".r, lazy{datelist1}) { |d, _, l|
+          seq(C::DATE, ",".r, lazy {datelist1}) { |d, _, l|
           [d, l].flatten
         }  |
         C::DATE.map { |d| [d] }
@@ -264,7 +264,7 @@ module Vobject::Vcalendar
 
       def date_timelist
         date_timelist1   =
-          seq(C::DATE_TIME, ",".r, lazy{date_timelist1}) { |d, _, l|
+          seq(C::DATE_TIME, ",".r, lazy {date_timelist1}) { |d, _, l|
           [d, l].flatten
         } |
         C::DATE_TIME.map { |d| [d] } 
@@ -278,7 +278,7 @@ module Vobject::Vcalendar
       end
 
       def date_time_utclist
-        date_time_utclist1   = seq(C::DATE_TIME_UTC, ",".r, lazy{date_time_utclist1}) { |d, _, l|
+        date_time_utclist1   = seq(C::DATE_TIME_UTC, ",".r, lazy {date_time_utclist1}) { |d, _, l|
           [d, l].flatten
         } |
         C::DATE_TIME_UTC.map { |d| [d] }
@@ -299,7 +299,7 @@ module Vobject::Vcalendar
           {start: s, duration: Vobject::Vcalendar::PropertyValue::Duration.new(d)}
         }
         period 	        = period_explicit | period_start
-        periodlist1      = seq(period, ",".r, lazy{periodlist1}) { |p, _, l|
+        periodlist1      = seq(period, ",".r, lazy {periodlist1}) { |p, _, l|
           [p, l].flatten
         } |
         period.map { |p| [p] }
