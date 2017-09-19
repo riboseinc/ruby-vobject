@@ -1,9 +1,7 @@
 require "vobject/property"
 
 module Vcard::V3_0
-
   class Property < Vobject::Property
-
   end
 
   def parameter_base_class
@@ -14,10 +12,7 @@ module Vcard::V3_0
     version_class.const_get(:Property)
   end
 
-
   def version_class
     Vcard::V3_0
   end
-
-
 end

@@ -2,61 +2,63 @@ require "rsec"
 require "set"
 require "uri"
 require "date"
-#require "tzinfo"
 include Rsec::Helpers
 require "vobject/vcard/version"
 require "vobject"
-require_relative './propertyvalue'
+require_relative "./propertyvalue"
 
 module Vcard::V3_0
   class Typegrammars
-
     class << self
-
       # property value types, each defining their own parser
 
       def binary
-        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) { |b, q|
-          ( (b.length + q.length) % 4 == 0 ) ? PropertyValue::Binary.new(b + q)
-          : {error: 'Malformed binary coding'}
-        }
+        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) do |b, q|
+          if (b.length + q.length) % 4 == 0
+            PropertyValue::Binary.new(b + q)
+          else
+            { error: "Malformed binary coding" }
+          end
+        end
         binary.eof
       end
 
-      def phoneNumber
+      def phone_number
         # This is on the lax side; there should be up to 15 digits
         # Will allow letters
-        phoneNumber = /[0-9() +A-Z-]+/i.r.map { |p| PropertyValue::Phonenumber.new p}
-        phoneNumber.eof
+        phone_number = /[0-9() +A-Z-]+/i.r.map { |p| PropertyValue::Phonenumber.new p }
+        phone_number.eof
       end
 
       def geovalue
-        float      = prim(:double)
-        geovalue = seq(float << ";".r, float) { |a, b|
-          ( a <= 180.0 && a >= -180.0 && b <= 180 && b > -180 ) ?
-            PropertyValue::Geovalue.new(lat: a, long: b) :
-            {error: 'Latitude/Longitude outside of range -180..180'}
-        }
+        float = prim(:double)
+        geovalue = seq(float << ";".r, float) do |a, b|
+          if a <= 180.0 && a >= -180.0 && b <= 180 && b > -180
+            PropertyValue::Geovalue.new(lat: a, long: b)
+          else
+            { error: "Latitude/Longitude outside of range -180..180" }
+          end
+        end
         geovalue.eof
       end
 
-
-      def classvalue 
+      def classvalue
         iana_token = /[a-zA-Z\d\-]+/.r
-        xname = seq( '[xX]-', /[a-zA-Z0-9-]+/.r).map(&:join)
-        classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | iana_token | xname).map { |m|
-          PropertyValue::ClassValue.new m }
+        xname = seq(/[xX]-/, /[a-zA-Z0-9-]+/.r).map(&:join)
+        classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | iana_token | xname).map do |m|
+          PropertyValue::ClassValue.new m
+        end
         classvalue.eof
       end
 
-      def integer 
+      def integer
         integer = prim(:int32).map { |i| PropertyValue::Integer.new i }
         integer.eof
       end
 
-      def floatT
-        floatT 	 = prim(:double).map { |f| PropertyValue::Float.new f }
-        floatT.eof
+      def float_t
+        float_t = prim(:double).map { |f| PropertyValue::Float.new f }
+        float_t.eof
       end
 
       def iana_token
@@ -65,33 +67,36 @@ module Vcard::V3_0
       end
 
       def versionvalue
-        versionvalue = "3.0".r.map { |v| PropertyValue::Version.new v}
+        versionvalue = "3.0".r.map { |v| PropertyValue::Version.new v }
         versionvalue.eof
       end
 
       def profilevalue
-        profilevalue = /VCARD/i.r.map { |v| PropertyValue::Profilevalue.new v}
+        profilevalue = /VCARD/i.r.map { |v| PropertyValue::Profilevalue.new v }
         profilevalue.eof
       end
 
       def uri
-        uri    = /\S+/.r.map { |s|
-          s =~ URI::regexp ? PropertyValue::Uri.new(s) :
-            {error: 'Invalid URI'}
-        }
+        uri    = /\S+/.r.map do |s|
+          if s =~ URI::DEFAULT_PARSER.make_regexp
+            PropertyValue::Uri.new(s)
+          else
+            { error: "Invalid URI" }
+          end
+        end
         uri.eof
       end
 
-      def textT
-        textT = C::TEXT3.map { |t| PropertyValue::Text.new(unescape t) }
-        textT.eof
+      def text_t
+        text_t = C::TEXT3.map { |t| PropertyValue::Text.new(unescape(t)) }
+        text_t.eof
       end
 
       def textlist
         text = C::TEXT3
         textlist1 =
-          seq(text << ",".r, lazy {textlist1}) { |a, b| [unescape(a), b].flatten } |
-          text.map { |t| [unescape(t)]}
+          seq(text << ",".r, lazy { textlist1 }) { |a, b| [unescape(a), b].flatten } |
+          text.map { |t| [unescape(t)] }
         textlist = textlist1.map { |m| PropertyValue::Textlist.new m }
         textlist.eof
       end
@@ -99,30 +104,30 @@ module Vcard::V3_0
       def org
         text = C::TEXT3
         org1 =
-          seq(text << ";".r, lazy {org1}) { |a, b| [unescape(a), b].flatten } |
-          text.map { |t| [unescape(t)]}
+          seq(text << ";".r, lazy { org1 }) { |a, b| [unescape(a), b].flatten } |
+          text.map { |t| [unescape(t)] }
         org	 = org1.map { |o| PropertyValue::Org.new o }
         org.eof
       end
 
-      def dateT
-        dateT = seq(/[0-9]{4}/.r, /-/.r._? >> /[0-9]{2}/.r, /-/.r._? >> /[0-9]{2}/.r) { |yy, mm, dd|
+      def date_t
+        date_t = seq(/[0-9]{4}/.r, /-/.r._? >> /[0-9]{2}/.r, /-/.r._? >> /[0-9]{2}/.r) do |yy, mm, dd|
           PropertyValue::Date.new(year: yy, month: mm, day: dd)
-        }
-        dateT.eof
+        end
+        date_t.eof
       end
 
-      def time_t	
+      def time_t
         utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |s, h, m|
           { sign: s, hour: h, min: m }
         end
         zone = utc_offset.map { |u| u } |
-          /Z/i.r.map { |z| "Z" }
+          /Z/i.r.map { "Z" }
         hour = /[0-9]{2}/.r
         minute = /[0-9]{2}/.r
         second = /[0-9]{2}/.r
         secfrac = seq(",".r >> /[0-9]+/)
-        time_t = seq(hour, /:/._?, minute, /:/._?, second, secfrac._?, zone._?) do |h, _, m, _, s, f, z|
+        time_t = seq(hour << /:/._?, minute << /:/._?, second, secfrac._?, zone._?) do |h, m, s, f, z|
           h = { hour: h, min: m, sec: s }
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
@@ -329,7 +334,7 @@ module Vcard::V3_0
           ret = uri._parse ctx1
           # not imposing filename restrictions on calendar URIs
         when :NAME, :FN, :LABEL, :EMAIL, :MAILER, :TITLE, :ROLE, :NOTE, :PRODID, :SORT_STRING, :UID
-          ret = textT._parse ctx1
+          ret = text_t._parse ctx1
         when :CLASS
           ret = classvalue._parse ctx1
         when :CATEGORIES, :NICKNAME
@@ -350,20 +355,20 @@ module Vcard::V3_0
           ret = if params && params[:ENCODING] == "b"
                   binary._parse ctx1
                 else
-                  textT._parse ctx1
+                  text_t._parse ctx1
                 end
         when :BDAY
           ret = if params && params[:VALUE] == "date-time"
                   date_time._parse ctx1
                 elsif params && params[:VALUE] == "date"
-                  dateT._parse ctx1
+                  date_t._parse ctx1
                 else
                   # unlike VCARD 4, can have either date || date_time without explicit value switch
                   date_or_date_time._parse ctx1
                 end
         when :REV
           ret = if params && params[:VALUE] == "date"
-                  dateT._parse ctx1
+                  date_t._parse ctx1
                 elsif params && params[:VALUE] == "date-time"
                   date_time._parse ctx1
                 else
@@ -373,10 +378,10 @@ module Vcard::V3_0
         when :ADR
           ret = address._parse ctx1
         when :TEL
-          ret = phoneNumber._parse ctx1
+          ret = phone_number._parse ctx1
         when :TZ
           ret = if params && params[:VALUE] == "text"
-                  textT._parse ctx1
+                  text_t._parse ctx1
                 else
                   utc_offset._parse ctx1
                 end
@@ -395,7 +400,7 @@ module Vcard::V3_0
             # TODO same strictness as grammar
           end
         else
-          ret = textT._parse ctx1
+          ret = text_t._parse ctx1
         end
         if ret.is_a?(Hash) && ret[:error]
           parse_err(strict, errors, "#{ret[:error]} for property #{key}, value #{value}", ctx)

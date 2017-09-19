@@ -43,12 +43,12 @@ module Vcard::V3_0
       valuetype 	= /URI/i.r | /DATE/i.r | /DATE-TIME/i.r | /BINARY/i.r | /PTEXT/i.r 
       mediaattr	= /[!\"#$%&'*+.^A-Z0-9a-z_`i{}|~-]+/.r
       mediavalue	=	mediaattr | C::QUOTEDSTRING_VCARD
-      mediatail   = seq(";", mediaattr, "=", mediavalue).map { |_, a, _, v|
+      mediatail = seq(";", mediaattr, "=", mediavalue).map { |_, a, _, v|
         ";#{a}=#{v}"
       }
-      rfc4288regname      = /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
-      rfc4288typename     = rfc4288regname
-      rfc4288subtypename  = rfc4288regname
+      rfc4288regname = /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
+      rfc4288typename = rfc4288regname
+      rfc4288subtypename = rfc4288regname
       mediavalue	= seq(rfc4288typename, "/", rfc4288subtypename, mediatail.star).map { |t, _, s, tail|
         ret = "#{t}/#{s}"
         ret = ret . tail[0] unless tail.empty?
@@ -77,23 +77,23 @@ module Vcard::V3_0
       }
 
       param 	= seq(/ENCODING/i.r, "=", /b/.r) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        { name.upcase.gsub(/-/, "_").to_sym => val }
       } | seq(/LANGUAGE/i.r, "=", rfc1766language) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+        { name.upcase.gsub(/-/, "_").to_sym => val.upcase }
       } | seq(/CONTEXT/i.r, "=", /word/.r) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+        { name.upcase.gsub(/-/, "_").to_sym => val.upcase }
       } | seq(/TYPE/i.r, "=", typevaluelist) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        { name.upcase.gsub(/-/, "_").to_sym => val }
       } | seq(/VALUE/i.r, "=", valuetype) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        { name.upcase.gsub(/-/, "_").to_sym => val }
       } | /PREF/i.r.map { |name|
         # this is likely erroneous use of VCARD 2.1 convention in RFC2739; converting to canonical TYPE=PREF
         {:TYPE => ["PREF"]}
       } | seq(otherparamname, "=", pvalueList) { |name, _, val|
         val = val[0] if val.length == 1
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        { name.upcase.gsub(/-/, "_").to_sym => val }
       } | seq(paramname, "=", pvalueList) { |name, _, val|
-        parse_err("Violated format of parameter value #{name} = #{val}")
+        parse_err("Violated format of parameter value #{ name} = #{val }")
       }
 
       params	= seq(";".r >> param & ";", lazy { params } ) { |p, ps|
@@ -108,7 +108,7 @@ module Vcard::V3_0
 
       contentline = seq(linegroup._?, C::NAME_VCARD, params._?, ":",
                         C::VALUE, /(\r|\n|\r\n)/) do |group, name, params, _, value, _|
-        key =  name.upcase.gsub(/-/,"_").to_sym
+        key =  name.upcase.gsub(/-/, "_").to_sym
         hash = { key => {} }
         hash[key][:value], errors1 = Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value, @ctx)
         self.errors << errors1
@@ -118,7 +118,7 @@ module Vcard::V3_0
         hash
       end
       props	=  seq(contentline, lazy { props }) { |c, rest|
-        c.merge( rest ) { | key, old, new|
+        c.merge(rest) { | key, old, new|
           if @cardinality1[:PROP].include?(key.upcase)
             parse_err("Violated cardinality of property #{key}")
           end
@@ -130,23 +130,22 @@ module Vcard::V3_0
       }
 
       calpropname = /VERSION/i.r
-      calprop     = seq(linegroup._?, calpropname, ":", C::VALUE, 	/[\r\n]/) { |group, key, _, value, _|
-        key = key.upcase.gsub(/-/,"_").to_sym
+      calprop = seq(linegroup._?, calpropname, ":", C::VALUE, /[\r\n]/) { |group, key, _, value, _|
+        key = key.upcase.gsub(/-/, "_").to_sym
         hash = { key => {} }
-        hash[key][:value], errors1 = Typegrammars.typematch(self.strict, key, nil, :VCARD, value, @ctx)
-        self.errors << errors1
-        hash[key][:group] = group[0]  unless group.empty?
+        hash[key][:value], errors1 = Typegrammars.typematch(strict, key, nil, :VCARD, value, @ctx)
+        errors << errors1
+        hash[key][:group] = group[0] unless group.empty?
         hash
       }
-      vobject 	= seq(linegroup._?, /BEGIN:VCARD[\r\n]/i.r, calprop, props, linegroup._?, /END:VCARD[\r\n]/i.r) { |(g, b, v, rest, g1, e)|
+      vobject = seq(linegroup._?, /BEGIN:VCARD[\r\n]/i.r >> calprop, props, linegroup._? << /END:VCARD[\r\n]/i.r) do |(_g, v, rest, _g1)|
         # TODO what do we do with the groups here?
         parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
         parse_err("Missing FN attribute") unless rest.has_key?(:FN)
         parse_err("Missing N attribute") unless rest.has_key?(:N)
         rest.delete(:END)
-        hash = { :VCARD => v.merge( rest ), errors: self.errors.flatten }
-        hash
-      }
+        { VCARD: v.merge(rest), errors: errors.flatten }
+      end
       vobject.eof
     end
 
@@ -155,32 +154,29 @@ module Vcard::V3_0
       self.errors = []
     end
 
-
     def parse(vobject)
       @ctx = Rsec::ParseContext.new self.class.unfold(vobject), "source"
       ret = vobject_grammar._parse @ctx
       if !ret || Rsec::INVALID[ret]
-        if self.strict
+        if strict
           raise @ctx.generate_error "source"
         else
-          self.errors << @ctx.generate_error("source")
-          ret = { :VCARD => nil, errors: self.errors.flatten }
+          errors << @ctx.generate_error("source")
+          ret = { VCARD: nil, errors: errors.flatten }
         end
       end
       Rsec::Fail.reset
-      return ret
-
+      ret
     end
 
     private
 
     def parse_err(msg)
-      if self.strict
+      if strict
         raise @ctx.report_error msg, "source"
       else
-        self.errors << @ctx.report_error(msg, "source")
+        errors << @ctx.report_error(msg, "source")
       end
     end
-
   end
 end
