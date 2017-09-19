@@ -4,9 +4,9 @@ module Vobject
 
     attr_accessor :value, :type, :errors
 
-    def initialize val
+    def initialize(val)
       self.value = val
-      self.type = 'property'
+      self.type = "property"
     end
 
     #raise_invalid_initialization if key != name

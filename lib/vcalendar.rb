@@ -1,8 +1,8 @@
-require 'vobject'
-require 'vobject/component'
-require 'vobject/vcalendar/component'
-require 'vobject/vcalendar/grammar'
-require 'json'
+require "vobject"
+require "vobject/component"
+require "vobject/vcalendar/component"
+require "vobject/vcalendar/grammar"
+require "json"
 
 class Vcalendar < Vobject::Component
 
@@ -46,12 +46,12 @@ class Vcalendar < Vobject::Component
       base_class = Vobject::Component::Vcalendar::Vavailability
     elsif key == :AVAILABLE
       base_class = Vobject::Component::Vcalendar::Vavailability::Available
-    elsif !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+    elsif !(val.is_a?(Hash) && !val.has_key?(:value) )
       base_class = property_base_class
     else
       base_class = Vobject::Component::Vcalendar
     end
-    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
+    return base_class if key == :CLASS || key == :OBJECT || key == :METHOD
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end

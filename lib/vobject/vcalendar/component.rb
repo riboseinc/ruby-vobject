@@ -1,7 +1,7 @@
-require 'vobject'
-require 'vobject/property'
-require 'vobject/vcalendar/grammar'
-require 'json'
+require "vobject"
+require "vobject/property"
+require "vobject/vcalendar/grammar"
+require "json"
 
 class Vobject::Component::Vcalendar < Vobject::Component
 
@@ -18,19 +18,19 @@ class Vobject::Component::Vcalendar < Vobject::Component
 
 
     def initialize key, cs
-      #super key, cs  
+      #super key, cs 
       self.comp_name = key
       raise_invalid_initialization if key != name
 
       self.children = []
-      if cs.kind_of?(Array)
+      if cs.is_a?(Array)
         cs.each do |component|
           c = []
           component.each_key do |key|
             val = component[key]
-            # iteration of array or hash values is making the value a key!
+            # iteration of array || hash values is making the value a key!
             next if key.class == Array
-            next if key.class == Hash 
+            next if key.class == Hash
             cc = child_class(key, val)
             c << cc.new(key, val)
           end
@@ -39,9 +39,9 @@ class Vobject::Component::Vcalendar < Vobject::Component
       else
         cs.each_key do |key|
           val = cs[key]
-          # iteration of array or hash values is making the value a key!
+          # iteration of array || hash values is making the value a key!
           next if key.class == Array
-          next if key.class == Hash 
+          next if key.class == Hash
           cc = child_class(key, val)
           self.children << cc.new(key, val)
         end
@@ -69,12 +69,12 @@ class Vobject::Component::Vcalendar < Vobject::Component
         base_class = Vobject::Component::Vcalendar::Vavailability
       elsif key == :AVAILABLE
         base_class = Vobject::Component::Vcalendar::Vavailability::Available
-      elsif !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+      elsif !(val.is_a?(Hash) && !val.has_key?(:value) )
         base_class = property_base_class
       else
         base_class = Vobject::Component::Vcalendar
       end
-      return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
+      return base_class if key == :CLASS || key == :OBJECT || key == :METHOD
       camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
       base_class.const_get(camelized_key) rescue base_class
     end

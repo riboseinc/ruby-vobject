@@ -1,22 +1,22 @@
-require 'vobject'
-require 'vobject/propertyvalue'
+require "vobject"
+require "vobject/propertyvalue"
 
 module Vcard::V3_0
   module PropertyValue
 
     class Text < Vobject::PropertyValue
 
-      class << self 
+      class << self
         def escape x
           # temporarily escape \\ as \u007f, which is banned from text
           x.gsub(/\\/, "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;").gsub(/\u007f/, "\\\\")
         end
 
         def listencode x
-          if x.kind_of?(Array)
-            ret = x.map{|m| Text.escape m}.join(',')
-          elsif x.nil? or x.empty?
-            ret = ''
+          if x.is_a?(Array)
+            ret = x.map { |m| Text.escape m}.join(",")
+          elsif x.nil? || x.empty?
+            ret = ""
           else
             ret = Text.escape x
           end
@@ -24,9 +24,9 @@ module Vcard::V3_0
         end
       end
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'text'
+        self.type = "text"
       end
 
       def to_s
@@ -40,9 +40,9 @@ module Vcard::V3_0
     end
 
     class ClassValue < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'classvalue'
+        self.type = "classvalue"
       end
 
       def to_hash
@@ -52,9 +52,9 @@ module Vcard::V3_0
     end
 
     class Profilevalue < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'profilevalue'
+        self.type = "profilevalue"
       end
 
       def to_hash
@@ -64,9 +64,9 @@ module Vcard::V3_0
     end
 
     class Kindvalue < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'kindvalue'
+        self.type = "kindvalue"
       end
 
       def to_hash
@@ -76,9 +76,9 @@ module Vcard::V3_0
     end
 
     class Ianatoken < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'ianatoken'
+        self.type = "ianatoken"
       end
 
       def to_hash
@@ -88,9 +88,9 @@ module Vcard::V3_0
     end
 
     class Binary < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'binary'
+        self.type = "binary"
       end
 
       def to_hash
@@ -100,9 +100,9 @@ module Vcard::V3_0
     end
 
     class Phonenumber < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'phonenumber'
+        self.type = "phonenumber"
       end
 
       def to_hash
@@ -112,9 +112,9 @@ module Vcard::V3_0
     end
 
     class Uri < Text
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'uri'
+        self.type = "uri"
       end
 
       def to_hash
@@ -133,9 +133,9 @@ module Vcard::V3_0
         self.value <=> anOther.value
       end
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'float'
+        self.type = "float"
       end
 
       def to_s
@@ -154,9 +154,9 @@ module Vcard::V3_0
         self.value <=> anOther.value
       end
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'integer'
+        self.type = "integer"
       end
 
       def to_s
@@ -175,9 +175,9 @@ module Vcard::V3_0
         self.value <=> anOther.value
       end
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'date'
+        self.type = "date"
       end
 
       def to_s
@@ -196,18 +196,18 @@ module Vcard::V3_0
         self.value[:time] <=> anOther.value[:time]
       end
 
-      def initialize val
+      def initialize(val)
         self.value = val.clone
-        # val consists of :time and :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
-        self.type = 'datetimeLocal'
-        val[:sec] += (val[:secfrac].to_f / (10 ** val[:secfrac].length)) if !val[:secfrac].nil? and !val[:secfrac].empty?
-        if val[:zone].nil? or val[:zone].empty?
+        # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
+        self.type = "datetimeLocal"
+        val[:sec] += (val[:secfrac].to_f / (10 ** val[:secfrac].length)) if !val[:secfrac].nil? && !val[:secfrac].empty?
+        if val[:zone].nil? || val[:zone].empty?
           self.value[:time] = ::Time.local(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
         else
           self.value[:time] = ::Time.utc(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
         end
         self.value[:origtime] = self.value[:time]
-        if val[:zone] and val[:zone] != 'Z'
+        if val[:zone] && val[:zone] != "Z"
           offset = val[:zone][:hour].to_i*3600 + val[:zone][:min].to_i*60
           offset += val[:zone][:sec].to_i if val[:zone][:sec]
           offset = -offset if val[:sign] == '-'
@@ -220,8 +220,8 @@ module Vcard::V3_0
         ret = sprintf("%04d-%02d-%02dT%02d:%02d:%02d", localtime.year, localtime.month, localtime.day,
                       localtime.hour, localtime.min, localtime.sec)
         ret = ret + ",.#{self.value[:secfrac]}" if self.value[:secfrac]
-        zone = "Z" if self.value[:zone] and self.value[:zone] == "Z"
-        zone = "#{self.value[:zone][:sign]}#{self.value[:zone][:hour]}:#{self.value[:zone][:min]}" if self.value[:zone] and self.value[:zone].kind_of?(Hash)
+        zone = "Z" if self.value[:zone] && self.value[:zone] == "Z"
+        zone = "#{self.value[:zone][:sign]}#{self.value[:zone][:hour]}:#{self.value[:zone][:min]}" if self.value[:zone] && self.value[:zone].is_a?(Hash)
         ret = ret + zone
         ret
       end
@@ -244,17 +244,17 @@ module Vcard::V3_0
 
     class Time < Vobject::PropertyValue
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'time'
+        self.type = "time"
       end
 
       def to_s
         ret = "#{self.value[:hour]}:#{self.value[:min]}:#{self.value[:sec]}"
         ret = ret + ".#{self.value[:secfrac]}" if self.value[:secfrac]
         zone = ""
-        zone = "Z" if self.value[:zone] and self.value[:zone] == "Z"
-        zone = "#{self.value[:zone][:sign]}#{self.value[:zone][:hour]}:#{self.value[:zone][:min]}" if self.value[:zone] and self.value[:zone].kind_of?(Hash)
+        zone = "Z" if self.value[:zone] && self.value[:zone] == "Z"
+        zone = "#{self.value[:zone][:sign]}#{self.value[:zone][:hour]}:#{self.value[:zone][:min]}" if self.value[:zone] && self.value[:zone].is_a?(Hash)
         ret = ret + zone
         ret
       end
@@ -267,9 +267,9 @@ module Vcard::V3_0
 
     class Utcoffset < Vobject::PropertyValue
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'utcoffset'
+        self.type = "utcoffset"
       end
 
       def to_s
@@ -286,9 +286,9 @@ module Vcard::V3_0
 
     class Geovalue < Vobject::PropertyValue
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'geovalue'
+        self.type = "geovalue"
       end
 
       def to_s
@@ -304,9 +304,9 @@ module Vcard::V3_0
 
     class Version < Vobject::PropertyValue
 
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'version'
+        self.type = "version"
       end
 
       def to_s
@@ -320,13 +320,13 @@ module Vcard::V3_0
     end
 
     class Org < Vobject::PropertyValue
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'org'
+        self.type = "org"
       end
 
       def to_s
-        self.value.map{|m| Text.escape m}.join(';')
+        self.value.map { |m| Text.escape m}.join(";")
       end
 
       def to_hash
@@ -336,16 +336,16 @@ module Vcard::V3_0
     end
 
     class Fivepartname < Vobject::PropertyValue
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'fivepartname'
+        self.type = "fivepartname"
       end
 
       def to_s
         ret = Text.listencode self.value[:surname]
-        ret += ";#{Text.listencode self.value[:givenname]}" if !self.value[:givenname].empty? or !self.value[:middlename].empty? or !self.value[:honprefix].empty? or !self.value[:honsuffix].empty?
-        ret += ";#{Text.listencode self.value[:middlename]}" if !self.value[:middlename].empty? or !self.value[:honprefix].empty?
-        ret += ";#{Text.listencode self.value[:honprefix]}" if !self.value[:honprefix].empty? or !self.value[:honsuffix].empty?
+        ret += ";#{Text.listencode self.value[:givenname]}" if !self.value[:givenname].empty? || !self.value[:middlename].empty? || !self.value[:honprefix].empty? || !self.value[:honsuffix].empty?
+        ret += ";#{Text.listencode self.value[:middlename]}" if !self.value[:middlename].empty? || !self.value[:honprefix].empty?
+        ret += ";#{Text.listencode self.value[:honprefix]}" if !self.value[:honprefix].empty? || !self.value[:honsuffix].empty?
         ret += ";#{Text.listencode self.value[:honsuffix]}" if !self.value[:honsuffix].empty?
         ret
       end
@@ -357,18 +357,18 @@ module Vcard::V3_0
     end
 
     class Address < Vobject::PropertyValue
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'address'
+        self.type = "address"
       end
 
       def to_s
         ret = Text.listencode self.value[:pobox]
-        ret += ";#{Text.listencode self.value[:ext]}" if !self.value[:ext].empty? or !self.value[:street].empty? or !self.value[:locality].empty? or !self.value[:region].empty? or !self.value[:code].empty? or !self.value[:country].empty?
-        ret += ";#{Text.listencode self.value[:street]}" if !self.value[:street].empty? or !self.value[:locality].empty? or !self.value[:region].empty? or !self.value[:code].empty? or !self.value[:country].empty?
-        ret += ";#{Text.listencode self.value[:locality]}" if !self.value[:locality].empty? or !self.value[:region].empty? or !self.value[:code].empty? or !self.value[:country].empty?
-        ret += ";#{Text.listencode self.value[:region]}" if !self.value[:region].empty? or !self.value[:code].empty? or !self.value[:country].empty?
-        ret += ";#{Text.listencode self.value[:code]}" if !self.value[:code].empty? or !self.value[:country].empty?
+        ret += ";#{Text.listencode self.value[:ext]}" if !self.value[:ext].empty? || !self.value[:street].empty? || !self.value[:locality].empty? || !self.value[:region].empty? || !self.value[:code].empty? || !self.value[:country].empty?
+        ret += ";#{Text.listencode self.value[:street]}" if !self.value[:street].empty? || !self.value[:locality].empty? || !self.value[:region].empty? || !self.value[:code].empty? || !self.value[:country].empty?
+        ret += ";#{Text.listencode self.value[:locality]}" if !self.value[:locality].empty? || !self.value[:region].empty? || !self.value[:code].empty? || !self.value[:country].empty?
+        ret += ";#{Text.listencode self.value[:region]}" if !self.value[:region].empty? || !self.value[:code].empty? || !self.value[:country].empty?
+        ret += ";#{Text.listencode self.value[:code]}" if !self.value[:code].empty? || !self.value[:country].empty?
         ret += ";#{Text.listencode self.value[:country]}" if !self.value[:country].empty?
         ret
       end
@@ -380,13 +380,13 @@ module Vcard::V3_0
     end
 
     class Textlist < Vobject::PropertyValue
-      def initialize val
+      def initialize(val)
         self.value = val
-        self.type = 'textlist'
+        self.type = "textlist"
       end
 
       def to_s
-        self.value.map{|m| Text.escape m}.join(',')
+        self.value.map { |m| Text.escape m}.join(",")
       end
 
       def to_hash
@@ -396,20 +396,20 @@ module Vcard::V3_0
     end
 
     class Agent < Vobject::PropertyValue
-      def initialize val
+      def initialize(val)
         val[:VCARD].delete(:VERSION)
         self.value = val
-        self.type = 'agent'
+        self.type = "agent"
       end
 
       def to_hash
         ret = {}
-        self.value.each{|k, v| 
+        self.value.each{ |k, v|
           ret[k] = {}
-          v.each{|k1, v1|
-            if v1.kind_of?(Hash)
+          v.each{ |k1, v1|
+            if v1.is_a?(Hash)
               ret[k][k1] = {	}
-              v1.each {|k2, v2|
+              v1.each { |k2, v2|
                 ret[k][k1][k2] = v2.to_hash
               }
             else

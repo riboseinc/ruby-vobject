@@ -1,5 +1,5 @@
-require 'vobject'
-require 'vobject/propertyvalue'
+require "vobject"
+require "vobject/propertyvalue"
 
 module Vobject
   module Vcalendar
@@ -7,16 +7,16 @@ module Vobject
 
       class Text < Vobject::PropertyValue
 
-        class << self 
+        class << self
           def escape x
             # temporarily escape \\ as \u007f, which is banned from text
             x.gsub(/\\/, "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;").gsub(/\u007f/, "\\\\\\\\")
           end
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'text'
+          self.type = "text"
         end
 
         def to_s
@@ -30,9 +30,9 @@ module Vobject
       end
 
       class ClassValue < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'classvalue'
+          self.type = "classvalue"
         end
 
         def to_hash
@@ -42,9 +42,9 @@ module Vobject
       end
 
       class TranspValue < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'transpvalue'
+          self.type = "transpvalue"
         end
 
         def to_hash
@@ -54,9 +54,9 @@ module Vobject
       end
 
       class ActionValue < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'actionvalue'
+          self.type = "actionvalue"
         end
 
         def to_hash
@@ -66,9 +66,9 @@ module Vobject
       end
 
       class MethodValue < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'methodvalue'
+          self.type = "methodvalue"
         end
 
         def to_hash
@@ -78,9 +78,9 @@ module Vobject
       end
 
       class Busytype < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'busytype'
+          self.type = "busytype"
         end
 
         def to_hash
@@ -90,9 +90,9 @@ module Vobject
       end
 
       class Color < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'color'
+          self.type = "color"
         end
 
         def to_hash
@@ -102,9 +102,9 @@ module Vobject
       end
 
       class EventStatus < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'eventstatus'
+          self.type = "eventstatus"
         end
 
         def to_hash
@@ -114,9 +114,9 @@ module Vobject
       end
 
       class Todostatus < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'todostatus'
+          self.type = "todostatus"
         end
 
         def to_hash
@@ -126,9 +126,9 @@ module Vobject
       end
 
       class Journalstatus < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'journalstatus'
+          self.type = "journalstatus"
         end
 
         def to_hash
@@ -138,9 +138,9 @@ module Vobject
       end
 
       class Ianatoken < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'ianatoken'
+          self.type = "ianatoken"
         end
 
         def to_hash
@@ -150,9 +150,9 @@ module Vobject
       end
 
       class Binary < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'binary'
+          self.type = "binary"
         end
 
         def to_hash
@@ -162,9 +162,9 @@ module Vobject
       end
 
       class Uri < Text
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'uri'
+          self.type = "uri"
         end
 
         def to_hash
@@ -175,9 +175,9 @@ module Vobject
 
       class Calscale < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'calscale'
+          self.type = "calscale"
         end
 
         def to_s
@@ -196,9 +196,9 @@ module Vobject
           self.value <=> anOther.value
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'float'
+          self.type = "float"
         end
 
         def to_s
@@ -217,9 +217,9 @@ module Vobject
           self.value <=> anOther.value
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'integer'
+          self.type = "integer"
         end
 
         def to_s
@@ -234,9 +234,9 @@ module Vobject
 
       class PercentComplete < Integer
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'percentcomplete'
+          self.type = "percentcomplete"
         end
 
         def to_hash
@@ -247,9 +247,9 @@ module Vobject
 
       class Priority < Integer
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'priority'
+          self.type = "priority"
         end
 
         def to_hash
@@ -264,9 +264,9 @@ module Vobject
           self.value <=> anOther.value
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'date'
+          self.type = "date"
         end
 
         def to_s
@@ -285,10 +285,10 @@ module Vobject
           self.value[:time] <=> anOther.value[:time]
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          # val consists of :time and :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
-          self.type = 'datetimeLocal'
+          # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
+          self.type = "datetimeLocal"
         end
 
         def to_s
@@ -315,9 +315,9 @@ module Vobject
           self.value[:time] <=> anOther.value[:time]
         end
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'datetimeUTC'
+          self.type = "datetimeUTC"
         end
 
 
@@ -335,9 +335,9 @@ module Vobject
 
       class Boolean < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'boolean'
+          self.type = "boolean"
         end
 
         def to_s
@@ -352,9 +352,9 @@ module Vobject
 
       class Duration < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'duration'
+          self.type = "duration"
         end
 
         def to_s
@@ -362,7 +362,7 @@ module Vobject
           ret = self.value[:sign] + ret if self.value[:sign]
           ret = ret + "#{self.value[:weeks]}W" if self.value[:weeks]
           ret = ret + "#{self.value[:days]}D" if self.value[:days]
-          ret = ret + "T" if self.value[:hours] or self.value[:minutes] or self.value[:seconds]
+          ret = ret + "T" if self.value[:hours] || self.value[:minutes] || self.value[:seconds]
           ret = ret + "#{self.value[:hours]}H" if self.value[:hours]
           ret = ret + "#{self.value[:minutes]}M" if self.value[:minutes]
           ret = ret + "#{self.value[:seconds]}S" if self.value[:seconds]
@@ -377,9 +377,9 @@ module Vobject
 
       class Time < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'time'
+          self.type = "time"
         end
 
         def to_s
@@ -396,9 +396,9 @@ module Vobject
 
       class Utcoffset < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'utcoffset'
+          self.type = "utcoffset"
         end
 
         def to_s
@@ -415,9 +415,9 @@ module Vobject
 
       class Geovalue < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'geovalue'
+          self.type = "geovalue"
         end
 
         def to_s
@@ -433,13 +433,13 @@ module Vobject
 
       class Version < Vobject::PropertyValue
 
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'version'
+          self.type = "version"
         end
 
         def to_s
-          self.value.join(';')
+          self.value.join(";")
         end
 
         def to_hash
@@ -453,13 +453,13 @@ module Vobject
       end
 
       class Textlist < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'textlist'
+          self.type = "textlist"
         end
 
         def to_s
-          self.value.map{|m| Text.escape m}.join(',')
+          self.value.map { |m| Text.escape m}.join(",")
         end
 
         def to_hash
@@ -469,78 +469,78 @@ module Vobject
       end
 
       class Periodlist < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'periodlist'
+          self.type = "periodlist"
         end
 
         def to_s
-          self.value.map{|m| 
+          self.value.map { |m|
             ret = m[:start].to_s + "/"
             ret += m[:end].to_s if m.has_key? :end
             ret += m[:duration].to_s if m.has_key? :duration
             ret
-          }.join(',')
+          }.join(",")
         end
 
         def to_hash
-          self.value.map {|m| m.each {|k, v| m[k] = v.to_hash }}
+          self.value.map { |m| m.each { |k, v| m[k] = v.to_hash }}
         end
 
       end
 
       class Datelist < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'datelist'
+          self.type = "datelist"
         end
 
         def to_s
-          self.value.map{|m| m.to_s}.join(',')
+          self.value.map { |m| m.to_s}.join(",")
         end
 
         def to_hash
-          self.value.map{|m| m.to_hash}
+          self.value.map { |m| m.to_hash}
         end
 
       end
 
       class Datetimelist < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'datetimelist'
+          self.type = "datetimelist"
         end
 
         def to_s
-          self.value.map{|m| m.to_s}.join(',')
+          self.value.map { |m| m.to_s}.join(",")
         end
 
         def to_hash
-          self.value.map{|m| m.to_hash}
+          self.value.map { |m| m.to_hash}
         end
 
       end
 
       class Datetimeutclist < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'datetimeutclist'
+          self.type = "datetimeutclist"
         end
 
         def to_s
-          self.value.map{|m| m.to_s}.join(',')
+          self.value.map { |m| m.to_s}.join(",")
         end
 
         def to_hash
-          self.value.map{|m| m.to_hash}
+          self.value.map { |m| m.to_hash}
         end
 
       end
 
       class Requeststatusvalue < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'requeststatusvalue'
+          self.type = "requeststatusvalue"
         end
 
         def to_s
@@ -556,22 +556,22 @@ module Vobject
       end
 
       class Recur < Vobject::PropertyValue
-        def initialize val
+        def initialize(val)
           self.value = val
-          self.type = 'recur'
+          self.type = "recur"
         end
 
         def to_s
           ret = []
-          self.value.each {|k, v| 
+          self.value.each { |k, v|
             ret << "#{k.to_s.upcase}=#{valencode(k,v)}"
           }
-          ret.join(';')
+          ret.join(";")
         end
 
         def to_hash
           ret = {}
-          self.value.each{|k, v|
+          self.value.each{ |k, v|
             if v.respond_to?(:to_hash)
               ret[k] = v.to_hash
             else
@@ -583,35 +583,35 @@ module Vobject
 
         private
 
-        def valencode(k, v) 
+        def valencode(k, v)
           case k
           when :bysetpos, :byyearday
-            return v.map{|x| 
+            return v.map { |x|
               ret = x[:ordyrday]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(',')
+            }.join(",")
           when :byweekno
-            return v.map{|x| 
+            return v.map { |x|
               ret = x[:ordwk]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(',')
+            }.join(",")
           when :bymonthday
-            return v.map{|x| 
+            return v.map { |x|
               ret = x[:ordmoday]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(',')
+            }.join(",")
           when :byday
-            return v.map{|x| 
+            return v.map { |x|
               ret = x[:weekday]
               ret = x[:ordwk] + ret if x[:ordwk]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(',')
+            }.join(",")
           when :bymonth, :byhour, :byminute, :bysecond
-            return v.join(',')
+            return v.join(",")
           when :enddate
             return v.to_s
           else

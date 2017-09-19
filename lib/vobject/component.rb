@@ -1,7 +1,7 @@
-require 'vobject'
-require 'vobject/property'
-require 'vobject/vcalendar/grammar'
-require 'json'
+require "vobject"
+require "vobject/property"
+require "vobject/vcalendar/grammar"
+require "json"
 
 class Vobject::Component
 
@@ -20,11 +20,11 @@ class Vobject::Component
     else
       cs.each_key do |key|
         val = cs[key]
-        # iteration of array or hash values is making the value a key!
+        # iteration of array || hash values is making the value a key!
         next if key.class == Array
-        next if key.class == Hash 
+        next if key.class == Hash
         cc = child_class(key, val)
-        if val.is_a?(Hash) and val.has_key?(:component)
+        if val.is_a?(Hash) && val.has_key?(:component)
           val[:component].each do |x|
             self.children << cc.new(key, x, [])
           end
@@ -41,14 +41,14 @@ class Vobject::Component
   end
 
   def child_class key, val
-    if val.is_a?(Hash) and val.has_key?(:component)
+    if val.is_a?(Hash) && val.has_key?(:component)
       base_class = component_base_class
-    elsif !(val.is_a?(Hash) and !val.has_key?(:value) ) 
+    elsif !(val.is_a?(Hash) && !val.has_key?(:value) )
       base_class = property_base_class
     else
       base_class = component_base_class
     end
-    return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
+    return base_class if key == :CLASS || key == :OBJECT || key == :METHOD
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end
@@ -69,9 +69,9 @@ class Vobject::Component
     a = {}
     children.each do |c|
       if c.is_a?(Vobject::Component)
-        a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
+        a = a.merge(c.to_hash) { |key, old, new| [old, new].flatten }
       elsif c.is_a?(Vobject::Property)
-        a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
+        a = a.merge(c.to_hash) { |key, old, new| [old, new].flatten }
       else
         a[c.name] = c.to_hash
       end

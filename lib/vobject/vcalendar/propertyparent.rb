@@ -6,7 +6,7 @@ require "tzinfo"
 include Rsec::Helpers
 require_relative "../../c"
 require_relative "../../error"
-require 'vobject'
+require "vobject"
 
 module Vobject::Vcalendar
   class Typegrammars
@@ -19,7 +19,7 @@ module Vobject::Vcalendar
       # Ensure each property belongs to a legal component
       def property_parent(strict, key, component, value, ctx1)
         errors = []
-        if not (key =~ /^x/i) and is_registered_propname?(key.to_s)
+        if !(key =~ /^x/i) && is_registered_propname?(key.to_s)
           case component
           when :EVENT
             case key
@@ -45,7 +45,7 @@ module Vobject::Vcalendar
             case key
             when :DTSTAMP, :UID, :DTSTART, :CLASS, :CREATED, :DESCRIPTION,
               :LAST_MOD, :ORGANIZER, :RECURRENCE_ID, :SEQUENCE, :STATUS,
-              :SUMMARY, :URL, :RRULE, 
+              :SUMMARY, :URL, :RRULE,
               :ATTACH, :ATTENDEE, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE,
               :RSTATUS, :RELATED,  :RDATE, :COLOR, :IMAGE
             else
@@ -95,7 +95,7 @@ module Vobject::Vcalendar
               parse_err(strict, errors, "Invalid property #{key} specified for #{component}", ctx1)
             end
           end
-        end    
+        end   
         return errors
       end
 

@@ -4,7 +4,7 @@ module Vobject
 
     #attr_accessor :group, :prop_name, :params, :value, :multiple
 
-    def initialize val
+    def initialize(val)
       self.value = val
     end
 

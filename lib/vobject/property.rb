@@ -1,5 +1,5 @@
-require 'vobject'
-require 'vobject/parameter'
+require "vobject"
+require "vobject/parameter"
 
 
 
@@ -9,24 +9,24 @@ class Vobject::Property
   attr_accessor :group, :prop_name, :params, :value, :multiple
 
   def initialize key, options
-    if options.class == Array 
+    if options.class == Array
       self.multiple = []
-      options.each {|v|
+      options.each { |v|
         self.multiple << property_base_class.new(key, v)
         self.prop_name = key
       }
     else
       self.prop_name = key
-      if options.nil? or options.empty?
+      if options.nil? || options.empty?
         self.group = nil
         self.params = []
         self.value = nil
       else
         self.group = options[:group]
         self.prop_name = key
-        unless options[:params].nil? or options[:params].empty?
+        unless options[:params].nil? || options[:params].empty?
           self.params = []
-          options[:params].each {|k, v|
+          options[:params].each { |k, v|
             self.params << parameter_base_class.new(k, v)
           }
         end
@@ -39,7 +39,7 @@ class Vobject::Property
   end
 
   def to_s
-    if self.multiple.nil? or self.multiple.empty?
+    if self.multiple.nil? || self.multiple.empty?
       ret = self.to_s_line
     else
       arr = []

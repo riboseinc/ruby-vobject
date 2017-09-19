@@ -4,8 +4,8 @@ require "uri"
 require "date"
 #require "tzinfo"
 include Rsec::Helpers
-require 'vobject/vcard/version'
-require 'vobject'
+require "vobject/vcard/version"
+require "vobject"
 require_relative './propertyvalue'
 
 module Vcard::V3_0
@@ -16,24 +16,24 @@ module Vcard::V3_0
       # property value types, each defining their own parser
 
       def binary
-        binary  = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) {|b, q|
-          ( (b.length + q.length) % 4 == 0 ) ? Vcard::V3_0::PropertyValue::Binary.new(b + q) 
+        binary  = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) { |b, q|
+          ( (b.length + q.length) % 4 == 0 ) ? Vcard::V3_0::PropertyValue::Binary.new(b + q)
           : {:error => 'Malformed binary coding'}
         }
         binary.eof
       end
 
-      def phoneNumber 
+      def phoneNumber
         # This is on the lax side; there should be up to 15 digits
         # Will allow letters
-        phoneNumber = /[0-9() +A-Z-]+/i.r.map {|p| Vcard::V3_0::PropertyValue::Phonenumber.new p}
+        phoneNumber = /[0-9() +A-Z-]+/i.r.map { |p| Vcard::V3_0::PropertyValue::Phonenumber.new p}
         phoneNumber.eof
       end
 
       def geovalue
         float           = prim(:double)
-        geovalue    = seq(float, ';', float) {|a, _, b|
-          ( a <= 180.0 and a >= -180.0 and b <= 180 and b > -180 ) ? 
+        geovalue    = seq(float, ";", float) { |a, _, b|
+          ( a <= 180.0 && a >= -180.0 && b <= 180 && b > -180 ) ?
             Vcard::V3_0::PropertyValue::Geovalue.new({:lat => a, :long => b}) :
             {:error => 'Latitude/Longitude outside of range -180..180'}
         }
@@ -41,120 +41,120 @@ module Vcard::V3_0
       end
 
 
-      def classvalue  
-        ianaToken 	= /[a-zA-Z\d\-]+/.r 
+      def classvalue 
+        ianaToken 	= /[a-zA-Z\d\-]+/.r
         xname 	= seq( '[xX]-', /[a-zA-Z0-9-]+/.r).map(&:join)
-        classvalue 	= (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | ianaToken | xname).map {|m|
+        classvalue 	= (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | ianaToken | xname).map { |m|
           Vcard::V3_0::PropertyValue::ClassValue.new m }
         classvalue.eof
       end
 
-      def integer  
-        integer 	= prim(:int32).map {|i| Vcard::V3_0::PropertyValue::Integer.new i }
+      def integer 
+        integer 	= prim(:int32).map { |i| Vcard::V3_0::PropertyValue::Integer.new i }
         integer.eof
       end
 
       def floatT
-        floatT 	    = prim(:double).map {|f| Vcard::V3_0::PropertyValue::Float.new f }
+        floatT 	    = prim(:double).map { |f| Vcard::V3_0::PropertyValue::Float.new f }
         floatT.eof
       end
 
       def ianaToken
-        ianaToken 	= /[a-zA-Z\d\-]+/.r.map {|x| Vcard::V3_0::PropertyValue::Ianatoken.new x }
+        ianaToken 	= /[a-zA-Z\d\-]+/.r.map { |x| Vcard::V3_0::PropertyValue::Ianatoken.new x }
         ianaToken.eof
-      end 
+      end
 
       def versionvalue
-        versionvalue = '3.0'.r.map {|v| Vcard::V3_0::PropertyValue::Version.new v}
+        versionvalue = "3.0".r.map { |v| Vcard::V3_0::PropertyValue::Version.new v}
         versionvalue.eof
       end
 
       def profilevalue
-        profilevalue = /VCARD/i.r.map {|v| Vcard::V3_0::PropertyValue::Profilevalue.new v}
+        profilevalue = /VCARD/i.r.map { |v| Vcard::V3_0::PropertyValue::Profilevalue.new v}
         profilevalue.eof
       end
 
       def uri
-        uri         = /\S+/.r.map {|s|
-          s =~ URI::regexp ? Vcard::V3_0::PropertyValue::Uri.new(s) : 
+        uri         = /\S+/.r.map { |s|
+          s =~ URI::regexp ? Vcard::V3_0::PropertyValue::Uri.new(s) :
             {:error => 'Invalid URI'}
         }
         uri.eof
       end
 
       def textT
-        textT	= C::TEXT3.map {|t| Vcard::V3_0::PropertyValue::Text.new(unescape t) }
+        textT	= C::TEXT3.map { |t| Vcard::V3_0::PropertyValue::Text.new(unescape t) }
         textT.eof
       end
 
       def textlist
         text	= C::TEXT3
-        textlist1	= 
-          seq(text << ','.r, lazy{textlist1}) { |a, b| [unescape(a), b].flatten } |
-          text.map {|t| [unescape(t)]}
-        textlist	= textlist1.map {|m| Vcard::V3_0::PropertyValue::Textlist.new m }
+        textlist1	=
+          seq(text << ",".r, lazy{textlist1}) { |a, b| [unescape(a), b].flatten } |
+          text.map { |t| [unescape(t)]}
+        textlist	= textlist1.map { |m| Vcard::V3_0::PropertyValue::Textlist.new m }
         textlist.eof
       end
 
       def org
         text	= C::TEXT3
-        org1	= 
-          seq(text, ';', lazy{org1}) { |a, _, b| [unescape(a), b].flatten } |
-          text.map {|t| [unescape(t)]}
-        org		= org1.map {|o| Vcard::V3_0::PropertyValue::Org.new o }
+        org1	=
+          seq(text, ";", lazy{org1}) { |a, _, b| [unescape(a), b].flatten } |
+          text.map { |t| [unescape(t)]}
+        org		= org1.map { |o| Vcard::V3_0::PropertyValue::Org.new o }
         org.eof
       end
 
       def dateT
-        dateT	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) {|yy, _, mm, _, dd|
+        dateT	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
           Vcard::V3_0::PropertyValue::Date.new({:year => yy, :month => mm, :day => dd})
-        } 
+        }
         dateT.eof
       end
 
-      def timeT	
-        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) {|s, h, _, m|
+      def time_t	
+        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
           {:sign => s, :hour => h, :min => m}
         }
-        zone	= utc_offset.map {|u| u  } | 
-          /Z/i.r.map {|z| 'Z' }
+        zone	= utc_offset.map { |u| u  } |
+          /Z/i.r.map { |z| "Z" }
         hour	= /[0-9]{2}/.r
         minute	= /[0-9]{2}/.r
         second	= /[0-9]{2}/.r
-        secfrac	= seq(','.r >> /[0-9]+/)
-        time	= seq(hour, /:/._?, minute, /:/._?, second, secfrac._?, zone._?) {|h, _, m, _, s, f, z|
+        secfrac	= seq(",".r >> /[0-9]+/)
+        time	= seq(hour, /:/._?, minute, /:/._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
           h = {:hour => h, :min => m, :sec => s}
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
           Vcard::V3_0::PropertyValue::Time.new(h)
-        } 
-        timeT.eof
+        }
+        time_t.eof
       end
 
       def date_time
-        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) {|s, h, _, m|
+        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
           {:sign => s, :hour => h, :min => m}
         }
-        zone	= utc_offset.map {|u| u  } | 
-          /Z/i.r.map {|z| 'Z' }
+        zone	= utc_offset.map { |u| u  } |
+          /Z/i.r.map { |z| "Z" }
         hour	= /[0-9]{2}/.r
         minute	= /[0-9]{2}/.r
         second	= /[0-9]{2}/.r
-        secfrac	= seq(','.r >> /[0-9]+/)
-        date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) {|yy, _, mm, _, dd|
+        secfrac	= seq(",".r >> /[0-9]+/)
+        date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
           {:year => yy, :month => mm, :day => dd}
-        } 
-        time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) {|h, _, m, _, s, f, z|
+        }
+        time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
           h = {:hour => h, :min => m, :sec => s}
           if z.empty?
-            h[:zone] = ''
+            h[:zone] = ""
           else
-            h[:zone] = z[0] 
+            h[:zone] = z[0]
           end
           h[:secfrac] = f[0] unless f.empty?
           h
-        } 
-        date_time	= seq(date, 'T', time) {|d, _, t|
+        }
+        date_time	= seq(date, 'T', time) { |d, _, t|
           #d = d.merge t
           #res = {:time => Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), :zone => d[:zone]}
           #res[:secfrac] = h[:secfrac] if h[:secfrac]
@@ -164,30 +164,30 @@ module Vcard::V3_0
       end
 
       def date_or_date_time
-        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) {|s, h, _, m|
+        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
           {:sign => s, :hour => h, :min => m}
         }
-        zone	= utc_offset.map {|u| u  } | 
-          /Z/i.r.map {|z| 'Z' }
+        zone	= utc_offset.map { |u| u  } |
+          /Z/i.r.map { |z| "Z" }
         hour	= /[0-9]{2}/.r
         minute	= /[0-9]{2}/.r
         second	= /[0-9]{2}/.r
-        secfrac	= seq(','.r >> /[0-9]+/)
-        date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) {|yy, _, mm, _, dd|
+        secfrac	= seq(",".r >> /[0-9]+/)
+        date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
           {:year => yy, :month => mm, :day => dd}
-        } 
-        time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) {|h, _, m, _, s, f, z|
+        }
+        time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
           h = {:hour => h, :min => m, :sec => s}
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
           h
-        } 
-        date_or_date_time	= seq(date, 'T', time) {|d, _, t|
+        }
+        date_or_date_time	= seq(date, 'T', time) { |d, _, t|
           #d = d.merge t
           #res = {:time => Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), :zone => d[:zone]}
           #res[:secfrac] = d[:secfrac] if d[:secfrac]
           Vcard::V3_0::PropertyValue::DateTimeLocal.new(d.merge t)
-        } | date.map {|d|
+        } | date.map { |d|
           #res = {:time => Time.local(d[:year], d[:month], d[:day], 0, 0, 0), :zone => d[:zone]}
           Vcard::V3_0::PropertyValue::Date.new(d)
         }
@@ -195,66 +195,66 @@ module Vcard::V3_0
       end
 
       def utc_offset
-        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) {|s, h, _, m|
+        utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
           Vcard::V3_0::PropertyValue::Utcoffset.new({:sign => s, :hour => h, :min => m})
         }
         utc_offset.eof
       end
 
       def kindvalue
-        ianaToken 	= /[a-zA-Z\d\-]+/.r 
+        ianaToken 	= /[a-zA-Z\d\-]+/.r
         xname 	= seq( '[xX]-', /[a-zA-Z0-9-]+/.r).map(&:join)
         kindvalue = (/individual/i.r | /group/i.r | /org/i.r | /location/i.r |
-                     ianaToken | xname).map {|k| Vcard::V3_0::PropertyValue::Kindvalue.new(k)}
+                     ianaToken | xname).map { |k| Vcard::V3_0::PropertyValue::Kindvalue.new(k)}
         kindvalue.eof
       end
 
       def fivepartname
-        #text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r  
+        #text	= /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e:"\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[;,\\nN])*/.r 
         text	= C::TEXT3
-        component	=  
-          seq(text, ',', lazy{component}) {|a, _, b|
+        component	= 
+          seq(text, ",", lazy { component }) { |a, _, b|
           [unescape(a), b].flatten
-        } | text.map {|t| [unescape(t)] }
-          fivepartname1 = seq(component, ';', component, ';', component, ';', 
-                              component, ';', component) {|a, _, b, _, c, _, d, _, e|
+        } | text.map { |t| [unescape(t)] }
+          fivepartname1 = seq(component, ";", component, ";", component, ";",
+                              component, ";", component) { |a, _, b, _, c, _, d, _, e|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
             {:surname => a, :givenname => b, :middlename => c, :honprefix => d, :honsuffix => e}
-          } | seq(component, ';', component, ';', component, ';', component) {|a, _, b, _, c, _, d|
+          } | seq(component, ";", component, ";", component, ";", component) { |a, _, b, _, c, _, d|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
-            {:surname => a, :givenname => b, :middlename => c, :honprefix => d, :honsuffix => ''}
-          } | seq(component, ';', component, ';', component) {|a, _, b, _, c|
+            {:surname => a, :givenname => b, :middlename => c, :honprefix => d, :honsuffix => ""}
+          } | seq(component, ";", component, ";", component) { |a, _, b, _, c|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
-            {:surname => a, :givenname => b, :middlename => c, :honprefix => '', :honsuffix => ''}
-          } | seq(component, ';', component) {|a, _, b|
+            {:surname => a, :givenname => b, :middlename => c, :honprefix => "", :honsuffix => ""}
+          } | seq(component, ";", component) { |a, _, b|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
-            {:surname => a, :givenname => b, :middlename => '', :honprefix => '', :honsuffix => ''}
-          } | component.map {|a|
+            {:surname => a, :givenname => b, :middlename => "", :honprefix => "", :honsuffix => ""}
+          } | component.map { |a|
             a = a[0] if a.length == 1
-            {:surname => 'a', :givenname => '', :middlename => '', :honprefix => '', :honsuffix => ''}
-          } 
-          fivepartname 	= fivepartname1.map {|n| Vcard::V3_0::PropertyValue::Fivepartname.new(n)}
+            {:surname => 'a', :givenname => "", :middlename => "", :honprefix => "", :honsuffix => ""}
+          }
+          fivepartname 	= fivepartname1.map { |n| Vcard::V3_0::PropertyValue::Fivepartname.new(n)}
           fivepartname.eof
       end
 
       def address
         text	= C::TEXT3
-        component	=  
-          seq(text, ',', lazy{component}) {|a, _, b|
+        component	= 
+          seq(text, ",", lazy { component }) { |a, _, b|
           [unescape(a), b].flatten
-        } | text.map {|t| [unescape(t)] }
-          address1 = seq(component, ';', component, ';', component, ';', component, ';', 
-                         component, ';', component, ';', component) {|a, _, b, _, c, _, d, _, e, _, f, _, g|
+        } | text.map { |t| [unescape(t)] }
+          address1 = seq(component, ";", component, ";", component, ";", component, ";",
+                         component, ";", component, ";", component) { |a, _, b, _, c, _, d, _, e, _, f, _, g|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
@@ -262,51 +262,51 @@ module Vcard::V3_0
             e = e[0] if e.length == 1
             f = f[0] if f.length == 1
             g = g[0] if g.length == 1
-            {:pobox => a, :ext => b, :street => c, 
+            {:pobox => a, :ext => b, :street => c,
              :locality => d, :region => e, :code => f, :country => g}
-          } | seq(component, ';', component, ';', component, ';', component, ';', 
-                  component, ';', component) {|a, _, b, _, c, _, d, _, e, _, f|
+          } | seq(component, ";", component, ";", component, ";", component, ";",
+                  component, ";", component) { |a, _, b, _, c, _, d, _, e, _, f|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
             f = f[0] if f.length == 1
-            {:pobox => a, :ext => b, :street => c, 
-             :locality => d, :region => e, :code => f, :country => ''}
-          } | seq(component, ';', component, ';', component, ';', component, ';', 
-                  component) {|a, _, b, _, c, _, d, _, e|
+            {:pobox => a, :ext => b, :street => c,
+             :locality => d, :region => e, :code => f, :country => ""}
+          } | seq(component, ";", component, ";", component, ";", component, ";",
+                  component) { |a, _, b, _, c, _, d, _, e|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
-            {:pobox => a, :ext => b, :street => c, 
-             :locality => d, :region => e, :code => '', :country => ''}
-          } | seq(component, ';', component, ';', component, ';', component) {|a, _, b, _, c, _, d|
+            {:pobox => a, :ext => b, :street => c,
+             :locality => d, :region => e, :code => "", :country => ""}
+          } | seq(component, ";", component, ";", component, ";", component) { |a, _, b, _, c, _, d|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
-            {:pobox => a, :ext => b, :street => c, 
-             :locality => d, :region => '', :code => '', :country => ''}
-          } | seq(component, ';', component, ';', component) {|a, _, b, _, c|
+            {:pobox => a, :ext => b, :street => c,
+             :locality => d, :region => "", :code => "", :country => ""}
+          } | seq(component, ";", component, ";", component) { |a, _, b, _, c|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
-            {:pobox => a, :ext => b, :street => c, 
-             :locality => '', :region => '', :code => '', :country => ''}
-          } | seq(component, ';', component) {|a, _, b|
+            {:pobox => a, :ext => b, :street => c,
+             :locality => "", :region => "", :code => "", :country => ""}
+          } | seq(component, ";", component) { |a, _, b|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
-            {:pobox => a, :ext => b, :street => '', 
-             :locality => '', :region => '', :code => '', :country => ''}
-          } | component.map {|a|
+            {:pobox => a, :ext => b, :street => "",
+             :locality => "", :region => "", :code => "", :country => ""}
+          } | component.map { |a|
             a = a[0] if a.length == 1
-            {:pobox => a, :ext => '', :street => '', 
-             :locality => '', :region => '', :code => '', :country => ''}
-          } 
-          address 	= address1.map {|n| Vcard::V3_0::PropertyValue::Address.new(n)}
+            {:pobox => a, :ext => "", :street => "",
+             :locality => "", :region => "", :code => "", :country => ""}
+          }
+          address 	= address1.map { |n| Vcard::V3_0::PropertyValue::Address.new(n)}
           address.eof
       end
 
@@ -322,7 +322,7 @@ module Vcard::V3_0
       # text escapes: \\ \; \, \N \n
       def unescape(x)
         # temporarily escape \\ as \007f, which is disallowed in any text
-        x.gsub(/\\\\/, "\u007f").gsub(/\\;/, ';').gsub(/\\,/, ',').gsub(/\\[Nn]/, "\n").gsub(/\u007f/, "\\")
+        x.gsub(/\\\\/, "\u007f").gsub(/\\;/, ";").gsub(/\\,/, ",").gsub(/\\[Nn]/, "\n").gsub(/\u007f/, "\\")
       end
 
 
@@ -330,7 +330,7 @@ module Vcard::V3_0
       # If successful, return typed interpretation of string
       def typematch(strict, key, params, component, value, ctx)
         errors = []
-        params[:VALUE] = params[:VALUE].downcase if params and params[:VALUE]
+        params[:VALUE] = params[:VALUE].downcase if params && params[:VALUE]
         ctx1 = Rsec::ParseContext.new value, 'source'
         case key
         when :VERSION
@@ -351,33 +351,33 @@ module Vcard::V3_0
         when :N
           ret = fivepartname._parse ctx1
         when :PHOTO, :LOGO, :SOUND
-          if params and params[:VALUE] == 'uri'
+          if params && params[:VALUE] == 'uri'
             ret = uri._parse ctx1
           else
             ret = binary._parse ctx1
           end
         when :KEY
-          if params and params[:ENCODING] == 'b'
+          if params && params[:ENCODING] == 'b'
             ret = binary._parse ctx1
           else
             ret = textT._parse ctx1
           end
         when :BDAY
-          if params and params[:VALUE] == 'date-time'
+          if params && params[:VALUE] == 'date-time'
             ret = date_time._parse ctx1
-          elsif params and params[:VALUE] == 'date'
+          elsif params && params[:VALUE] == 'date'
             ret = dateT._parse ctx1
           else
-            # unlike VCARD 4, can have either date or date_time without explicit value switch
+            # unlike VCARD 4, can have either date || date_time without explicit value switch
             ret = date_or_date_time._parse ctx1
           end
         when :REV
-          if params and params[:VALUE] == 'date'
+          if params && params[:VALUE] == 'date'
             ret = dateT._parse ctx1
-          elsif params and params[:VALUE] == 'date-time'
+          elsif params && params[:VALUE] == 'date-time'
             ret = date_time._parse ctx1
           else
-            # unlike VCARD 4, can have either date or date_time without explicit value switch
+            # unlike VCARD 4, can have either date || date_time without explicit value switch
             ret = date_or_date_time._parse ctx1
           end
         when :ADR
@@ -385,7 +385,7 @@ module Vcard::V3_0
         when :TEL
           ret = phoneNumber._parse ctx1
         when :TZ
-          if params and params[:VALUE] == 'text'
+          if params && params[:VALUE] == 'text'
             ret = textT._parse ctx1
           else
             ret = utc_offset._parse ctx1
@@ -393,25 +393,25 @@ module Vcard::V3_0
         when :GEO
           ret = geovalue._parse ctx1
         when :AGENT
-          if params and params[:VALUE] == 'uri'
+          if params && params[:VALUE] == 'uri'
             ret = uri._parse ctx1
           else
             # unescape
-            value = value.gsub(/\\n/,"\n").gsub(/\\;/,';').gsub(/\\,/,',').gsub(/\\:/,':')
+            value = value.gsub(/\\n/,"\n").gsub(/\\;/,";").gsub(/\\,/,",").gsub(/\\:/,':')
             # spec says that colons need to be escaped, but none of the examples do so
             #value = value.gsub(/\\:/,':')
             value = value.gsub(/BEGIN:VCARD\n/, "BEGIN:VCARD\nVERSION:3.0\n") unless value =~ /\nVERSION:3\.0/
-            ctx1 = Rsec::ParseContext.new value, 'source' 
+            ctx1 = Rsec::ParseContext.new value, 'source'
             ret = Vcard::V3_0::PropertyValue::Agent.new(Vcard::V3_0::Grammar.new(strict).vobjectGrammar._parse ctx1)
             # TODO same strictness as grammar
           end
         else
           ret = textT._parse ctx1
         end
-        if ret.kind_of?(Hash) and ret[:error]
+        if ret.is_a?(Hash) && ret[:error]
           parse_err(strict, errors, "#{ret[:error]} for property #{key}, value #{value}", ctx)
         end
-        if Rsec::INVALID[ret] 
+        if Rsec::INVALID[ret]
           parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
         end
         Rsec::Fail.reset

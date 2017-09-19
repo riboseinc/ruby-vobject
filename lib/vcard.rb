@@ -1,5 +1,5 @@
-require 'vobject'
-require 'vobject/component'
+require "vobject"
+require "vobject/component"
 
 
 class Vcard < Vobject::Component
@@ -62,15 +62,15 @@ end
 def require_dir(dir)
   base = File.expand_path('../', __FILE__)
   Dir.glob(File.join(base, dir, "**", "*.rb")).each do |path|
-    require path.gsub(/\.rb\Z/, '')
+    require path.gsub(/\.rb\Z/, "")
   end
 end
 
-require 'vobject/vcard/v4_0/component'
-require 'vobject/vcard/v4_0/property'
+require "vobject/vcard/v4_0/component"
+require "vobject/vcard/v4_0/property"
 require_dir 'vobject/vcard/v4_0/component'
 require_dir 'vobject/vcard/v4_0/property'
-require 'vobject/vcard/v3_0/component'
-require 'vobject/vcard/v3_0/property'
+require "vobject/vcard/v3_0/component"
+require "vobject/vcard/v3_0/property"
 require_dir 'vobject/vcard/v3_0/component'
 require_dir 'vobject/vcard/v3_0/property'

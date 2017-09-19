@@ -7,9 +7,9 @@ module Vobject
 
     def initialize key, options
       self.param_name = key
-      if options.class == Array 
+      if options.class == Array
         self.multiple = []
-        options.each {|v|
+        options.each { |v|
           self.multiple << parameter_base_class.new(key, v)
           self.param_name = key
         }
@@ -23,13 +23,13 @@ module Vobject
     def to_s
       # we made param names have underscore instead of dash as symbols
       line = "#{param_name.to_s.gsub(/_/,'-')}"
-      line << "=" 
+      line << "="
       if self.multiple
         arr = []
-        self.multiple.each {|v|
+        self.multiple.each { |v|
           arr << to_s_line(v.value.to_s)
         }
-        line << arr.join(',')
+        line << arr.join(",")
       else
         line << to_s_line(self.value.to_s)
       end
