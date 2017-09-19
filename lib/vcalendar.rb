@@ -21,48 +21,48 @@ class Vcalendar < Vobject::Component
 
   end
 
-    def initialize key, cs, err
-	    super key, cs, err
-    end
+  def initialize key, cs, err
+    super key, cs, err
+  end
 
   def child_class key, val
     if key == :VTODO
-	    base_class = Vobject::Component::Vcalendar::ToDo
+      base_class = Vobject::Component::Vcalendar::ToDo
     elsif key == :VFREEBUSY
-	    base_class = Vobject::Component::Vcalendar::FreeBusy
+      base_class = Vobject::Component::Vcalendar::FreeBusy
     elsif key == :JOURNAL
-	    base_class = Vobject::Component::Vcalendar::Journal
+      base_class = Vobject::Component::Vcalendar::Journal
     elsif key == :STANDARD
-	    base_class = Vobject::Component::Vcalendar::Timezone::Standard
+      base_class = Vobject::Component::Vcalendar::Timezone::Standard
     elsif key == :DAYLIGHT
-	    base_class = Vobject::Component::Vcalendar::Timezone::Daylight
+      base_class = Vobject::Component::Vcalendar::Timezone::Daylight
     elsif key == :VTIMEZONE
-	    base_class = Vobject::Component::Vcalendar::Timezone
+      base_class = Vobject::Component::Vcalendar::Timezone
     elsif key == :VEVENT
-	    base_class = Vobject::Component::Vcalendar::Event
+      base_class = Vobject::Component::Vcalendar::Event
     elsif key == :VALARM
-	    base_class = Vobject::Component::Vcalendar::Alarm
+      base_class = Vobject::Component::Vcalendar::Alarm
     elsif key == :VAVAILABILITY
-	    base_class = Vobject::Component::Vcalendar::Vavailability
+      base_class = Vobject::Component::Vcalendar::Vavailability
     elsif key == :AVAILABLE
-	    base_class = Vobject::Component::Vcalendar::Vavailability::Available
+      base_class = Vobject::Component::Vcalendar::Vavailability::Available
     elsif !(val.is_a?(Hash) and !val.has_key?(:value) ) 
-	    base_class = property_base_class
+      base_class = property_base_class
     else
-	    base_class = Vobject::Component::Vcalendar
+      base_class = Vobject::Component::Vcalendar
     end
     return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end
 
-    private
+  private
 
-    def raise_invalid_parsing
-      raise "Vobject component parse failed"
-    end
-
+  def raise_invalid_parsing
+    raise "Vobject component parse failed"
   end
+
+end
 
 
 

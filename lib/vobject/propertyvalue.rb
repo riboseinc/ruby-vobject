@@ -1,15 +1,15 @@
 module Vobject
-      	class PropertyValue
+  class PropertyValue
 
 
-		attr_accessor :value, :type, :errors
+    attr_accessor :value, :type, :errors
 
     def initialize val
-        self.value = val
-        self.type = 'property'
-     end
+      self.value = val
+      self.type = 'property'
+    end
 
-      #raise_invalid_initialization if key != name
+    #raise_invalid_initialization if key != name
 
     def to_s
       self.value
@@ -35,5 +35,5 @@ module Vobject
     end
 
 
-end
+  end
 end

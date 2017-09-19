@@ -7,10 +7,10 @@ require 'rsec'
 
 # unfold lines, and capitalise in order to avoid discrepancies in logical capitalisation
 def normalise_vcal(ics)
-	ics.gsub(/\n /,'').upcase
+  ics.gsub(/\n /,'').upcase
 end
 def normalise_vcard(ics)
-	ics.gsub(/\n[ \t]/,'').gsub(/;+\n/, "\n").gsub(/(\\;)+\\n/, "\\n").upcase.gsub(/;TYPE=([^;,\n]+);TYPE=([^;,\n]+);TYPE=([^;,\n]+):/, ";TYPE=\\1,\\2,\\3:").gsub(/;TYPE=([^,;\n]+);TYPE=([^,;\n]+):/, ";TYPE=\\1,\\2:").gsub(/;TYPE="([^"]+)"/, ";TYPE=\\1").split("\n").sort.join("\n")
+  ics.gsub(/\n[ \t]/,'').gsub(/;+\n/, "\n").gsub(/(\\;)+\\n/, "\\n").upcase.gsub(/;TYPE=([^;,\n]+);TYPE=([^;,\n]+);TYPE=([^;,\n]+):/, ";TYPE=\\1,\\2,\\3:").gsub(/;TYPE=([^,;\n]+);TYPE=([^,;\n]+):/, ";TYPE=\\1,\\2:").gsub(/;TYPE="([^"]+)"/, ";TYPE=\\1").split("\n").sort.join("\n")
 end
 
 describe Vobject do
@@ -645,10 +645,10 @@ end
 describe Vcard do
 
   it 'should parse VCF properly' do
-      ics = File.read "spec/examples/vcard/example1.vcf"
-      vobj_json = Vcard.parse(ics, '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example1.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example1.vcf"
+    vobj_json = Vcard.parse(ics, '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example1.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF' do
     ics = File.read "spec/examples/vcard/example1.vcf"
@@ -657,10 +657,10 @@ describe Vcard do
   end
 
   it 'should parse VCF properly' do
-      ics = File.read "spec/examples/vcard/example2.vcf"
-      vobj_json = Vcard.parse(ics, '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example2.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example2.vcf"
+    vobj_json = Vcard.parse(ics, '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example2.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF' do
     ics = File.read "spec/examples/vcard/example2.vcf"
@@ -669,10 +669,10 @@ describe Vcard do
   end
 
   it 'should parse VCF with binary photo properly' do
-      ics = File.read "spec/examples/vcard/example3.vcf"
-      vobj_json = Vcard.parse(ics, '3.0',true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example3.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example3.vcf"
+    vobj_json = Vcard.parse(ics, '3.0',true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example3.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF with binary photo properly' do
     ics = File.read "spec/examples/vcard/example3.vcf"
@@ -681,10 +681,10 @@ describe Vcard do
   end
 
   it 'should parse VCF properly' do
-      ics = File.read "spec/examples/vcard/example4.vcf"
-      vobj_json = Vcard.parse(ics, '3.0',true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example4.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example4.vcf"
+    vobj_json = Vcard.parse(ics, '3.0',true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example4.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF' do
     ics = File.read "spec/examples/vcard/example4.vcf"
@@ -693,10 +693,10 @@ describe Vcard do
   end
 
   it 'should parse VCF from Apple' do
-      ics = File.read "spec/examples/vcard/apple.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/apple.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/apple.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/apple.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF from Apple' do
     ics = File.read "spec/examples/vcard/apple.vcf"
@@ -705,30 +705,30 @@ describe Vcard do
   end
 
   it 'should reject TYPE on iana-token property' do
-      ics = File.read "spec/examples/vcard/apple1.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/apple1.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end 
 
   it 'should reject URL without http prefix per RFC 1738' do
-      ics = File.read "spec/examples/vcard/apple2.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/apple2.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end 
 
   it 'should reject type parameters on URL' do
-      ics = File.read "spec/examples/vcard/apple3.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/apple3.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end 
 
   it 'should reject X-parameters on IMPP in v3' do
-      ics = File.read "spec/examples/vcard/apple4.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/apple4.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end 
 
   it 'should not reject X-parameters on IMPP in v4' do
-      ics = File.read "spec/examples/vcard/apple5.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/apple5.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/apple5.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/apple5.json")
+    expect(vobj_json).to include_json(exp_json)
   end 
   it 'should roundtrip VCF that does not reject X-parameters on IMPP in v4' do
     ics = File.read "spec/examples/vcard/apple5.vcf"
@@ -737,10 +737,10 @@ describe Vcard do
   end
 
   it 'should process VCF from Apple' do
-      ics = File.read "spec/examples/vcard/ujb.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/ujb.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/ujb.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/ujb.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF from Apple' do
     ics = File.read "spec/examples/vcard/ujb.vcf"
@@ -749,20 +749,20 @@ describe Vcard do
   end
 
   it 'should reject CHARSET parameter' do
-      ics = File.read "spec/examples/vcard/ujb1.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/ujb1.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should reject TYPE parameter on X-property in v3' do
-      ics = File.read "spec/examples/vcard/ujb2.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/ujb2.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should not reject TYPE parameter on X-property in v4' do
-      ics = File.read "spec/examples/vcard/ujb3.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/ujb3.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/ujb3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/ujb3.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF that does not reject TYPE parameter on X-property in v4' do
     ics = File.read "spec/examples/vcard/ujb3.vcf"
@@ -771,20 +771,20 @@ describe Vcard do
   end
 
   it 'should reject VCF with FN but no N in v3' do
-      ics = File.read "spec/examples/vcard/example51.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/example51.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should reject VCF with FN but no N in v3' do
-      ics = File.read "spec/examples/vcard/example61.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/example61.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
   end
 
   it 'should process VCF from Apple' do
-      ics = File.read "spec/examples/vcard/example5.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example5.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example5.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example5.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF from Apple' do
     ics = File.read "spec/examples/vcard/example5.vcf"
@@ -793,10 +793,10 @@ describe Vcard do
   end
 
   it 'should process VCF from Apple' do
-      ics = File.read "spec/examples/vcard/example6.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/example6.json")
-      expect(vobj_json).to include_json(exp_json)
+    ics = File.read "spec/examples/vcard/example6.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/example6.json")
+    expect(vobj_json).to include_json(exp_json)
   end
   it 'should roundtrip VCF from Apple' do
     ics = File.read "spec/examples/vcard/example6.vcf"
@@ -804,60 +804,60 @@ describe Vcard do
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4' do
-      ics = File.read "spec/examples/vcard/vcard4.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/vcard4.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4' do
+    ics = File.read "spec/examples/vcard/vcard4.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/vcard4.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4' do
     ics = File.read "spec/examples/vcard/vcard4.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4' do
-      ics = File.read "spec/examples/vcard/vcard4author.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/vcard4author.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4' do
+    ics = File.read "spec/examples/vcard/vcard4author.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/vcard4author.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4' do
     ics = File.read "spec/examples/vcard/vcard4author.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v3' do
-      ics = File.read "spec/examples/vcard/vcard3.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/vcard3.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v3' do
+    ics = File.read "spec/examples/vcard/vcard3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/vcard3.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v3' do
     ics = File.read "spec/examples/vcard/vcard3.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v3' do
-      ics = File.read "spec/examples/vcard/bubba.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/bubba.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v3' do
+    ics = File.read "spec/examples/vcard/bubba.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/bubba.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v3' do
     ics = File.read "spec/examples/vcard/bubba.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4' do
-      ics = File.read "spec/examples/vcard/bubba4.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/bubba4.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4' do
+    ics = File.read "spec/examples/vcard/bubba4.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/bubba4.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4' do
     ics = File.read "spec/examples/vcard/bubba4.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
@@ -865,222 +865,222 @@ describe Vcard do
   end
 
   it 'should reject VCF4 with LABEL property' do
-      ics = File.read "spec/examples/vcard/example61.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true)}.to raise_error(Rsec::SyntaxError)
+    ics = File.read "spec/examples/vcard/example61.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true)}.to raise_error(Rsec::SyntaxError)
   end
 
-    it 'should reject TYPE param on X-name property in v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_EVOLUTION.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should process EVOLUTION VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_EVOLUTION.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_EVOLUTION.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject TYPE param on X-name property in v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_EVOLUTION.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process EVOLUTION VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_EVOLUTION.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_EVOLUTION.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should reject unescaped comma in FN property, v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_GMAIL.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should reject escaped colon in URI property, v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_GMAIL.1.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should process GMAIL VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_GMAIL.2.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_GMAIL.3.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject unescaped comma in FN property, v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_GMAIL.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should reject escaped colon in URI property, v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_GMAIL.1.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process GMAIL VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_GMAIL.2.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_GMAIL.3.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip GMAIL VCF v3' do
     ics = File.read "spec/examples/vcard/John_Doe_GMAIL.2.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process IPHONE VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_IPHONE.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r+\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_IPHONE.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process IPHONE VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_IPHONE.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r+\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_IPHONE.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip IPHONE VCF v3' do
     ics = File.read "spec/examples/vcard/John_Doe_IPHONE.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r+\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r+\n?/,"\n")))
   end
 
-    it 'should reject double quotation mark in NOTE value, unescaped' do
-      ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should reject TZ value without sign and double digit hour' do
-      ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.1.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should reject SOURCE value which is not URI' do
-      ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.2.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should process LOTUS VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.3.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.3.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject double quotation mark in NOTE value, unescaped' do
+    ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should reject TZ value without sign and double digit hour' do
+    ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.1.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should reject SOURCE value which is not URI' do
+    ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.2.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process LOTUS VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_LOTUS_NOTES.3.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should reject BASE64 parameter VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should reject two spaces for folded lines in VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.2.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should reject unescaped commas in xname values' do
-      ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.3.vcf"
-     expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-     end
-    it 'should process MAC ADDRRESS BOOK VCF v3' do
-      ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r+\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject BASE64 parameter VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should reject two spaces for folded lines in VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.2.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should reject unescaped commas in xname values' do
+    ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.3.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process MAC ADDRRESS BOOK VCF v3' do
+    ics = File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r+\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/John_Doe_MAC_ADDRESS_BOOK.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should process VCF v4' do
-      ics = File.read "spec/examples/vcard/fullcontact.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/fullcontact.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4' do
+    ics = File.read "spec/examples/vcard/fullcontact.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/fullcontact.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4' do
     ics = File.read "spec/examples/vcard/fullcontact.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process GMAIL VCF v3' do
-      ics = File.read "spec/examples/vcard/gmail-single.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/gmail-single.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process GMAIL VCF v3' do
+    ics = File.read "spec/examples/vcard/gmail-single.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/gmail-single.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip GMAIL VCF v3' do
     ics = File.read "spec/examples/vcard/gmail-single.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process GMAIL VCF v3' do
-      ics = File.read "spec/examples/vcard/gmail-single2.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/gmail-single2.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process GMAIL VCF v3' do
+    ics = File.read "spec/examples/vcard/gmail-single2.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/gmail-single2.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should reject obsolete CHARSET parameter VCF v3' do
-      ics = File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should process THUNDERBIRD VCF v3' do
-      ics = File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject obsolete CHARSET parameter VCF v3' do
+    ics = File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process THUNDERBIRD VCF v3' do
+    ics = File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip THUNDERBIRD VCF v3' do
     ics = File.read "spec/examples/vcard/thunderbird-MoreFunctionsForAddressBook-extension.1.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should reject mispositioned VERSION property, v3' do
-      ics = File.read "spec/examples/vcard/stenerson.vcf"
-      expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
-    end
-    it 'should process VCF v3' do
-      ics = File.read "spec/examples/vcard/stenerson.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/stenerson.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should reject mispositioned VERSION property, v3' do
+    ics = File.read "spec/examples/vcard/stenerson.vcf"
+    expect { Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true)}.to raise_error(Rsec::SyntaxError)
+  end
+  it 'should process VCF v3' do
+    ics = File.read "spec/examples/vcard/stenerson.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/stenerson.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v3' do
     ics = File.read "spec/examples/vcard/stenerson.1.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process RFC2739 additions to VCF v3' do
-      ics = File.read "spec/examples/vcard/rfc2739.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc2739.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process RFC2739 additions to VCF v3' do
+    ics = File.read "spec/examples/vcard/rfc2739.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '3.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc2739.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should process VCF v4' do
-      ics = File.read "spec/examples/vcard/trafalgar.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/trafalgar.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4' do
+    ics = File.read "spec/examples/vcard/trafalgar.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/trafalgar.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
 
-    it 'should process VCF v4 additions from RFC 6474' do
-      ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4 additions from RFC 6474' do
+    ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4 additions from RFC 6474' do
     ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4 additions from RFC 6474' do
-      ics = File.read "spec/examples/vcard/rfc6474.2.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.2.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4 additions from RFC 6474' do
+    ics = File.read "spec/examples/vcard/rfc6474.2.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.2.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4 additions from RFC 6474' do
     ics = File.read "spec/examples/vcard/rfc6474.2.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4 additions from RFC 6474' do
-      ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.3.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4 additions from RFC 6474' do
+    ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc6474.3.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4 additions from RFC 6474' do
     ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4 additions from RFC 6715' do
-      ics = File.read "spec/examples/vcard/rfc6715.1.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc6715.1.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4 additions from RFC 6715' do
+    ics = File.read "spec/examples/vcard/rfc6715.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc6715.1.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4 additions from RFC 6715' do
     ics = File.read "spec/examples/vcard/rfc6715.1.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s
     expect(normalise_vcard(roundtrip)).to eql(normalise_vcard(ics.gsub(/\r\n?/,"\n")))
   end
 
-    it 'should process VCF v4 additions from RFC 6473' do
-      ics = File.read "spec/examples/vcard/rfc6473.vcf"
-      vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
-      exp_json = JSON.load(File.read "spec/examples/vcard/rfc6473.json")
-      expect(vobj_json).to include_json(exp_json)
-    end
+  it 'should process VCF v4 additions from RFC 6473' do
+    ics = File.read "spec/examples/vcard/rfc6473.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_json
+    exp_json = JSON.load(File.read "spec/examples/vcard/rfc6473.json")
+    expect(vobj_json).to include_json(exp_json)
+  end
   it 'should roundtrip VCF v4 additions from RFC 6473' do
     ics = File.read "spec/examples/vcard/rfc6473.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/,"\n"), '4.0', true).to_s

@@ -8,7 +8,7 @@ class Vobject::Component
   attr_accessor :comp_name, :children, :multiple_components, :errors
 
   def blank version
-		        return self.ingest :VOBJECT, {:VERSION => {:value => version}}
+    return self.ingest :VOBJECT, {:VERSION => {:value => version}}
   end
 
 
@@ -16,37 +16,37 @@ class Vobject::Component
     self.comp_name = key
     raise_invalid_initialization if key != name
     self.children = []
-    		if cs.nil?
-		else
-    		cs.each_key do |key|
-      			val = cs[key]
-      			# iteration of array or hash values is making the value a key!
-      			next if key.class == Array
-      			next if key.class == Hash 
-        		cc = child_class(key, val)
-			if val.is_a?(Hash) and val.has_key?(:component)
-				val[:component].each do |x|
-        				self.children << cc.new(key, x, [])
-				end
-			else
-        			self.children << cc.new(key, val)
-			end
-    		end
-		end
-	self.errors = err
+    if cs.nil?
+    else
+      cs.each_key do |key|
+        val = cs[key]
+        # iteration of array or hash values is making the value a key!
+        next if key.class == Array
+        next if key.class == Hash 
+        cc = child_class(key, val)
+        if val.is_a?(Hash) and val.has_key?(:component)
+          val[:component].each do |x|
+            self.children << cc.new(key, x, [])
+          end
+        else
+          self.children << cc.new(key, val)
+        end
+      end
+    end
+    self.errors = err
   end
 
   def get_errors
-	  self.errors
+    self.errors
   end
 
   def child_class key, val
     if val.is_a?(Hash) and val.has_key?(:component)
-	    base_class = component_base_class
+      base_class = component_base_class
     elsif !(val.is_a?(Hash) and !val.has_key?(:value) ) 
-	    base_class = property_base_class
+      base_class = property_base_class
     else
-	    base_class = component_base_class
+      base_class = component_base_class
     end
     return base_class if key == :CLASS or key == :OBJECT or key == :METHOD
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
@@ -66,17 +66,17 @@ class Vobject::Component
   end
 
   def to_hash
-    		a = {}
-    		children.each do |c|
-			if c.is_a?(Vobject::Component)
-				a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
-			elsif c.is_a?(Vobject::Property)
-				a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
-			else
-				a[c.name] = c.to_hash
-			end
-    		end
-    		ret = {comp_name => a }
+    a = {}
+    children.each do |c|
+      if c.is_a?(Vobject::Component)
+        a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
+      elsif c.is_a?(Vobject::Property)
+        a = a.merge(c.to_hash) {|key, old, new| [old, new].flatten }
+      else
+        a[c.name] = c.to_hash
+      end
+    end
+    ret = {comp_name => a }
     ret
   end
 
@@ -99,7 +99,7 @@ class Vobject::Component
   end
 
   def parameter_base_class
-	  Vobject::Parameter
+    Vobject::Parameter
   end
 
   def raise_invalid_initialization

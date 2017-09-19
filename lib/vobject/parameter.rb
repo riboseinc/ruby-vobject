@@ -8,14 +8,14 @@ module Vobject
     def initialize key, options
       self.param_name = key
       if options.class == Array 
-	self.multiple = []
-	options.each {|v|
+        self.multiple = []
+        options.each {|v|
           self.multiple << parameter_base_class.new(key, v)
           self.param_name = key
-	}
+        }
       else
         self.value = options
-     end
+      end
 
       raise_invalid_initialization(key, name) if key != name
     end
@@ -25,13 +25,13 @@ module Vobject
       line = "#{param_name.to_s.gsub(/_/,'-')}"
       line << "=" 
       if self.multiple
-	        arr = []
-      		self.multiple.each {|v|
-			arr << to_s_line(v.value.to_s)
-		}
-		line << arr.join(',')
+        arr = []
+        self.multiple.each {|v|
+          arr << to_s_line(v.value.to_s)
+        }
+        line << arr.join(',')
       else
-	      	line << to_s_line(self.value.to_s)
+        line << to_s_line(self.value.to_s)
       end
       line
     end
@@ -40,23 +40,23 @@ module Vobject
       # RFC 6868
       val = val.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
       if val =~ /[:;,]/
-	      val = '"' + val + '"'
+        val = '"' + val + '"'
       end
       val
     end
 
-  def to_hash
-    a = {}
-    if self.multiple
+    def to_hash
+      a = {}
+      if self.multiple
         val = []
         self.multiple.each do |c|
-            val << c.value
+          val << c.value
         end
         return {param_name => val}
-    else
+      else
         return {param_name => value}
+      end
     end
-  end
 
     private
 
@@ -82,9 +82,9 @@ module Vobject
       "text"
     end
 
-          def parameter_base_class
-		                Vobject::Parameter
-	  end
+    def parameter_base_class
+      Vobject::Parameter
+    end
 
 
     def raise_invalid_initialization(key, name)
@@ -93,4 +93,4 @@ module Vobject
 
   end
 
- end
+end

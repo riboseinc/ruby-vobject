@@ -8,21 +8,21 @@ class Vcard < Vobject::Component
 
   class << self
 
-  def blank version
-    self.new :VERSION => {:value => version}
-  end
+    def blank version
+      self.new :VERSION => {:value => version}
+    end
 
-  def decode vcard_str, version=nil
-	  version_str = version.nil? ? '4.0' : /\nVERSION:([^\n\r]+)/i.match(vcard_str)[1]
-	  return self.blank(version_str).parse(vcard_str)
-  end
+    def decode vcard_str, version=nil
+      version_str = version.nil? ? '4.0' : /\nVERSION:([^\n\r]+)/i.match(vcard_str)[1]
+      return self.blank(version_str).parse(vcard_str)
+    end
 
-  def parse vcf, version, strict
-	  hash = version == '3.0' ? Vcard::V3_0::Component.parse(vcf, strict) : Vcard::V4_0::Component.parse(vcf, strict)
-	  #comp_name = hash.keys.first
-	  #return self.new(comp_name, hash[:vobject][comp_name], hash[:errors] )
-	  hash
-  end
+    def parse vcf, version, strict
+      hash = version == '3.0' ? Vcard::V3_0::Component.parse(vcf, strict) : Vcard::V4_0::Component.parse(vcf, strict)
+      #comp_name = hash.keys.first
+      #return self.new(comp_name, hash[:vobject][comp_name], hash[:errors] )
+      hash
+    end
 
 
     private
@@ -34,12 +34,12 @@ class Vcard < Vobject::Component
   end
 
   def encode version
-	  return self.to_s
+    return self.to_s
   end
 
   def initialize version
-	  self.version = version
-	  super :VCARD, {:VERSION => {:value => version}}
+    self.version = version
+    super :VCARD, {:VERSION => {:value => version}}
   end
 
   private
