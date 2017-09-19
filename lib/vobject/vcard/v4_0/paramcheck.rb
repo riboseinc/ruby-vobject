@@ -1,7 +1,6 @@
 require "set"
 require "uri"
 require "date"
-#require "tzinfo"
 include Rsec::Helpers
 require "vobject/vcard/version"
 require "vobject"
@@ -9,7 +8,6 @@ require "vobject"
 module Vcard::V4_0
   class Paramcheck
     class << self
-
       def paramcheck(strict, prop, params, ctx)
         if params && params[:TYPE]
           case prop
@@ -30,14 +28,13 @@ module Vcard::V4_0
             :FBURL, :CALADRURI, :CALURI, :UID, :TZ
             # no-op
           when :TEL, :KEY
-            if params[:VALUE] == 'uri'
+            if params[:VALUE] == "uri"
             else
               parse_err(strict, errors, ":MEDIATYPE parameter given for #{prop} with :VALUE of text", ctx)
             end
           when :RELATED
-            if params[:VALUE] == 'text'
+            if params[:VALUE] == "text"
               parse_err(strict, errors, ":MEDIATYPE parameter given for #{prop} with :VALUE of text", ctx)
-            else
             end
           when /^x/i
           else
@@ -49,9 +46,8 @@ module Vcard::V4_0
           when :BDAY, :ANNIVERSARY
             # no-op
           when :DEATHDATE
-            if params[:VALUE] == 'text'
+            if params[:VALUE] == "text"
               parse_err(strict, errors, ":CALSCALE parameter given for #{prop} with :VALUE of text", ctx)
-            else
             end
           when /^x/i
             # no-op
@@ -86,12 +82,12 @@ module Vcard::V4_0
             # no-op
           when :BDAY, :ANNIVERSARY, :DEATHDATE
             # added :ANNIVERSARY per errata
-            if params[:VALUE] == 'text'
+            if params[:VALUE] == "text"
             else
               parse_err(strict, errors, ":LANGUAGE parameter given for #{prop} with :VALUE of date/time", ctx)
             end
           when :RELATED
-            if params[:VALUE] == 'text'
+            if params[:VALUE] == "text"
             else
               parse_err(strict, errors, ":LANGUAGE parameter given for #{prop} with :VALUE of uri", ctx)
             end
@@ -142,7 +138,7 @@ module Vcard::V4_0
         end
         if params && params[:SORT_AS]
           case prop
-          when  :N, :ORG
+          when :N, :ORG
             # no-op
           when /^x/i
             # no-op
@@ -193,7 +189,7 @@ module Vcard::V4_0
             parse_err(strict, errors, ":INDEX parameter given for #{prop}", ctx)
           end
         end
-        params.each { |p|
+        params.each do |p|
           case p
           when :LANGUAGE, :VALUE, :PREF, :PID, :TYPE, :GEO, :TZ, :SORT_AS, :CALSCALE,
             :LABEL, :ALTID
@@ -215,38 +211,38 @@ module Vcard::V4_0
               parse_err(strict, errors, "#{p} parameter given for #{prop}", ctx)
             end
           end
-        }
+        end
         case prop
         when :SOURCE, :PHOTO, :IMPP, :GEO, :LOGO, :MEMBER, :SOUND, :URL, :FBURL,
           :CALADRURI, :CALURI
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "uri"
-          }
+          end
         when :LANG
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "language-tag"
-          }
+          end
         when :REV
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "timestamp"
-          }
+          end
         when :KIND, :XML, :FN, :N, :NICKNAME, :GENDER, :ADR, :EMAIL, :TITLE, :ROLE, :ORG,
           :CATEGORIES, :NOTE, :PRODID, :VERSION
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "text"
-          }
+          end
         when :BDAY, :ANNIVERSARY, :DEATHDATE
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "date-and-or-time" && val != "text"
-          }
+          end
         when :TEL, :RELATED, :UID, :KEY, :BIRTHPLACE, :DEATHPLACE
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "uri" && val != "text"
-          }
+          end
         when :TZ
-          params.each { |key, val|
+          params.each do |key, val|
             parse_err(strict, errors, "illegal value #{val} given for parameter #{key} of #{prop}", ctx) if key == :VALUE && val != "uri" && val != "text" && val != "utc-offset"
-          }
+          end
         when :EXPERTISE
           if params && params[:LEVEL]
             parse_err(strict, errors, "illegal value #{params[:LEVEL]} given for parameter :LEVEL of #{prop}", ctx) unless params[:LEVEL] =~ /^(beginner|average|expert)$/i
@@ -255,7 +251,6 @@ module Vcard::V4_0
           if params && params[:LEVEL]
             parse_err(strict, errors, "illegal value #{params[:LEVEL]} given for parameter :LEVEL of #{prop}", ctx) unless params[:LEVEL] =~ /^(high|medium|low)$/i
           end
-        else
         end
       end
 

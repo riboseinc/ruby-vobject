@@ -25,15 +25,15 @@ module C
   }
   DATE_TIME = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                   /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, _, h, m, s, z|
-    z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new({:time => Time.local(yy, mm, dd, h, m, s), :zone => ""}) :
-      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({:time => Time.utc(yy, mm, dd, h, m, s), :zone => "Z"})
+    z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new({time: Time.local(yy, mm, dd, h, m, s), zone: ""}) :
+      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({time: Time.utc(yy, mm, dd, h, m, s), zone: "Z"})
   end
   DATE_TIME_UTC = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
                       /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, _, h, m, s, z|
-    Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({:time => Time.utc(yy, mm, dd, h, m, s), :zone => "Z"})
+    Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({time: Time.utc(yy, mm, dd, h, m, s), zone: "Z"})
   end
   TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) { |h, m, s, z|
-    hash = {:hour => h, :min => m, :sec => s}
+    hash = {hour: h, min: m, sec: s}
     hash[:utc] = not(z.empty?)
     hash
   }
@@ -67,19 +67,19 @@ module C
     beginend	= /BEGIN/i.r | /END/i.r
   NAME_VCAL = C::XNAME_VCAL | seq( "".r ^ beginend, C::IANATOKEN )[1]
   NAME_VCARD = C::XNAME_VCARD | seq( "".r ^ beginend, C::IANATOKEN )[1]
-  durday = seq(/[0-9]+/.r, 'D') { |d, _| {:days => d.to_i }}
-  dursecond = seq(/[0-9]+/.r, 'S')  { |d, _| {:seconds => d.to_i }}
+  durday = seq(/[0-9]+/.r, 'D') { |d, _| {days: d.to_i }}
+  dursecond = seq(/[0-9]+/.r, 'S')  { |d, _| {seconds: d.to_i }}
   durminute = seq(/[0-9]+/.r, 'M', dursecond._?)  { |d, _, s|
-    hash =	{:minutes => d.to_i }
+    hash =	{minutes: d.to_i }
     hash = hash.merge s[0] unless s.empty?
     hash
   }
   durhour = seq(/[0-9]+/.r, 'H', durminute._?)  { |d, _, m|
-    hash =	{:hours => d.to_i }
+    hash =	{hours: d.to_i }
     hash = hash.merge m[0] unless m.empty?
     hash
   }
-  durweek = seq(/[0-9]+/.r, 'W')  { |d, _| {:weeks => d.to_i }}
+  durweek = seq(/[0-9]+/.r, 'W')  { |d, _| {weeks: d.to_i }}
   durtime1 = durhour | durminute | dursecond
   durtime = seq('T', durtime1) { |_, d| d }
   durdate = seq(durday, durtime._?) { |d, t|
@@ -173,7 +173,7 @@ module C
     /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r
 
   UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) { |s, h, m, z|
-    h = {:sign => s, :hour => h, :min => m}
+    h = {sign: s, hour: h, min: m}
     h[:sec] = z[0] unless z.empty?
     h
   }

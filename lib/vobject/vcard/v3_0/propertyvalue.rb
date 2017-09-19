@@ -229,12 +229,12 @@ module Vcard::V3_0
 
       def to_hash
         ret = {
-          :year => self.value[:year],
-          :month => self.value[:month],
-          :day => self.value[:day],
-          :hour => self.value[:hour],
-          :min => self.value[:min],
-          :sec => self.value[:sec],
+          year: self.value[:year],
+          month: self.value[:month],
+          day: self.value[:day],
+          hour: self.value[:hour],
+          min: self.value[:min],
+          sec: self.value[:sec],
         }
         ret[:zone] = self.value[:zone] if self.value[:zone]
         ret

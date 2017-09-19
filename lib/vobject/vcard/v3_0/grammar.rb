@@ -144,7 +144,7 @@ module Vcard::V3_0
         parse_err("Missing FN attribute") unless rest.has_key?(:FN)
         parse_err("Missing N attribute") unless rest.has_key?(:N)
         rest.delete(:END)
-        hash = { :VCARD => v.merge( rest ), :errors => self.errors.flatten }
+        hash = { :VCARD => v.merge( rest ), errors: self.errors.flatten }
         hash
       }
       vobject.eof
@@ -164,7 +164,7 @@ module Vcard::V3_0
           raise @ctx.generate_error "source"
         else
           self.errors << @ctx.generate_error("source")
-          ret = { :VCARD => nil, :errors => self.errors.flatten }
+          ret = { :VCARD => nil, errors: self.errors.flatten }
         end
       end
       Rsec::Fail.reset

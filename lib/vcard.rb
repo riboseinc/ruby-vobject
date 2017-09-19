@@ -9,7 +9,7 @@ class Vcard < Vobject::Component
   class << self
 
     def blank version
-      self.new :VERSION => {:value => version}
+      self.new :VERSION => {value: version}
     end
 
     def decode vcard_str, version=nil
@@ -39,7 +39,7 @@ class Vcard < Vobject::Component
 
   def initialize version
     self.version = version
-    super :VCARD, {:VERSION => {:value => version}}
+    super :VCARD, {:VERSION => {value: version}}
   end
 
   private

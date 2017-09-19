@@ -74,7 +74,7 @@ class Vobject::Property
         ret[prop_name] = ret[prop_name] << c.to_hash[prop_name]
       end
     else
-      ret = {prop_name => {:value => value.to_hash }}
+      ret = {prop_name => {value: value.to_hash }}
       ret[prop_name][:group] = group unless group.nil?
       if params
         ret[prop_name][:params] = {}

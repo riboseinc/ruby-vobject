@@ -18,7 +18,7 @@ module Vcard::V3_0
       def binary
         binary  = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) { |b, q|
           ( (b.length + q.length) % 4 == 0 ) ? Vcard::V3_0::PropertyValue::Binary.new(b + q)
-          : {:error => 'Malformed binary coding'}
+          : {error: 'Malformed binary coding'}
         }
         binary.eof
       end
@@ -34,8 +34,8 @@ module Vcard::V3_0
         float           = prim(:double)
         geovalue    = seq(float, ";", float) { |a, _, b|
           ( a <= 180.0 && a >= -180.0 && b <= 180 && b > -180 ) ?
-            Vcard::V3_0::PropertyValue::Geovalue.new({:lat => a, :long => b}) :
-            {:error => 'Latitude/Longitude outside of range -180..180'}
+            Vcard::V3_0::PropertyValue::Geovalue.new({lat: a, long: b}) :
+            {error: 'Latitude/Longitude outside of range -180..180'}
         }
         geovalue.eof
       end
@@ -77,7 +77,7 @@ module Vcard::V3_0
       def uri
         uri         = /\S+/.r.map { |s|
           s =~ URI::regexp ? Vcard::V3_0::PropertyValue::Uri.new(s) :
-            {:error => 'Invalid URI'}
+            {error: 'Invalid URI'}
         }
         uri.eof
       end
@@ -107,14 +107,14 @@ module Vcard::V3_0
 
       def dateT
         dateT	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
-          Vcard::V3_0::PropertyValue::Date.new({:year => yy, :month => mm, :day => dd})
+          Vcard::V3_0::PropertyValue::Date.new({year: yy, month: mm, day: dd})
         }
         dateT.eof
       end
 
       def time_t	
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
-          {:sign => s, :hour => h, :min => m}
+          {sign: s, hour: h, min: m}
         }
         zone	= utc_offset.map { |u| u  } |
           /Z/i.r.map { |z| "Z" }
@@ -123,7 +123,7 @@ module Vcard::V3_0
         second	= /[0-9]{2}/.r
         secfrac	= seq(",".r >> /[0-9]+/)
         time	= seq(hour, /:/._?, minute, /:/._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
-          h = {:hour => h, :min => m, :sec => s}
+          h = {hour: h, min: m, sec: s}
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
           Vcard::V3_0::PropertyValue::Time.new(h)
@@ -133,7 +133,7 @@ module Vcard::V3_0
 
       def date_time
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
-          {:sign => s, :hour => h, :min => m}
+          {sign: s, hour: h, min: m}
         }
         zone	= utc_offset.map { |u| u  } |
           /Z/i.r.map { |z| "Z" }
@@ -142,10 +142,10 @@ module Vcard::V3_0
         second	= /[0-9]{2}/.r
         secfrac	= seq(",".r >> /[0-9]+/)
         date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
-          {:year => yy, :month => mm, :day => dd}
+          {year: yy, month: mm, day: dd}
         }
         time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
-          h = {:hour => h, :min => m, :sec => s}
+          h = {hour: h, min: m, sec: s}
           if z.empty?
             h[:zone] = ""
           else
@@ -156,7 +156,7 @@ module Vcard::V3_0
         }
         date_time	= seq(date, 'T', time) { |d, _, t|
           #d = d.merge t
-          #res = {:time => Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), :zone => d[:zone]}
+          #res = {time: Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), zone: d[:zone]}
           #res[:secfrac] = h[:secfrac] if h[:secfrac]
           Vcard::V3_0::PropertyValue::DateTimeLocal.new(d.merge t)
         }
@@ -165,7 +165,7 @@ module Vcard::V3_0
 
       def date_or_date_time
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
-          {:sign => s, :hour => h, :min => m}
+          {sign: s, hour: h, min: m}
         }
         zone	= utc_offset.map { |u| u  } |
           /Z/i.r.map { |z| "Z" }
@@ -174,21 +174,21 @@ module Vcard::V3_0
         second	= /[0-9]{2}/.r
         secfrac	= seq(",".r >> /[0-9]+/)
         date	= seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) { |yy, _, mm, _, dd|
-          {:year => yy, :month => mm, :day => dd}
+          {year: yy, month: mm, day: dd}
         }
         time	= seq(hour, /:/.r._?, minute, /:/.r._?, second, secfrac._?, zone._?) { |h, _, m, _, s, f, z|
-          h = {:hour => h, :min => m, :sec => s}
+          h = {hour: h, min: m, sec: s}
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
           h
         }
         date_or_date_time	= seq(date, 'T', time) { |d, _, t|
           #d = d.merge t
-          #res = {:time => Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), :zone => d[:zone]}
+          #res = {time: Time.local(d[:year], d[:month], d[:day], d[:hour], d[:min], d[:sec]), zone: d[:zone]}
           #res[:secfrac] = d[:secfrac] if d[:secfrac]
           Vcard::V3_0::PropertyValue::DateTimeLocal.new(d.merge t)
         } | date.map { |d|
-          #res = {:time => Time.local(d[:year], d[:month], d[:day], 0, 0, 0), :zone => d[:zone]}
+          #res = {time: Time.local(d[:year], d[:month], d[:day], 0, 0, 0), zone: d[:zone]}
           Vcard::V3_0::PropertyValue::Date.new(d)
         }
         date_or_date_time.eof
@@ -196,7 +196,7 @@ module Vcard::V3_0
 
       def utc_offset
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) { |s, h, _, m|
-          Vcard::V3_0::PropertyValue::Utcoffset.new({:sign => s, :hour => h, :min => m})
+          Vcard::V3_0::PropertyValue::Utcoffset.new({sign: s, hour: h, min: m})
         }
         utc_offset.eof
       end
@@ -223,25 +223,25 @@ module Vcard::V3_0
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
-            {:surname => a, :givenname => b, :middlename => c, :honprefix => d, :honsuffix => e}
+            {surname: a, givenname: b, middlename: c, honprefix: d, honsuffix: e}
           } | seq(component, ";", component, ";", component, ";", component) { |a, _, b, _, c, _, d|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
-            {:surname => a, :givenname => b, :middlename => c, :honprefix => d, :honsuffix => ""}
+            {surname: a, givenname: b, middlename: c, honprefix: d, honsuffix: ""}
           } | seq(component, ";", component, ";", component) { |a, _, b, _, c|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
-            {:surname => a, :givenname => b, :middlename => c, :honprefix => "", :honsuffix => ""}
+            {surname: a, givenname: b, middlename: c, honprefix: "", honsuffix: ""}
           } | seq(component, ";", component) { |a, _, b|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
-            {:surname => a, :givenname => b, :middlename => "", :honprefix => "", :honsuffix => ""}
+            {surname: a, givenname: b, middlename: "", honprefix: "", honsuffix: ""}
           } | component.map { |a|
             a = a[0] if a.length == 1
-            {:surname => 'a', :givenname => "", :middlename => "", :honprefix => "", :honsuffix => ""}
+            {surname: 'a', givenname: "", middlename: "", honprefix: "", honsuffix: ""}
           }
           fivepartname 	= fivepartname1.map { |n| Vcard::V3_0::PropertyValue::Fivepartname.new(n)}
           fivepartname.eof
@@ -262,8 +262,8 @@ module Vcard::V3_0
             e = e[0] if e.length == 1
             f = f[0] if f.length == 1
             g = g[0] if g.length == 1
-            {:pobox => a, :ext => b, :street => c,
-             :locality => d, :region => e, :code => f, :country => g}
+            {pobox: a, ext: b, street: c,
+             locality: d, region: e, code: f, country: g}
           } | seq(component, ";", component, ";", component, ";", component, ";",
                   component, ";", component) { |a, _, b, _, c, _, d, _, e, _, f|
             a = a[0] if a.length == 1
@@ -272,8 +272,8 @@ module Vcard::V3_0
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
             f = f[0] if f.length == 1
-            {:pobox => a, :ext => b, :street => c,
-             :locality => d, :region => e, :code => f, :country => ""}
+            {pobox: a, ext: b, street: c,
+             locality: d, region: e, code: f, country: ""}
           } | seq(component, ";", component, ";", component, ";", component, ";",
                   component) { |a, _, b, _, c, _, d, _, e|
             a = a[0] if a.length == 1
@@ -281,30 +281,30 @@ module Vcard::V3_0
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
             e = e[0] if e.length == 1
-            {:pobox => a, :ext => b, :street => c,
-             :locality => d, :region => e, :code => "", :country => ""}
+            {pobox: a, ext: b, street: c,
+             locality: d, region: e, code: "", country: ""}
           } | seq(component, ";", component, ";", component, ";", component) { |a, _, b, _, c, _, d|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
             d = d[0] if d.length == 1
-            {:pobox => a, :ext => b, :street => c,
-             :locality => d, :region => "", :code => "", :country => ""}
+            {pobox: a, ext: b, street: c,
+             locality: d, region: "", code: "", country: ""}
           } | seq(component, ";", component, ";", component) { |a, _, b, _, c|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
             c = c[0] if c.length == 1
-            {:pobox => a, :ext => b, :street => c,
-             :locality => "", :region => "", :code => "", :country => ""}
+            {pobox: a, ext: b, street: c,
+             locality: "", region: "", code: "", country: ""}
           } | seq(component, ";", component) { |a, _, b|
             a = a[0] if a.length == 1
             b = b[0] if b.length == 1
-            {:pobox => a, :ext => b, :street => "",
-             :locality => "", :region => "", :code => "", :country => ""}
+            {pobox: a, ext: b, street: "",
+             locality: "", region: "", code: "", country: ""}
           } | component.map { |a|
             a = a[0] if a.length == 1
-            {:pobox => a, :ext => "", :street => "",
-             :locality => "", :region => "", :code => "", :country => ""}
+            {pobox: a, ext: "", street: "",
+             locality: "", region: "", code: "", country: ""}
           }
           address 	= address1.map { |n| Vcard::V3_0::PropertyValue::Address.new(n)}
           address.eof
@@ -351,7 +351,7 @@ module Vcard::V3_0
         when :N
           ret = fivepartname._parse ctx1
         when :PHOTO, :LOGO, :SOUND
-          if params && params[:VALUE] == 'uri'
+          if params && params[:VALUE] == "uri"
             ret = uri._parse ctx1
           else
             ret = binary._parse ctx1
@@ -385,7 +385,7 @@ module Vcard::V3_0
         when :TEL
           ret = phoneNumber._parse ctx1
         when :TZ
-          if params && params[:VALUE] == 'text'
+          if params && params[:VALUE] == "text"
             ret = textT._parse ctx1
           else
             ret = utc_offset._parse ctx1
@@ -393,7 +393,7 @@ module Vcard::V3_0
         when :GEO
           ret = geovalue._parse ctx1
         when :AGENT
-          if params && params[:VALUE] == 'uri'
+          if params && params[:VALUE] == "uri"
             ret = uri._parse ctx1
           else
             # unescape

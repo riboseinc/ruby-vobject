@@ -8,7 +8,7 @@ class Vobject::Component
   attr_accessor :comp_name, :children, :multiple_components, :errors
 
   def blank version
-    return self.ingest :VOBJECT, {:VERSION => {:value => version}}
+    return self.ingest :VOBJECT, {:VERSION => {value: version}}
   end
 
 

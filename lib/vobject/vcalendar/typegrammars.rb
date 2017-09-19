@@ -36,12 +36,12 @@ module Vobject::Vcalendar
         ordwk 	= /[0-9]{1,2}/.r
         weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
         weekdaynum1	= seq(C::SIGN._?, ordwk) { |s, o|
-          h = {:ordwk => o}
+          h = {ordwk: o}
           h[:sign] = s[0] unless s.empty?
           h
         }
         weekdaynum 	= seq(weekdaynum1._?, weekday) { |a, b|
-          h = {:weekday => b}
+          h = {weekday: b}
           h = h.merge a[0] unless a.empty?
           h
         }
@@ -50,7 +50,7 @@ module Vobject::Vcalendar
         } | weekdaynum.map { |w| [w]}
         ordmoday 	= /[0-9]{1,2}/.r
         monthdaynum = seq(C::SIGN._?, ordmoday) { |s, o|
-          h = {:ordmoday => o}
+          h = {ordmoday: o}
           h[:sign] = s[0] unless s.empty?
           h
         }
@@ -59,7 +59,7 @@ module Vobject::Vcalendar
         } | monthdaynum.map { |m| [m]}
         ordyrday 	= /[0-9]{1,3}/.r
         yeardaynum	= seq(C::SIGN._?, ordyrday) { |s, o|
-          h = {:ordyrday => o}
+          h = {ordyrday: o}
           h[:sign] = s[0] unless s.empty?
           h
         }
@@ -67,7 +67,7 @@ module Vobject::Vcalendar
           [y, l].flatten
         } | yeardaynum.map { |y| [y]}
         weeknum 	= seq(C::SIGN._?, ordwk) { |s, o|
-          h = {:ordwk => o}
+          h = {ordwk: o}
           h[:sign] = s[0] unless s.empty?
           h
         }
@@ -92,23 +92,23 @@ module Vobject::Vcalendar
           /islamic-rgsa/i.r | /iso8601/i.r | /japanese/i.r | /persian/i.r |
           /roc/i.r | /islamicc/i.r | /gregorian/i.r
         skip	= /OMIT/i.r | /BACKWARD/i.r | /FORWARD/i.r
-        recur_rule_part = 	seq(/FREQ/i.r, "=", freq) { |k, _, v| {:freq => v} } |
-          seq(/UNTIL/i.r, "=", enddate) { |k, _, v| {:until => v} } |
-          seq(/COUNT/i.r, "=", /[0-9]+/i.r) { |k, _, v| {:count => v} } |
-          seq(/INTERVAL/i.r, "=", /[0-9]+/i.r) { |k, _, v| {:interval => v} } |
-          seq(/BYSECOND/i.r, "=", byseclist) { |k, _, v| {:bysecond => v} } |
-          seq(/BYMINUTE/i.r, "=", byminlist) { |k, _, v| {:byminute => v} } |
-          seq(/BYHOUR/i.r, "=", byhrlist) { |k, _, v| {:byhour => v} } |
-          seq(/BYDAY/i.r, "=", bywdaylist) { |k, _, v| {:byday => v} } |
-          seq(/BYMONTHDAY/i.r, "=", bymodaylist) { |k, _, v| {:bymonthday => v} } |
-          seq(/BYYEARDAY/i.r, "=", byyrdaylist) { |k, _, v| {:byyearday => v} } |
-          seq(/BYWEEKNO/i.r, "=", bywknolist)  { |k, _, v| {:byweekno => v} } |
-          seq(/BYMONTH/i.r, "=", bymolist)  { |k, _, v| {:bymonth => v} } |
-          seq(/BYSETPOS/i.r, "=", bysplist)  { |k, _, v| {:bysetpos => v} } |
-          seq(/WKST/i.r, "=", weekday)  { |k, _, v| {:wkst => v} } |
+        recur_rule_part = 	seq(/FREQ/i.r, "=", freq) { |k, _, v| {freq: v} } |
+          seq(/UNTIL/i.r, "=", enddate) { |k, _, v| {until: v} } |
+          seq(/COUNT/i.r, "=", /[0-9]+/i.r) { |k, _, v| {count: v} } |
+          seq(/INTERVAL/i.r, "=", /[0-9]+/i.r) { |k, _, v| {interval: v} } |
+          seq(/BYSECOND/i.r, "=", byseclist) { |k, _, v| {bysecond: v} } |
+          seq(/BYMINUTE/i.r, "=", byminlist) { |k, _, v| {byminute: v} } |
+          seq(/BYHOUR/i.r, "=", byhrlist) { |k, _, v| {byhour: v} } |
+          seq(/BYDAY/i.r, "=", bywdaylist) { |k, _, v| {byday: v} } |
+          seq(/BYMONTHDAY/i.r, "=", bymodaylist) { |k, _, v| {bymonthday: v} } |
+          seq(/BYYEARDAY/i.r, "=", byyrdaylist) { |k, _, v| {byyearday: v} } |
+          seq(/BYWEEKNO/i.r, "=", bywknolist)  { |k, _, v| {byweekno: v} } |
+          seq(/BYMONTH/i.r, "=", bymolist)  { |k, _, v| {bymonth: v} } |
+          seq(/BYSETPOS/i.r, "=", bysplist)  { |k, _, v| {bysetpos: v} } |
+          seq(/WKST/i.r, "=", weekday)  { |k, _, v| {wkst: v} } |
           # RFC 7529
-          seq(/RSCALE/i.r, "=", rscale)  { |k, _, v| {:rscale => v} } |
-          seq(/SKIP/i.r, "=", skip)  { |k, _, v| {:skip => v} }
+          seq(/RSCALE/i.r, "=", rscale)  { |k, _, v| {rscale: v} } |
+          seq(/SKIP/i.r, "=", skip)  { |k, _, v| {skip: v} }
         recur1 	= seq(recur_rule_part, ";", lazy{recur1}) { |h, _, r| h.merge r } |
           recur_rule_part
         recur	= recur1.map { |r| Vobject::Vcalendar::PropertyValue::Recur.new r }
@@ -124,7 +124,7 @@ module Vobject::Vcalendar
         integer 	= prim(:int32).map { |a|
           (a >= 0 && a <= 100) ?
             (Vobject::Vcalendar::PropertyValue::PercentComplete.new a) : 
-            {:error => 'Percentage outside of range 0..100'}
+            {error: 'Percentage outside of range 0..100'}
         }
         integer.eof
       end
@@ -133,7 +133,7 @@ module Vobject::Vcalendar
         integer 	= prim(:int32).map { |a|
           (a >= 0 && a <= 9) ?
             (Vobject::Vcalendar::PropertyValue::Priority.new a) : 
-            {:error => 'Percentage outside of range 0..100'}
+            {error: 'Percentage outside of range 0..100'}
         }
         integer.eof
       end
@@ -153,8 +153,8 @@ module Vobject::Vcalendar
         # TODO confirm that Rsec can do signs!
         geovalue	= seq(float, ";", float) { |a, _, b|
           ( a <= 180.0 && a >= -180.0 && b <= 180 && b > -180 ) ?
-            Vobject::Vcalendar::PropertyValue::Geovalue.new({:lat => a, :long => b}) :
-            {:error => 'Latitude/Longitude outside of range -180..180'}
+            Vobject::Vcalendar::PropertyValue::Geovalue.new({lat: a, long: b}) :
+            {error: 'Latitude/Longitude outside of range -180..180'}
         }
         geovalue.eof
       end
@@ -180,7 +180,7 @@ module Vobject::Vcalendar
       def binary
         binary	= seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) { |b, q|
           ( (b.length + q.length) % 4 == 0 ) ? Vobject::Vcalendar::PropertyValue::Binary.new(b + q)
-          : {:error => 'Malformed binary coding'}
+          : {error: 'Malformed binary coding'}
         }
         binary.eof
       end
@@ -189,7 +189,7 @@ module Vobject::Vcalendar
         uri         = /\S+/.r.map { |s|
           s =~ URI::regexp ?
             Vobject::Vcalendar::PropertyValue::Uri.new(s) :
-            {:error => 'Invalid URI'}
+            {error: 'Invalid URI'}
         }
         uri.eof
       end
@@ -211,8 +211,8 @@ module Vobject::Vcalendar
         @req_status = Set.new %w{2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 2.11 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13 3.14 4.0 5.0 5.1 5.2 5.3}
         extdata = seq(";".r, C::TEXT) { |_, t| t}
         request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r, ";".r, C::TEXT, extdata._?) { |n, _, t1, t2|
-          return {:error => "Invalid request status #{n}"} unless @req_status.include?(n) #RFC 5546   			
-          hash = {:statcode => n, :statdesc => t1}
+          return {error: "Invalid request status #{n}"} unless @req_status.include?(n) #RFC 5546   			
+          hash = {statcode: n, statdesc: t1}
           hash[:extdata] = t2[0] unless t2.empty?
           Vobject::Vcalendar::PropertyValue::Requeststatusvalue.new hash
         }
@@ -293,10 +293,10 @@ module Vobject::Vcalendar
 
       def periodlist
         period_explicit = seq(C::DATE_TIME, "/".r, C::DATE_TIME) { |s, _, e|
-          {:start => s, :end => e}
+          {start: s, end: e}
         }
         period_start    = seq(C::DATE_TIME, "/".r, C::DURATION) { |s, _, d|
-          {:start => s, :duration => Vobject::Vcalendar::PropertyValue::Duration.new(d)}
+          {start: s, duration: Vobject::Vcalendar::PropertyValue::Duration.new(d)}
         }
         period 	        = period_explicit | period_start
         periodlist1      = seq(period, ",".r, lazy{periodlist1}) { |p, _, l|
@@ -315,7 +315,7 @@ module Vobject::Vcalendar
 
       def utc_offset
         utc_offset 	= seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) { |sign, h, m, sec|
-          hash = {:sign => sign, :hr => h, :min => m }
+          hash = {sign: sign, hr: h, min: m }
           hash[:sec] = sec[0] unless sec.empty?
           Vobject::Vcalendar::PropertyValue::Utcoffset.new hash
         }
@@ -444,7 +444,7 @@ module Vobject::Vcalendar
                   tz = TZInfo::Timezone.get(params[:TZID])
                   ret = date_timeT._parse ctx1
                   # note that we use the registered tz information to map to UTC, rather than look up the values witin the VTIMEZONE component
-                  ret.value = {:time => tz.local_to_utc(ret.value[:time]), :zone => params[:TZID]}
+                  ret.value = {time: tz.local_to_utc(ret.value[:time]), zone: params[:TZID]}
                 rescue
                   # undefined timezone: default to floating local
                   ret = date_timeT._parse ctx1
@@ -465,7 +465,7 @@ module Vobject::Vcalendar
               tz = TZInfo::Timezone.get(params[:TZID])
               ret = date_timelist._parse ctx1
               ret.value.each { |x|
-                x.value = {:time => tz.local_to_utc(x.value[:time]), :zone => params[:TZID]}
+                x.value = {time: tz.local_to_utc(x.value[:time]), zone: params[:TZID]}
               }
             else
               ret = date_timelist._parse ctx1
@@ -484,7 +484,7 @@ module Vobject::Vcalendar
               tz = TZInfo::Timezone.get(params[:TZID])
               ret = date_timelist._parse ctx1
               ret.value.each { |x|
-                x.value = {:time => tz.local_to_utc(x.value[:time]), :zone => params[:TZID] }
+                x.value = {time: tz.local_to_utc(x.value[:time]), zone: params[:TZID] }
               }
             else
               ret = date_timelist._parse ctx1

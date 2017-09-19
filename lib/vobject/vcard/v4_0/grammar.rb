@@ -47,7 +47,7 @@ module Vcard::V4_0
         /GEO/i.r | /TZ/i.r | /LABEL/i.r | /INDEX/i.r | /LEVEL/i.r
       otherparamname = C::NAME_VCARD ^ paramname
       paramvalue 	= C::QUOTEDSTRING_VCARD.map { |s| rfc6868decode s } | C::PTEXT_VCARD.map { |s| rfc6868decode(s).upcase }
-      tzidvalue 	= seq("/".r._?, C::PTEXT_VCARD).map { |_, val| val}   
+      tzidvalue 	= seq("/".r._?, C::PTEXT_VCARD).map { |_, val| val }   
       calscalevalue = /GREGORIAN/i.r | C::IANATOKEN | C::XNAME_VCARD
       prefvalue	= /[0-9]{1,2}/i.r | '100'.r
       pidvalue	= /[0-9]+(\.[0-9]+)?/.r
@@ -105,39 +105,39 @@ module Vcard::V4_0
       levelvalue	= /beginner/i.r | /average/i.r | /expert/i.r | /high/i.r | /medium/i.r | /low/i.r
 
       param 	= seq(/ALTID/i.r, "=", paramvalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/LANGUAGE/i.r, "=", C::RFC5646LANGVALUE) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+        {name.upcase.tr("-", "_").to_sym => val.upcase }
       } | seq(/PREF/i.r, "=", prefvalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+        {name.upcase.tr("-", "_").to_sym => val.upcase }
       } | seq(/TYPE/i.r, "=", "\"".r >> typevaluelist << "\"".r) { |name, _, val|
         # not in spec but in examples. Errata ID 3488, "Held for Document Update": acknwoledged as error requiring an updated spec. With this included, TYPE="x,y,z" is a list of values; the proper ABNF behaviour is that "x,y,z" is interpreted as a single value
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/TYPE/i.r, "=", typevaluelist) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/MEDIATYPE/i.r, "=", mediavalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/CALSCALE/i.r, "=", calscalevalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/SORT-AS/i.r, "=", pvalueList) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/TZ/i.r, "=", tzvalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/GEO/i.r, "=", geourlvalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/VALUE/i.r, "=", valuetype) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/PID/i.r, "=", pidvaluelist) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/INDEX/i.r, "=", prim(:int32)) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(/LEVEL/i.r, "=", levelvalue) { |name, _, val|
-        {name.upcase.gsub(/-/,"_").to_sym => val.upcase}
+        {name.upcase.tr("-", "_").to_sym => val.upcase }
       } | seq(otherparamname, "=", pvalueList) { |name, _, val|
         val = val[0] if val.length == 1
-        {name.upcase.gsub(/-/,"_").to_sym => val}
+        {name.upcase.tr("-", "_").to_sym => val }
       } | seq(paramname, "=", pvalueList) { |name, _, val|
-        parse_err("Violated format of parameter value #{name} = #{val}")
+        parse_err("Violated format of parameter value #{name} = #{val }")
       }
 
       params	=  seq(";".r >> param, lazy { params } ) { |p, ps|
@@ -154,7 +154,7 @@ module Vcard::V4_0
 
       contentline = seq(linegroup._?, C::NAME_VCARD, params._?, ':',
                         C::VALUE, /[\r\n]/) do |group, name, params, _, value, _|
-        key =  name.upcase.gsub(/-/,"_").to_sym
+        key =  name.upcase.tr("-", "_").to_sym
         hash = { key => {} }
         self.errors << Vcard::V4_0::Paramcheck.paramcheck(self.strict, key, params.empty?  ? {} : params[0], @ctx)
         hash[key][:value], errors1 = Vcard::V4_0::Typegrammars.typematch(self.strict, key, params[0], :GENERIC, value)
@@ -164,7 +164,7 @@ module Vcard::V4_0
         hash
       end
       props	=  seq(contentline, lazy { props }) { |c, rest|
-        c.merge( rest ) { | key, old, new|
+        c.merge(rest) { | key, old, new|
           if @cardinality1[:PROP].include?(key.upcase) and
             !(new.is_a?(Array) and
               new[0].key?(:params) && new[0][:params].key?(:ALTID) and
@@ -185,7 +185,7 @@ module Vcard::V4_0
 
       calpropname = /VERSION/i.r
       calprop     = seq(calpropname, ':', C::VALUE, 	/[\r\n]/) { |key, _, value, _|
-        key = key.upcase.gsub(/-/,"_").to_sym
+        key = key.upcase.tr("-", "_").to_sym
         hash = { key => {} }
         hash[key][:value], errors1 = Vcard::V4_0::Typegrammars.typematch(self.strict, key, nil, :VCARD, value)
         self.errors << errors1
@@ -195,7 +195,7 @@ module Vcard::V4_0
         parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
         parse_err("Missing FN attribute") unless rest.has_key?(:FN)
         rest.delete(:END)
-        hash = { :VCARD => v.merge( rest ) , :errors => self.errors.flatten }
+        hash = { :VCARD => v.merge(rest) , errors: self.errors.flatten }
         hash
       }
       vobject.eof
@@ -215,7 +215,7 @@ module Vcard::V4_0
           raise @ctx.generate_error "source"
         else
           self.errors << @ctx.generate_error("source")
-          ret = { :VCARD => nil, :errors => self.errors.flatten }
+          ret = { :VCARD => nil, errors: self.errors.flatten }
         end
 
       end
