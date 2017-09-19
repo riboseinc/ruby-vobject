@@ -12,36 +12,33 @@ require_relative "./propertyvalue"
 
 module Vobject::Vcalendar
   class Typegrammars
-
     class << self
-
-
       # property value types, each defining their own parser
       def recur
         freq	= /SECONDLY/i.r | /MINUTELY/i.r | /HOURLY/i.r | /DAILY/i.r |
           /WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
         enddate 	= C::DATE_TIME | C::DATE
         seconds 	= /[0-9]{1,2}/.r
-        byseclist 	= seq(seconds, ",", lazy { byseclist }) { |s, _, l|
+        byseclist 	= seq(seconds << ",".r, lazy { byseclist }) { |s, l|
           [s, l].flatten
         } | seconds.map { |s| [s]}
         minutes 	= /[0-9]{1,2}/.r
-        byminlist 	= seq(minutes, ",", lazy { byminlist }) { |m, _, l|
+        byminlist 	= seq(minutes << ",".r, lazy { byminlist }) { |m, l|
           [m, l].flatten
         } | minutes.map { |m| [m]}
         hours 	= /[0-9]{1,2}/.r
-        byhrlist 	= seq(hours, ",", lazy { byhrlist }) { |h, _, l|
+        byhrlist 	= seq(hours << ",".r, lazy { byhrlist }) { |h, l|
           [h, l].flatten
         } | hours.map { |h| [h]}
         ordwk 	= /[0-9]{1,2}/.r
         weekday 	= /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
         weekdaynum1	= seq(C::SIGN._?, ordwk) { |s, o|
-          h = {ordwk: o}
+          h = { ordwk: o }
           h[:sign] = s[0] unless s.empty?
           h
         }
         weekdaynum 	= seq(weekdaynum1._?, weekday) { |a, b|
-          h = {weekday: b}
+          h = { weekday: b }
           h = h.merge a[0] unless a.empty?
           h
         }
@@ -92,23 +89,23 @@ module Vobject::Vcalendar
           /islamic-rgsa/i.r | /iso8601/i.r | /japanese/i.r | /persian/i.r |
           /roc/i.r | /islamicc/i.r | /gregorian/i.r
         skip	= /OMIT/i.r | /BACKWARD/i.r | /FORWARD/i.r
-        recur_rule_part = 	seq(/FREQ/i.r, "=", freq) { |k, _, v| {freq: v} } |
-          seq(/UNTIL/i.r, "=", enddate) { |k, _, v| {until: v} } |
-          seq(/COUNT/i.r, "=", /[0-9]+/i.r) { |k, _, v| {count: v} } |
-          seq(/INTERVAL/i.r, "=", /[0-9]+/i.r) { |k, _, v| {interval: v} } |
-          seq(/BYSECOND/i.r, "=", byseclist) { |k, _, v| {bysecond: v} } |
-          seq(/BYMINUTE/i.r, "=", byminlist) { |k, _, v| {byminute: v} } |
-          seq(/BYHOUR/i.r, "=", byhrlist) { |k, _, v| {byhour: v} } |
-          seq(/BYDAY/i.r, "=", bywdaylist) { |k, _, v| {byday: v} } |
-          seq(/BYMONTHDAY/i.r, "=", bymodaylist) { |k, _, v| {bymonthday: v} } |
-          seq(/BYYEARDAY/i.r, "=", byyrdaylist) { |k, _, v| {byyearday: v} } |
-          seq(/BYWEEKNO/i.r, "=", bywknolist)  { |k, _, v| {byweekno: v} } |
-          seq(/BYMONTH/i.r, "=", bymolist)  { |k, _, v| {bymonth: v} } |
-          seq(/BYSETPOS/i.r, "=", bysplist)  { |k, _, v| {bysetpos: v} } |
-          seq(/WKST/i.r, "=", weekday)  { |k, _, v| {wkst: v} } |
+        recur_rule_part = 	seq(/FREQ/i.r << "=".r, freq) { |k, v| {freq: v} } |
+          seq(/UNTIL/i.r << "=".r, enddate) { |k, v| {until: v} } |
+          seq(/COUNT/i.r << "=".r, /[0-9]+/i.r) { |k, v| {count: v} } |
+          seq(/INTERVAL/i.r << "=".r, /[0-9]+/i.r) { |k, v| {interval: v} } |
+          seq(/BYSECOND/i.r << "=".r, byseclist) { |k, v| {bysecond: v} } |
+          seq(/BYMINUTE/i.r << "=".r, byminlist) { |k, v| {byminute: v} } |
+          seq(/BYHOUR/i.r << "=".r, byhrlist) { |k, v| {byhour: v} } |
+          seq(/BYDAY/i.r << "=".r, bywdaylist) { |k, v| {byday: v} } |
+          seq(/BYMONTHDAY/i.r << "=".r, bymodaylist) { |k, v| {bymonthday: v} } |
+          seq(/BYYEARDAY/i.r << "=".r, byyrdaylist) { |k, v| {byyearday: v} } |
+          seq(/BYWEEKNO/i.r << "=".r, bywknolist)  { |k, v| {byweekno: v} } |
+          seq(/BYMONTH/i.r << "=".r, bymolist)  { |k, v| {bymonth: v} } |
+          seq(/BYSETPOS/i.r << "=".r, bysplist)  { |k, v| {bysetpos: v} } |
+          seq(/WKST/i.r << "=".r, weekday)  { |k, v| {wkst: v} } |
           # RFC 7529
-          seq(/RSCALE/i.r, "=", rscale)  { |k, _, v| {rscale: v} } |
-          seq(/SKIP/i.r, "=", skip)  { |k, _, v| {skip: v} }
+          seq(/RSCALE/i.r << "=".r, rscale)  { |k, v| {rscale: v} } |
+          seq(/SKIP/i.r << "=".r, skip)  { |k, v| {skip: v} }
         recur1 	= seq(recur_rule_part, ";", lazy {recur1}) { |h, _, r| h.merge r } |
           recur_rule_part
         recur	= recur1.map { |r| Vobject::Vcalendar::PropertyValue::Recur.new r }
@@ -355,7 +352,6 @@ module Vobject::Vcalendar
         color.eof
       end
 
-
       # text escapes: \\ \; \, \N \n
       def unescape(x)
         # temporarily escape \\ as \007f, which is disallowed in any text
@@ -367,11 +363,10 @@ module Vobject::Vcalendar
         registered_propname.eof
       end
 
-      def is_registered_propname?(x)
+      def registered_propname?(x)
         p = registered_propname.parse(x)
         return not(Rsec::INVALID[p])
       end
-
 
       # Enforce type restrictions on values of particular properties.
       # If successful, return typed interpretation of string
@@ -387,7 +382,7 @@ module Vobject::Vcalendar
         when :VERSION
           ret = versionvalue._parse ctx1
         when :ATTACH
-          if params[:VALUE] == 'BINARY'
+          if params[:VALUE] == "BINARY"
             ret = binary._parse ctx1
           else
             ret = uri._parse ctx1
@@ -395,7 +390,7 @@ module Vobject::Vcalendar
         when :IMAGE
           parse_err(strict, errors, "No VALUE parameter specified for property #{key}", ctx1) if params.empty?
           parse_err(strict, errors, "No VALUE parameter specified for property #{key}", ctx1) unless params[:VALUE]
-          if params[:VALUE] == 'BINARY'
+          if params[:VALUE] == "BINARY"
             parse_err(strict, errors, "No ENCODING parameter specified for property #{key}", ctx1) unless params[:ENCODING]
             parse_err(strict, errors, "Incorrect ENCODING parameter specified for property #{key}", ctx1) unless params[:ENCODING] == 'BASE64'
             ret = binary._parse ctx1
@@ -430,7 +425,7 @@ module Vobject::Vcalendar
         when :COMPLETED, :CREATED, :DTSTAMP, :LAST_MODIFIED
           ret = date_time_utcT._parse ctx1
         when :DTEND, :DTSTART, :DUE, :RECURRENCE_ID
-          if params && params[:VALUE] == 'DATE'
+          if params && params[:VALUE] == "DATE"
             ret = dateT._parse ctx1
           else
             if component == :FREEBUSY
@@ -455,7 +450,7 @@ module Vobject::Vcalendar
             end
           end
         when :EXDATE
-          if params && params[:VALUE] == 'DATE'
+          if params && params[:VALUE] == "DATE"
             ret = datelist._parse ctx1
           else
             if params && params[:TZID]
@@ -472,9 +467,9 @@ module Vobject::Vcalendar
             end
           end
         when :RDATE
-          if params && params[:VALUE] == 'DATE'
+          if params && params[:VALUE] == "DATE"
             ret = datelist._parse ctx1
-          elsif params && params[:VALUE] == 'PERIOD'
+          elsif params && params[:VALUE] == "PERIOD"
             ret = periodlist._parse ctx1
           else
             if params && params[:TZID]
@@ -491,7 +486,7 @@ module Vobject::Vcalendar
             end
           end
         when :TRIGGER
-          if params && params[:VALUE] == 'DATE-TIME' || /^\d{8}T/.match(value)
+          if params && params[:VALUE] == "DATE-TIME" || /^\d{8}T/.match(value)
             if params && params[:RELATED]
               parse_err(strict, errors,  "Specified RELATED within property #{key} as date-time", ctx1)
             end
@@ -577,7 +572,7 @@ module Vobject::Vcalendar
           parse_err(strict, errors, "Type mismatch for property #{key}, value #{value}", ctx)
         end
         Rsec::Fail.reset
-        return [ret, errors]
+        [ret, errors]
       end
 
       private
@@ -589,7 +584,6 @@ module Vobject::Vcalendar
           errors << ctx.report_error(msg, "source")
         end
       end
-
     end
   end
 end

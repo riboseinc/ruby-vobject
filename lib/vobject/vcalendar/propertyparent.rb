@@ -19,7 +19,7 @@ module Vobject::Vcalendar
       # Ensure each property belongs to a legal component
       def property_parent(strict, key, component, value, ctx1)
         errors = []
-        if !(key =~ /^x/i) && is_registered_propname?(key.to_s)
+        if !(key =~ /^x/i) && registered_propname?(key.to_s)
           case component
           when :EVENT
             case key
