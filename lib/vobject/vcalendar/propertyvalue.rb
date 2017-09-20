@@ -4,13 +4,12 @@ require "vobject/propertyvalue"
 module Vobject
   module Vcalendar
     module PropertyValue
-
       class Text < Vobject::PropertyValue
-
         class << self
-          def escape x
+          def escape(x)
             # temporarily escape \\ as \u007f, which is banned from text
-            x.gsub(/\\/, "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").gsub(/;/, "\\;").gsub(/\u007f/, "\\\\\\\\")
+            x.tr("\\", "\u007f").gsub(/\n/, "\\n").gsub(/,/, "\\,").
+              gsub(/;/, "\\;").gsub(/\u007f/, "\\\\\\\\")
           end
         end
 
@@ -20,13 +19,12 @@ module Vobject
         end
 
         def to_s
-          Text.escape self.value
+          Text.escape value
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class ClassValue < Text
@@ -36,9 +34,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class TranspValue < Text
@@ -48,9 +45,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class ActionValue < Text
@@ -60,9 +56,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class MethodValue < Text
@@ -72,9 +67,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Busytype < Text
@@ -84,9 +78,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Color < Text
@@ -96,9 +89,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class EventStatus < Text
@@ -108,9 +100,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Todostatus < Text
@@ -120,9 +111,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Journalstatus < Text
@@ -132,9 +122,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Ianatoken < Text
@@ -144,9 +133,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Binary < Text
@@ -156,9 +144,8 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Uri < Text
@@ -168,32 +155,29 @@ module Vobject
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Calscale < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "calscale"
         end
 
         def to_s
-          self.value
+          value
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Float < Vobject::PropertyValue
         include Comparable
-        def <=>(anOther)
-          self.value <=> anOther.value
+        def <=>(another)
+          value <=> another.value
         end
 
         def initialize(val)
@@ -202,19 +186,18 @@ module Vobject
         end
 
         def to_s
-          self.value
+          value
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Integer < Vobject::PropertyValue
         include Comparable
-        def <=>(anOther)
-          self.value <=> anOther.value
+        def <=>(another)
+          value <=> another.value
         end
 
         def initialize(val)
@@ -223,45 +206,40 @@ module Vobject
         end
 
         def to_s
-          self.value.to_s
+          value.to_s
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class PercentComplete < Integer
-
         def initialize(val)
           self.value = val
           self.type = "percentcomplete"
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Priority < Integer
-
         def initialize(val)
           self.value = val
           self.type = "priority"
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Date < Vobject::PropertyValue
         include Comparable
-        def <=>(anOther)
-          self.value <=> anOther.value
+        def <=>(another)
+          value <=> another.value
         end
 
         def initialize(val)
@@ -270,19 +248,18 @@ module Vobject
         end
 
         def to_s
-          sprintf("%04d%02d%02d", self.value.year, self.value.month, self.value.day)
+          sprintf("%04d%02d%02d", value.year, value.month, value.day)
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class DateTimeLocal < Vobject::PropertyValue
         include Comparable
-        def <=>(anOther)
-          self.value[:time] <=> anOther.value[:time]
+        def <=>(another)
+          value[:time] <=> another.value[:time]
         end
 
         def initialize(val)
@@ -292,27 +269,25 @@ module Vobject
         end
 
         def to_s
-          if !self.value[:zone].empty?
-            tz = TZInfo::Timezone.get(self.value[:zone])
-            localtime = tz.utc_to_local(self.value[:time])
+          if !value[:zone].empty?
+            tz = TZInfo::Timezone.get(value[:zone])
+            localtime = tz.utc_to_local(value[:time])
           else
-            localtime = self.value[:time]
+            localtime = value[:time]
           end
           sprintf("%04d%02d%02dT%02d%02d%02d", localtime.year, localtime.month, localtime.day,
                   localtime.hour, localtime.min, localtime.sec)
         end
 
-
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class DateTimeUTC < Vobject::PropertyValue
         include Comparable
-        def <=>(anOther)
-          self.value[:time] <=> anOther.value[:time]
+        def <=>(another)
+          value[:time] <=> another.value[:time]
         end
 
         def initialize(val)
@@ -320,38 +295,33 @@ module Vobject
           self.type = "datetimeUTC"
         end
 
-
         def to_s
-          utc = self.value[:time]
+          utc = value[:time]
           sprintf("%04d%02d%02dT%02d%02d%02dZ", utc.year, utc.month, utc.day,
                   utc.hour, utc.min, utc.sec)
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Boolean < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "boolean"
         end
 
         def to_s
-          ret = self.value
+          value
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Duration < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "duration"
@@ -359,97 +329,88 @@ module Vobject
 
         def to_s
           ret = "P"
-          ret = self.value[:sign] + ret if self.value[:sign]
-          ret = ret + "#{self.value[:weeks]}W" if self.value[:weeks]
-          ret = ret + "#{self.value[:days]}D" if self.value[:days]
-          ret = ret + "T" if self.value[:hours] || self.value[:minutes] || self.value[:seconds]
-          ret = ret + "#{self.value[:hours]}H" if self.value[:hours]
-          ret = ret + "#{self.value[:minutes]}M" if self.value[:minutes]
-          ret = ret + "#{self.value[:seconds]}S" if self.value[:seconds]
+          ret = value[:sign] + ret if value[:sign]
+          ret = ret + "#{value[:weeks]}W" if value[:weeks]
+          ret = ret + "#{value[:days]}D" if value[:days]
+          ret = ret + "T" if value[:hours] || value[:minutes] || value[:seconds]
+          ret = ret + "#{value[:hours]}H" if value[:hours]
+          ret = ret + "#{value[:minutes]}M" if value[:minutes]
+          ret = ret + "#{value[:seconds]}S" if value[:seconds]
           ret
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Time < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "time"
         end
 
         def to_s
-          ret = "#{self.value[:hour]}#{self.value[:min]}#{self.value[:sec]}"
-          ret = ret + "Z" if self.value[:utc]
+          ret = "#{value[:hour]}#{value[:min]}#{value[:sec]}"
+          ret = ret + "Z" if value[:utc]
           ret
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Utcoffset < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "utcoffset"
         end
 
         def to_s
-          ret = "#{self.value[:sign]}#{self.value[:hr]}#{self.value[:min]}"
-          ret += self.value[:sec] if self.value[:sec]
+          ret = "#{value[:sign]}#{value[:hr]}#{value[:min]}"
+          ret += value[:sec] if value[:sec]
           ret
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Geovalue < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "geovalue"
         end
 
         def to_s
-          ret = "#{self.value[:lat]};#{self.value[:long]}"
+          ret = "#{value[:lat]};#{value[:long]}"
           ret
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Version < Vobject::PropertyValue
-
         def initialize(val)
           self.value = val
           self.type = "version"
         end
 
         def to_s
-          self.value.join(";")
+          value.join(";")
         end
 
         def to_hash
-          if self.value.length == 1
-            self.value[0]
+          if value.length == 1
+            value[0]
           else
-            self.value
+            value
           end
         end
-
       end
 
       class Textlist < Vobject::PropertyValue
@@ -459,13 +420,12 @@ module Vobject
         end
 
         def to_s
-          self.value.map { |m| Text.escape m}.join(",")
+          value.map { |m| Text.escape m }.join(",")
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Periodlist < Vobject::PropertyValue
@@ -475,18 +435,17 @@ module Vobject
         end
 
         def to_s
-          self.value.map { |m|
+          value.map do |m|
             ret = m[:start].to_s + "/"
             ret += m[:end].to_s if m.has_key? :end
             ret += m[:duration].to_s if m.has_key? :duration
             ret
-          }.join(",")
+          end.join(",")
         end
 
         def to_hash
-          self.value.map { |m| m.each { |k, v| m[k] = v.to_hash }}
+          value.map { |m| m.each { |k, v| m[k] = v.to_hash } }
         end
-
       end
 
       class Datelist < Vobject::PropertyValue
@@ -496,13 +455,12 @@ module Vobject
         end
 
         def to_s
-          self.value.map { |m| m.to_s}.join(",")
+          value.map(&:to_s).join(",")
         end
 
         def to_hash
-          self.value.map { |m| m.to_hash}
+          value.map(&:to_hash)
         end
-
       end
 
       class Datetimelist < Vobject::PropertyValue
@@ -512,13 +470,12 @@ module Vobject
         end
 
         def to_s
-          self.value.map { |m| m.to_s}.join(",")
+          value.map(&:to_s).join(",")
         end
 
         def to_hash
-          self.value.map { |m| m.to_hash}
+          value.map(&:to_hash)
         end
-
       end
 
       class Datetimeutclist < Vobject::PropertyValue
@@ -528,13 +485,12 @@ module Vobject
         end
 
         def to_s
-          self.value.map { |m| m.to_s}.join(",")
+          value.map(&:to_s).join(",")
         end
 
         def to_hash
-          self.value.map { |m| m.to_hash}
+          value.map(&:to_hash)
         end
-
       end
 
       class Requeststatusvalue < Vobject::PropertyValue
@@ -544,15 +500,14 @@ module Vobject
         end
 
         def to_s
-          ret = "#{self.value[:statcode]};#{self.value[:statdesc]}"
-          ret += ";#{self.value[:extdata]}" if self.value[:extdata]
+          ret = "#{value[:statcode]};#{value[:statdesc]}"
+          ret += ";#{value[:extdata]}" if value[:extdata]
           ret
         end
 
         def to_hash
-          self.value
+          value
         end
-
       end
 
       class Recur < Vobject::PropertyValue
@@ -563,21 +518,21 @@ module Vobject
 
         def to_s
           ret = []
-          self.value.each { |k, v|
-            ret << "#{k.to_s.upcase}=#{valencode(k,v)}"
-          }
+          value.each do |k, v|
+            ret << "#{k.to_s.upcase}=#{valencode(k, v)}"
+          end
           ret.join(";")
         end
 
         def to_hash
           ret = {}
-          self.value.each{ |k, v|
-            if v.respond_to?(:to_hash)
-              ret[k] = v.to_hash
-            else
-              ret[k] = v
-            end
-          }
+          value.each do |k, v|
+            ret[k] = if v.respond_to?(:to_hash)
+                       v.to_hash
+                     else
+                       v
+                     end
+          end
           ret
         end
 
@@ -586,41 +541,39 @@ module Vobject
         def valencode(k, v)
           case k
           when :bysetpos, :byyearday
-            return v.map { |x|
+            v.map do |x|
               ret = x[:ordyrday]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(",")
+            end.join(",")
           when :byweekno
-            return v.map { |x|
+            v.map do |x|
               ret = x[:ordwk]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(",")
+            end.join(",")
           when :bymonthday
-            return v.map { |x|
+            v.map do |x|
               ret = x[:ordmoday]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(",")
+            end.join(",")
           when :byday
-            return v.map { |x|
+            v.map do |x|
               ret = x[:weekday]
               ret = x[:ordwk] + ret if x[:ordwk]
               ret = x[:sign] + ret if x[:sign]
               ret
-            }.join(",")
+            end.join(",")
           when :bymonth, :byhour, :byminute, :bysecond
-            return v.join(",")
+            v.join(",")
           when :enddate
-            return v.to_s
+            v.to_s
           else
-            return v
+            v
           end
         end
-
       end
-
     end
   end
 end

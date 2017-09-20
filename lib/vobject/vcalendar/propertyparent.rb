@@ -10,16 +10,11 @@ require "vobject"
 
 module Vobject::Vcalendar
   class Typegrammars
-
     class << self
-
-
-
-
       # Ensure each property belongs to a legal component
-      def property_parent(strict, key, component, value, ctx1)
+      def property_parent(strict, key, component, _value, ctx1)
         errors = []
-        if !(key =~ /^x/i) && registered_propname?(key.to_s)
+        if key !~ /^x/i && registered_propname?(key.to_s)
           case component
           when :EVENT
             case key
@@ -47,7 +42,7 @@ module Vobject::Vcalendar
               :LAST_MOD, :ORGANIZER, :RECURRENCE_ID, :SEQUENCE, :STATUS,
               :SUMMARY, :URL, :RRULE,
               :ATTACH, :ATTENDEE, :CATEGORIES, :COMMENT, :CONTACT, :EXDATE,
-              :RSTATUS, :RELATED,  :RDATE, :COLOR, :IMAGE
+              :RSTATUS, :RELATED, :RDATE, :COLOR, :IMAGE
             else
               parse_err(strict, errors, "Invalid property #{key} specified for #{component}", ctx1)
             end
@@ -95,12 +90,9 @@ module Vobject::Vcalendar
               parse_err(strict, errors, "Invalid property #{key} specified for #{component}", ctx1)
             end
           end
-        end   
-        return errors
+        end
+        errors
       end
-
-
-
     end
   end
 end
