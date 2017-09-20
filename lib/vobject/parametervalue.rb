@@ -1,18 +1,13 @@
 module Vobject
   class ParameterValue
-
-
-    #attr_accessor :group, :prop_name, :params, :value, :multiple
-
     def initialize(val)
       self.value = val
     end
-
-    #raise_invalid_initialization if key != name
+    # raise_invalid_initialization if key != name
   end
 
   def to_s
-    self.value
+    value
   end
 
   private
@@ -25,11 +20,7 @@ module Vobject
     "text"
   end
 
-
   def raise_invalid_initialization
     raise "vObject property initialization failed"
   end
-
-
 end
-

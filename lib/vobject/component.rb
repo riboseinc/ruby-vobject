@@ -4,32 +4,30 @@ require "vobject/vcalendar/grammar"
 require "json"
 
 class Vobject::Component
-
   attr_accessor :comp_name, :children, :multiple_components, :errors
 
-  def blank version
-    return self.ingest :VOBJECT, {:VERSION => {value: version}}
+  def blank(version)
+    ingest VOBJECT: { VERSION: { value: version } }
   end
 
-
-  def initialize key, cs, err
+  def initialize(key, cs, err)
     self.comp_name = key
     raise_invalid_initialization if key != name
     self.children = []
     if cs.nil?
     else
-      cs.each_key do |key|
-        val = cs[key]
+      cs.each_key do |k|
+        val = cs[k]
         # iteration of array || hash values is making the value a key!
-        next if key.class == Array
-        next if key.class == Hash
-        cc = child_class(key, val)
+        next if k.class == Array
+        next if k.class == Hash
+        cc = child_class(k, val)
         if val.is_a?(Hash) && val.has_key?(:component)
           val[:component].each do |x|
-            self.children << cc.new(key, x, [])
+            children << cc.new(k, x, [])
           end
         else
-          self.children << cc.new(key, val)
+          children << cc.new(k, val)
         end
       end
     end
@@ -37,18 +35,18 @@ class Vobject::Component
   end
 
   def get_errors
-    self.errors
+    errors
   end
 
-  def child_class key, val
-    if val.is_a?(Hash) && val.has_key?(:component)
-      base_class = component_base_class
-    elsif !(val.is_a?(Hash) && !val.has_key?(:value) )
-      base_class = property_base_class
-    else
-      base_class = component_base_class
-    end
-    return base_class if key == :CLASS || key == :OBJECT || key == :METHOD
+  def child_class(key, val)
+    base_class = if val.is_a?(Hash) && val.has_key?(:component)
+                   component_base_class
+                 elsif !(val.is_a?(Hash) && !val.has_key?(:value))
+                   property_base_class
+                 else
+                   component_base_class
+                 end
+    return base_class if [:CLASS, :OBJECT, :METHOD].include? key
     camelized_key = key.to_s.downcase.split("_").map(&:capitalize).join("")
     base_class.const_get(camelized_key) rescue base_class
   end
@@ -69,27 +67,27 @@ class Vobject::Component
     a = {}
     children.each do |c|
       if c.is_a?(Vobject::Component)
-        a = a.merge(c.to_hash) { |key, old, new| [old, new].flatten }
+        a = a.merge(c.to_hash) { |_, old, new| [old, new].flatten }
       elsif c.is_a?(Vobject::Property)
-        a = a.merge(c.to_hash) { |key, old, new| [old, new].flatten }
+        a = a.merge(c.to_hash) { |_, old, new| [old, new].flatten }
       else
         a[c.name] = c.to_hash
       end
     end
-    ret = {comp_name => a }
+    ret = { comp_name => a }
     ret
   end
 
   def to_json
-    self.to_hash.to_json
+    to_hash.to_json
   end
-
 
   def name
     comp_name
   end
 
   private
+
   def property_base_class
     Vobject::Property
   end
@@ -105,7 +103,4 @@ class Vobject::Component
   def raise_invalid_initialization
     raise "vObject component initialization failed"
   end
-
 end
-
-

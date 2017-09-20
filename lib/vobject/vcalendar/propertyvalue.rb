@@ -186,7 +186,7 @@ module Vobject
         end
 
         def to_s
-          value
+          value.to_s
         end
 
         def to_hash
@@ -313,7 +313,7 @@ module Vobject
         end
 
         def to_s
-          value
+          value.to_s
         end
 
         def to_hash

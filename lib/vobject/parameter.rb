@@ -1,18 +1,15 @@
 module Vobject
-
-
   class Parameter
-
     attr_accessor :param_name, :value, :multiple
 
-    def initialize key, options
+    def initialize(key, options)
       self.param_name = key
       if options.class == Array
         self.multiple = []
-        options.each { |v|
-          self.multiple << parameter_base_class.new(key, v)
+        options.each do |v|
+          multiple << parameter_base_class.new(key, v)
           self.param_name = key
-        }
+        end
       else
         self.value = options
       end
@@ -22,23 +19,21 @@ module Vobject
 
     def to_s
       # we made param names have underscore instead of dash as symbols
-      line = "#{param_name.to_s.gsub(/_/,'-')}"
+      line = param_name.to_s.tr("_", "-")
       line << "="
-      if self.multiple
+      if multiple
         arr = []
-        self.multiple.each { |v|
-          arr << to_s_line(v.value.to_s)
-        }
+        multiple.each { |v| arr << to_s_line(v.value.to_s) }
         line << arr.join(",")
       else
-        line << to_s_line(self.value.to_s)
+        line << to_s_line(value.to_s)
       end
       line
     end
 
     def to_s_line(val)
       # RFC 6868
-      val = val.to_s.gsub(/\^/,"^^").gsub(/\n/,"^n").gsub(/"/,"^'")
+      val = val.to_s.gsub(/\^/, "^^").gsub(/\n/, "^n").gsub(/"/, "^'")
       if val =~ /[:;,]/
         val = '"' + val + '"'
       end
@@ -46,15 +41,14 @@ module Vobject
     end
 
     def to_hash
-      a = {}
-      if self.multiple
+      if multiple
         val = []
-        self.multiple.each do |c|
+        multiple.each do |c|
           val << c.value
         end
-        return {param_name => val}
+        { param_name => val }
       else
-        return {param_name => value}
+        { param_name => value }
       end
     end
 
@@ -64,13 +58,13 @@ module Vobject
       param_name
     end
 
-    def parse_value value
+    def parse_value(value)
       parse_method = :"parse_#{value_type}_value"
       parse_method = respond_to?(parse_method, true) ? parse_method : :parse_text_value
       send(parse_method, value)
     end
 
-    def parse_text_value value
+    def parse_text_value(value)
       value
     end
 
@@ -86,11 +80,8 @@ module Vobject
       Vobject::Parameter
     end
 
-
     def raise_invalid_initialization(key, name)
       raise "vObject property initialization failed (#{key}, #{name})"
     end
-
   end
-
 end

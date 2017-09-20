@@ -1,20 +1,16 @@
 require "vobject"
 require "vobject/parameter"
 
-
-
 class Vobject::Property
-
-
   attr_accessor :group, :prop_name, :params, :value, :multiple
 
-  def initialize key, options
+  def initialize(key, options)
     if options.class == Array
       self.multiple = []
-      options.each { |v|
-        self.multiple << property_base_class.new(key, v)
+      options.each do |v|
+        multiple << property_base_class.new(key, v)
         self.prop_name = key
-      }
+      end
     else
       self.prop_name = key
       if options.nil? || options.empty?
@@ -26,11 +22,11 @@ class Vobject::Property
         self.prop_name = key
         unless options[:params].nil? || options[:params].empty?
           self.params = []
-          options[:params].each { |k, v|
-            self.params << parameter_base_class.new(k, v)
-          }
+          options[:params].each do |k, v|
+            params << parameter_base_class.new(k, v)
+          end
         end
-        #self.value = parse_value(options[:value])
+        # self.value = parse_value(options[:value])
         self.value = options[:value]
       end
     end
@@ -39,27 +35,27 @@ class Vobject::Property
   end
 
   def to_s
-    if self.multiple.nil? || self.multiple.empty?
-      ret = self.to_s_line
+    if multiple.nil? || multiple.empty?
+      ret = to_s_line
     else
       arr = []
-      self.multiple.each do |x|
+      multiple.each do |x|
         arr << x.to_s_line
       end
       ret = arr.join("")
     end
-    return ret
+    ret
   end
 
   def to_s_line
     line = group ? "#{group}." : ""
-    line << "#{name.to_s.gsub(/_/,'-')}"
+    line << name.to_s.tr("_", "-")
 
     (params || {}).each do |p|
-      line << ";#{p.to_s}"
+      line << ";#{p}"
     end
 
-    line << ":#{self.value.to_s}"
+    line << ":#{value}"
 
     line = Vobject::fold_line(line) << "\n"
 
@@ -74,7 +70,7 @@ class Vobject::Property
         ret[prop_name] = ret[prop_name] << c.to_hash[prop_name]
       end
     else
-      ret = {prop_name => {value: value.to_hash }}
+      ret = {prop_name => { value: value.to_hash } }
       ret[prop_name][:group] = group unless group.nil?
       if params
         ret[prop_name][:params] = {}
@@ -83,9 +79,8 @@ class Vobject::Property
         end
       end
     end
-    return ret
+    ret
   end
-
 
   private
 
@@ -93,18 +88,17 @@ class Vobject::Property
     prop_name
   end
 
-  def parse_value value
+  def parse_value(value)
     parse_method = :"parse_#{value_type}_value"
     parse_method = respond_to?(parse_method, true) ? parse_method : :parse_text_value
     send(parse_method, value)
   end
 
-  def parse_text_value value
+  def parse_text_value(value)
     value
   end
 
   def value_type
-    #(params || {})[:VALUE] || default_value_type
     params ? params[0].value : default_value_type
   end
 
@@ -120,11 +114,7 @@ class Vobject::Property
     Vobject::Parameter
   end
 
-
   def raise_invalid_initialization
     raise "vObject property initialization failed"
   end
-
-
 end
-

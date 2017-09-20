@@ -3,40 +3,39 @@ require "set"
 require "uri"
 require_relative "vobject/vcalendar/propertyvalue"
 
-
 module C
-
   # definitions common to classes
-
   SIGN = /[+-]/i.r
-  BOOLEAN = ( /TRUE/i.r.map { |x| true} | /FALSE/i.r.map { |x| false} )
-  IANATOKEN =  /[a-zA-Z\d\-]+/.r
+  BOOLEAN = /TRUE/i.r.map { true } | /FALSE/i.r.map { false }
+  IANATOKEN = /[a-zA-Z\d\-]+/.r
   vendorid_vcal = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-  XNAME_VCAL = seq( '[xX]-', vendorid_vcal, '-', IANATOKEN).map(&:join)
+  XNAME_VCAL = seq(/[xX]-/, vendorid_vcal, "-", IANATOKEN).map(&:join)
   vendorid_vcard = /[a-zA-Z0-9]+/.r # different from iCal
-  XNAME_VCARD = seq( '[xX]-', vendorid_vcard, '-', IANATOKEN).map(&:join)
-  #TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u00bf\u00c2-\u00df\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]|\\[nN;,\\])*/.r  
-  TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r  
-  TEXT3 = 		/([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\]?)*/.r  
-  TEXT4 = 		/([ \t\u0021\u0023-\u002b\u002d-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,\\])*/.r  
-  COMPONENT4 = 	/([ \t\u0021\u0023-\u002b\u002d-\u003a\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,;\\])*/.r  
-  DATE = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) { |yy, mm, dd|
+  XNAME_VCARD = seq(/[xX]-/, vendorid_vcard, "-", IANATOKEN).map(&:join)
+  TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r
+  TEXT3 = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\]?)*/.r
+  TEXT4 = /([ \t\u0021\u0023-\u002b\u002d-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,\\])*/.r
+  COMPONENT4 = /([ \t\u0021\u0023-\u002b\u002d-\u003a\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,;\\])*/.r
+  DATE = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) do |yy, mm, dd|
     Vobject::Vcalendar::PropertyValue::Date.new Time.utc(yy, mm, dd)
-  }
-  DATE_TIME = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
-                  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, _, h, m, s, z|
-    z.empty? ? Vobject::Vcalendar::PropertyValue::DateTimeLocal.new({time: Time.local(yy, mm, dd, h, m, s), zone: ""}) :
-      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({time: Time.utc(yy, mm, dd, h, m, s), zone: "Z"})
   end
-  DATE_TIME_UTC = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, 'T',
-                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, _, h, m, s, z|
-    Vobject::Vcalendar::PropertyValue::DateTimeUTC.new({time: Time.utc(yy, mm, dd, h, m, s), zone: "Z"})
+  DATE_TIME = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
+                  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, z|
+    if z.empty?
+      Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(time: Time.local(yy, mm, dd, h, m, s), zone: "")
+    else
+      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+    end
   end
-  TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) { |h, m, s, z|
-    hash = {hour: h, min: m, sec: s}
+  DATE_TIME_UTC = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
+                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, _z|
+    Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+  end
+  TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |h, m, s, z|
+    hash = { hour: h, min: m, sec: s }
     hash[:utc] = not(z.empty?)
     hash
-  }
+  end
   ICALPROPNAMES	= /BEGIN/i.r | /END/i.r | /CALSCALE/i.r | /METHOD/i.r | /VERSION/i.r |
     /ATTACH/i.r | /IMAGE/i.r | /CATEGORIES/i.r | /RESOURCERS/i.r | /CLASS/i.r |
     /COMMENT/i.r | /DESCRIPTION/i.r | /LOCATION/i.r | /SUMMARY/i.r | /TZID/i.r |
@@ -65,80 +64,69 @@ module C
     /BIRTHPLACE/i.r | /DEATHPLACE/i.r | /DEATHDATE/i.r | /EXPERTISE/i.r |
     /HOBBY/i.r | /INTEREST/i.r | /ORG-DIRECTORY/i.r |
     beginend	= /BEGIN/i.r | /END/i.r
-  NAME_VCAL = C::XNAME_VCAL | seq( "".r ^ beginend, C::IANATOKEN )[1]
-  NAME_VCARD = C::XNAME_VCARD | seq( "".r ^ beginend, C::IANATOKEN )[1]
-  durday = seq(/[0-9]+/.r, 'D') { |d, _| {days: d.to_i }}
-  dursecond = seq(/[0-9]+/.r, 'S')  { |d, _| {seconds: d.to_i }}
-  durminute = seq(/[0-9]+/.r, 'M', dursecond._?)  { |d, _, s|
-    hash =	{minutes: d.to_i }
+  NAME_VCAL = C::XNAME_VCAL | seq("".r ^ beginend, C::IANATOKEN)[1]
+  NAME_VCARD = C::XNAME_VCARD | seq("".r ^ beginend, C::IANATOKEN)[1]
+  durday = seq(/[0-9]+/.r, "D") { |d, _| { days: d.to_i } }
+  dursecond = seq(/[0-9]+/.r, "S") { |d, _| { seconds: d.to_i } }
+  durminute = seq(/[0-9]+/.r, "M", dursecond._?) do |d, _, s|
+    hash =	{ minutes: d.to_i }
     hash = hash.merge s[0] unless s.empty?
     hash
-  }
-  durhour = seq(/[0-9]+/.r, 'H', durminute._?)  { |d, _, m|
-    hash =	{hours: d.to_i }
+  end
+  durhour = seq(/[0-9]+/.r, "H", durminute._?) do |d, _, m|
+    hash =	{ hours: d.to_i }
     hash = hash.merge m[0] unless m.empty?
     hash
-  }
-  durweek = seq(/[0-9]+/.r, 'W')  { |d, _| {weeks: d.to_i }}
+  end
+  durweek = seq(/[0-9]+/.r, "W") { |d, _| { weeks: d.to_i } }
   durtime1 = durhour | durminute | dursecond
-  durtime = seq('T', durtime1) { |_, d| d }
-  durdate = seq(durday, durtime._?) { |d, t|
+  durtime = seq("T", durtime1) { |_, d| d }
+  durdate = seq(durday, durtime._?) do |d, t|
     d = d.merge t[0] unless t.empty?
     d
-  }
+  end
   duration1 = durdate | durtime | durweek
-  DURATION = seq(SIGN._?, 'P', duration1) { |s, _, d|
+  DURATION = seq(SIGN._?, "P", duration1) do |s, _, d|
     d[:sign] = s[0] unless s.empty?
     d
-  }
+  end
 
-  utf8_tail = /[\u0080-\u00bf]/.r
-  utf8_2 = /[\u00c2-\u00df]/.r  | utf8_tail
-  utf8_3 = /[\u00e0\u00a0-\u00bf\u00e1-\u00ec\u00ed\u0080-\u009f\u00ee-\u00ef]/.r  |
-    utf8_tail
-  utf8_4 = /[\u00f0\u0090-\u00bf\u00f1-\u00f3\u00f4\u0080-\u008f]/.r | utf8_tail
-  #nonASCII = utf8_2 | utf8_3 | utf8_4
-  nonASCII = /[\u0080-\u3ffff]/
+  non_ascii = /[\u0080-\u3ffff]/
   wsp = /[ \t]/.r
-  qSafeChar_vcal = wsp | /[\u0021\u0023-\u007e]/ | nonASCII
-  safeChar_vcal = wsp | /[\u0021\u0023-\u0039\u003c-\u007e]/  | nonASCII
-  qSafeChar_vcard = wsp | /[!\u0023-\u007e]/ | nonASCII
-  safeChar_vcard = wsp | /[!\u0023-\u0039\u003c-\u007e]/  | nonASCII
-  vChar = /[\u0021-\u007e]/.r
-  valueChar = wsp | vChar | nonASCII
-  dQuote = /"/.r
+  q_safe_char_vcal = wsp | /[\u0021\u0023-\u007e]/ | non_ascii
+  safe_char_vcal = wsp | /[\u0021\u0023-\u0039\u003c-\u007e]/ | non_ascii
+  q_safe_char_vcard = wsp | /[!\u0023-\u007e]/ | non_ascii
+  safe_char_vcard = wsp | /[!\u0023-\u0039\u003c-\u007e]/ | non_ascii
+  v_char = /[\u0021-\u007e]/.r
+  value_char = wsp | v_char | non_ascii
 
-
-  QUOTEDSTRING_VCAL = seq(dQuote, qSafeChar_vcal.star, dQuote) { |_, qSafe, _|
-    qSafe.join("")
-  }
-  PTEXT_VCAL = safeChar_vcal.star.map(&:join)
-  QUOTEDSTRING_VCARD = seq(dQuote, qSafeChar_vcard.star, dQuote) { |_, qSafe, _|
-    qSafe.join("")
-  }
-  PTEXT_VCARD = safeChar_vcard.star.map(&:join)
-  VALUE = valueChar.star.map(&:join)
-
+  QUOTEDSTRING_VCAL = seq(/"/.r >> q_safe_char_vcal.star <<
+                          /"/.r) { |q| q.join("") }
+  PTEXT_VCAL = safe_char_vcal.star.map(&:join)
+  QUOTEDSTRING_VCARD = seq(/"/.r >> q_safe_char_vcard.star <<
+                           /"/.r) { |q| q.join("") }
+  PTEXT_VCARD = safe_char_vcard.star.map(&:join)
+  VALUE = value_char.star.map(&:join)
 
   rfc5646irregular = /en-GB-oed/i.r | /i-ami/i.r | /i-bnn/i.r | /i-default/i.r | /i-enochian/i.r |
     /i-hak/i.r | /i-klingon/i.r | /i-lux/i.r | /i-mingo/i.r |
-    /i-navajo/i.r | /i-pwn/i.r | /i-tao/i.r  | /i-tay/i.r |
+    /i-navajo/i.r | /i-pwn/i.r | /i-tao/i.r | /i-tay/i.r |
     /i-tsu/i.r | /sgn-BE-FR/i.r | /sgn-BE-NL/i.r | /sgn-CH-DE/i.r
   rfc5646regular = /art-lojban/i.r | /cel-gaulish/i.r | /no-bok/i.r | /no-nyn/i.r |
     /zh-guoyu/i.r | /zh-hakka/i.r | /zh-min/i.r | /zh-min-nan/i.r |
     /zh-xiang/i.r
   rfc5646grandfathered = rfc5646irregular | rfc5646regular
-  rfc5646privateuse1 = seq('-', /[0-9A-Za-z]{1,8}/.r)
-  rfc5646privateuse = seq('x', rfc5646privateuse1 * (1..-1))
-  rfc5646extension1 = seq('-', /[0-9A-Za-z]{2,8}/.r)
-  rfc5646extension = seq('-', /[0-9][A-WY-Za-wy-z]/.r, rfc5646extension1 * (1..-1))
-  rfc5646variant = seq('-', /[A-Za-z]{5,8}/.r) | seq('-', /[0-9][A-Za-z0-9]{3}/)
-  rfc5646region = seq('-', /[A-Za-z]{2}/.r) | seq('-', /[0-9]{3}/)
-  rfc5646script = seq('-', /[A-Za-z]{4}/.r)
+  rfc5646privateuse1 = seq("-", /[0-9A-Za-z]{1,8}/.r)
+  rfc5646privateuse = seq("x", rfc5646privateuse1 * (1..-1))
+  rfc5646extension1 = seq("-", /[0-9A-Za-z]{2,8}/.r)
+  rfc5646extension = seq("-", /[0-9][A-WY-Za-wy-z]/.r, rfc5646extension1 * (1..-1))
+  rfc5646variant = seq("-", /[A-Za-z]{5,8}/.r) | seq("-", /[0-9][A-Za-z0-9]{3}/)
+  rfc5646region = seq("-", /[A-Za-z]{2}/.r) | seq("-", /[0-9]{3}/)
+  rfc5646script = seq("-", /[A-Za-z]{4}/.r)
   rfc5646extlang = seq(/[A-Za-z]{3}/.r, /[A-Za-z]{3}/.r._?, /[A-Za-z]{3}/.r._?)
-  rfc5646language = seq(/[A-Za-z]{2,3}/.r , rfc5646extlang._?) | /[A-Za-z]{4}/.r | /[A-Za-z]{5,8}/.r
+  rfc5646language = seq(/[A-Za-z]{2,3}/.r, rfc5646extlang._?) | /[A-Za-z]{4}/.r | /[A-Za-z]{5,8}/.r
   rfc5646langtag = seq(rfc5646language, rfc5646script._?, rfc5646region._?,
-                       rfc5646variant.star, rfc5646extension.star, rfc5646privateuse._? ) do |a, b, c, d, e, f|
+                       rfc5646variant.star, rfc5646extension.star, rfc5646privateuse._?) do |a, b, c, d, e, f|
     [a, b, c, d, e, f].flatten.join("")
   end
   RFC5646LANGVALUE = rfc5646langtag | rfc5646privateuse | rfc5646grandfathered
@@ -172,12 +160,11 @@ module C
     /SpringGreen/i.r | /SteelBlue/i.r | /Tan/i.r | /Teal/i.r | /Thistle/i.r | /Tomato/i.r |
     /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r
 
-  UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) { |s, h, m, z|
-    h = {sign: s, hour: h, min: m}
+  UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) do |s, h, m, z|
+    h = { sign: s, hour: h, min: m }
     h[:sec] = z[0] unless z.empty?
     h
-  }
+  end
   ZONE	= UTC_OFFSET.map { |u| u } |
-    /Z/i.r.map { |z| "Z"}
-
+    /Z/i.r.map { "Z" }
 end

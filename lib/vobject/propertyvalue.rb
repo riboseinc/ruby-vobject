@@ -1,7 +1,5 @@
 module Vobject
   class PropertyValue
-
-
     attr_accessor :value, :type, :errors
 
     def initialize(val)
@@ -9,18 +7,18 @@ module Vobject
       self.type = "property"
     end
 
-    #raise_invalid_initialization if key != name
+    # raise_invalid_initialization if key != name
 
     def to_s
-      self.value
+      value
     end
 
     def to_hash
-      self.value
+      value
     end
 
     def name
-      self.type
+      type
     end
 
     private
@@ -29,11 +27,8 @@ module Vobject
       "text"
     end
 
-
     def raise_invalid_initialization
       raise "vObject property initialization failed"
     end
-
-
   end
 end
