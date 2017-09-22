@@ -6,6 +6,12 @@ require "json"
 class Vobject::Component
   attr_accessor :comp_name, :children, :multiple_components, :errors
 
+  def <=>(another)
+    me = self.to_norm
+    o = another.to_norm
+    me <=> o
+  end
+
   def blank(version)
     ingest VOBJECT: { VERSION: { value: version } }
   end
@@ -53,13 +59,20 @@ class Vobject::Component
 
   def to_s
     s = "BEGIN:#{name}\n"
-
     children.each do |c|
       s << c.to_s
     end
-
     s << "END:#{name}\n"
+    s
+  end
 
+  def to_norm
+    s = "BEGIN:#{name.upcase}\n"
+    properties = children.select { |c| c.is_a? Vobject::Property }
+    components = children.select { |c| not c.is_a? Vobject::Property }
+    properties.sort.each { |p| s << p.to_norm }
+    components.sort.each { |p| s << p.to_norm }
+    s << "END:#{name.upcase}\n"
     s
   end
 

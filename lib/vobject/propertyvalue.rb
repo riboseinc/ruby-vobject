@@ -2,6 +2,10 @@ module Vobject
   class PropertyValue
     attr_accessor :value, :type, :errors
 
+    def <=>(another)
+      self.value <=> another.value
+    end
+
     def initialize(val)
       self.value = val
       self.type = "property"
@@ -11,6 +15,10 @@ module Vobject
 
     def to_s
       value
+    end
+
+    def to_norm
+      to_s
     end
 
     def to_hash

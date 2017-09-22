@@ -4,6 +4,16 @@ require "vobject/parameter"
 class Vobject::Property
   attr_accessor :group, :prop_name, :params, :value, :multiple
 
+  def <=>(another)
+    if self.prop_name =~ /^VERSION$/i
+      -1
+    elsif another.prop_name =~ /^VERSION$/i
+      1
+    else
+      self.to_norm <=> another.to_norm
+    end
+  end
+
   def initialize(key, options)
     if options.class == Array
       self.multiple = []
@@ -61,6 +71,35 @@ class Vobject::Property
 
     line
   end
+
+  def to_norm
+    if multiple.nil? || multiple.empty?
+      ret = to_norm_line
+    else
+      arr = []
+      multiple.sort.each do |x|
+        arr << x.to_norm_line
+      end
+      ret = arr.join("")
+    end
+    ret
+  end
+
+  def to_norm_line
+    line = group ? "#{group}." : ""
+    line << name.to_s.tr("_", "-").upcase
+
+    (params || {}).sort.each do |p|
+      line << ";#{p.to_norm}"
+    end
+
+    line << ":#{value.to_norm}"
+
+    line = Vobject::fold_line(line) << "\n"
+
+    line
+  end
+
 
   def to_hash
     ret = {}

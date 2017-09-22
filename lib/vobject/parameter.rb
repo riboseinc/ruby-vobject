@@ -2,6 +2,10 @@ module Vobject
   class Parameter
     attr_accessor :param_name, :value, :multiple
 
+    def <=>(another)
+      self.to_norm <=> another.to_norm
+    end
+
     def initialize(key, options)
       self.param_name = key
       if options.class == Array
@@ -37,6 +41,28 @@ module Vobject
       if val =~ /[:;,]/
         val = '"' + val + '"'
       end
+      val
+    end
+
+    def to_norm
+      line = param_name.to_s.tr("_", "-").upcase
+      line << "="
+      if multiple
+        arr = []
+        multiple.sort.each { |v| arr << to_norm_line(v.value) }
+        line << arr.join(",")
+      else
+        line << to_norm_line(value)
+      end
+      line
+    end
+
+    def to_norm_line(val)
+      # RFC 6868
+      val = val.to_s.gsub(/\^/, "^^").gsub(/\n/, "^n").gsub(/"/, "^'")
+      #if val =~ /[:;,]/
+      val = '"' + val + '"'
+      #end
       val
     end
 

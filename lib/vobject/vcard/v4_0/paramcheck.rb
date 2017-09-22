@@ -9,6 +9,7 @@ module Vcard::V4_0
   class Paramcheck
     class << self
       def paramcheck(strict, prop, params, ctx)
+        errors = []
         if params && params[:TYPE]
           case prop
           when :FN, :NICKNAME, :PHOTO, :ADR, :TEL, :EMAIL, :IMPP, :LANG, :TZ,
@@ -252,6 +253,7 @@ module Vcard::V4_0
             parse_err(strict, errors, "illegal value #{params[:LEVEL]} given for parameter :LEVEL of #{prop}", ctx) unless params[:LEVEL] =~ /^(high|medium|low)$/i
           end
         end
+        errors
       end
 
       private

@@ -3,9 +3,13 @@
 The main purpose of the gem is to parse vobject formatted text into a ruby
 hash format. Currently there are two possiblities of vobjects, namely
 iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
-(https://tools.ietf.org/html/rfc6350). There are only a few differences
-between the iCalendar and vCard format. Only vCard supports grouping
-feature, and currently vCard does not have any sub-object supported.
+(https://tools.ietf.org/html/rfc6350). This gem parses iCalendar objects
+and vCard objects in versions 3.0 and 4.0, together with any subsequent
+additions to those specifications in other RFCs (see below).
+
+A secondary purpose is to create a normalised form of Vobjects (iCalendars
+and vCards version 4.0), which can be used to compare two Vobjects with minor
+formatting differences
 
 ## Installation
 
@@ -45,6 +49,8 @@ pp Vcalendar.parse(ics).to_hash
 pp JSON.parse(Vcalendar.parse(ics).to_json)
 # convert VCalendar into VCalendar text
 print Vcalendar.parse(ics).to_s
+# convert VCalendar into normalised VCalendar text
+print Vcalendar.parse(ics).to_norm
 ```
 
 ```ruby
@@ -77,10 +83,13 @@ as an array of value properties. Each value hash may have its own parameters.
 * The values of properties are also typed objects.
 * Objects can be parsed from text files.
 * Objects can be populated from hashes of property value objects.
-* Objects can be converted to Ruby hashes with native property value types (`.to_hash`), JSON objects with the same value types (`.to_json`), and round-tripped back to ICAL/VCARD string representations (`.to_s`)
+* Objects can be converted to Ruby hashes with native property value types (`.to_hash`), JSON objects with the same value types (`.to_json`), and round-tripped back to ICAL/VCARD string representations (`.to_s`). 
+* The normalised form of Vobjects (`.to_norm) applies normalising conventions to the string representation; most notably presenting elements of a vCard in sorted order.
+  * Normalisation follows the draft RFC `draft-calconnect-vobject-and-normalization`.
 * Validation can be strict or lax. 
   * If strict, an exception is raised on any syntax error, type mismatch, or other mismatch to the specification, such as mandatory elements.
   * If lax, an exception is still raised on syntax errors, but other issues are listed in an error field of the resulting object.
+* Normalisation follows the draft RFC `draft-calconnect-vobject-and-normalization`.
 
 Running spec:
 bundle exec rspec
