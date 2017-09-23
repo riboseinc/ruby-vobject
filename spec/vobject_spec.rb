@@ -147,7 +147,7 @@ describe Vobject do
   it "should normalise iCalendar 4" do
     ics = File.read "spec/examples/vcalendar/example4.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
-    ics2 = File.read "spec/examples/vcalendar/example4.ics"
+    ics2 = File.read "spec/examples/vcalendar/example4.norm.ics"
     expect(vobj_json).to eql(ics2)
   end
 
@@ -162,6 +162,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar 5" do
+    ics = File.read "spec/examples/vcalendar/example5.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/example5.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly 6" do
     ics = File.read "spec/examples/vcalendar/example6.ics"
@@ -174,6 +180,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar 6" do
+    ics = File.read "spec/examples/vcalendar/example6.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/example6.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly 7" do
     ics = File.read "spec/examples/vcalendar/example7.ics"
@@ -185,6 +197,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/example7.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar 6" do
+    ics = File.read "spec/examples/vcalendar/example7.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/example7.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should enforce proper Bin64 encoding" do

@@ -203,9 +203,8 @@ module Vcard::V3_0
       end
 
       def to_s
-        localtime = value[:origtime]
-        ret = sprintf("%04d-%02d-%02dT%02d:%02d:%02d", localtime.year, localtime.month, localtime.day,
-                      localtime.hour, localtime.min, localtime.sec)
+        # ret = sprintf("%04d-%02d-%02dT%02d:%02d:%02d", value[:year], value[:month], value[:day], value[:hour], value[:min], value[:sec])
+        ret = sprintf("%s-%s-%sT%s:%s:%s", value[:year], value[:month], value[:day], value[:hour], value[:min], value[:sec])
         ret = ret + ",#{value[:secfrac]}" if value[:secfrac]
         zone = "Z" if value[:zone] && value[:zone] == "Z"
         zone = "#{value[:zone][:sign]}#{value[:zone][:hour]}:#{value[:zone][:min]}" if value[:zone] && value[:zone].is_a?(Hash)
