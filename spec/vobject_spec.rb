@@ -19,6 +19,12 @@ def norm_vcard(ics)
     gsub(/;TYPE="([^"]+)"/, ";TYPE=\\1").split("\n").sort.join("\n")
 end
 
+RSpec::Matchers.define :contain_error do |expected|
+  match do |actual|
+    actual.select { |a| a =~ expected }
+  end
+end
+
 # rubocop:disable LineLength
 describe Vobject do
   it "should process RFC6868 caret parameters" do
@@ -209,6 +215,10 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/base64.ics"
     expect { Vcalendar.parse(ics, true) }.to raise_error(/Malformed binary coding for property ATTACH/)
   end
+  it "should report errors on proper Bin64 encoding" do
+    ics = File.read "spec/examples/vcalendar/base64.ics"
+    expect(Vcalendar.parse(ics, false).get_errors).to contain_error(/Malformed binary coding for property ATTACH/)
+  end
 
   it "should parse iCalendar properly with blank description" do
     ics = File.read "spec/examples/vcalendar/blank_description.ics"
@@ -231,6 +241,10 @@ describe Vobject do
   it "should require at least one component" do
     ics = File.read "spec/examples/vcalendar/blank_line_end.ics"
     expect { Vcalendar.parse(ics, true) }.to raise_error(Rsec::SyntaxError)
+  end
+  it "should require at least one component" do
+    ics = File.read "spec/examples/vcalendar/blank_line_end.ics"
+    expect(Vcalendar.parse(ics, false).get_errors).to contain_error(/SyntaxError/)
   end
 
   it "should reject blank lines" do
