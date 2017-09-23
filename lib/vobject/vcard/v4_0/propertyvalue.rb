@@ -44,7 +44,7 @@ module Vcard::V4_0
     class Kindvalue < Text
       def initialize(val)
         self.value = val
-        self.type = "kindvalue"
+        self.type = "text"
       end
 
       def to_hash
@@ -55,7 +55,7 @@ module Vcard::V4_0
     class Lang < Text
       def initialize(val)
         self.value = val
-        self.type = "lang"
+        self.type = "language-tag"
       end
 
       def to_hash
@@ -66,7 +66,7 @@ module Vcard::V4_0
     class Ianatoken < Text
       def initialize(val)
         self.value = val
-        self.type = "ianatoken"
+        self.type = "text"
       end
 
       def to_hash
@@ -92,7 +92,7 @@ module Vcard::V4_0
     class Clientpidmap < Text
       def initialize(val)
         self.value = val
-        self.type = "clientpidmap"
+        self.type = "text"
       end
 
       def to_s
@@ -196,7 +196,7 @@ module Vcard::V4_0
       def initialize(val)
         self.value = val.clone
         # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
-        self.type = "datetimeLocal"
+        self.type = "date-time"
         # fill in unspecified month && year && date; only for purposes of comparison
         val[:year] = sprintf("%04d", ::Date.today.year) unless val.has_key?(:year)
         val[:month] = sprintf("%02d", ::Date.today.month) unless val.has_key?(:month)
@@ -282,7 +282,7 @@ module Vcard::V4_0
     class Utcoffset < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "utcoffset"
+        self.type = "utc-offset"
       end
 
       def to_s
@@ -299,7 +299,7 @@ module Vcard::V4_0
     class Version < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "version"
+        self.type = "text"
       end
 
       def to_s
@@ -314,7 +314,7 @@ module Vcard::V4_0
     class Gender < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "gender"
+        self.type = "text"
       end
 
       def to_s
@@ -331,7 +331,7 @@ module Vcard::V4_0
     class Textlist < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "textlist"
+        self.type = "text"
       end
 
       def to_s
@@ -346,7 +346,7 @@ module Vcard::V4_0
     class Org < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "org"
+        self.type = "text"
       end
 
       def to_s
@@ -361,7 +361,7 @@ module Vcard::V4_0
     class Fivepartname < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "fivepartname"
+        self.type = "text"
       end
 
       def to_s

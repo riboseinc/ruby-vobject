@@ -186,7 +186,7 @@ module Vcard::V3_0
       def initialize(val)
         self.value = val.clone
         # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
-        self.type = "datetimeLocal"
+        self.type = "datetimelocal"
         val[:sec] += (val[:secfrac].to_f / (10**val[:secfrac].length)) if !val[:secfrac].nil? && !val[:secfrac].empty?
         value[:time] = if val[:zone].nil? || val[:zone].empty?
                          ::Time.local(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
