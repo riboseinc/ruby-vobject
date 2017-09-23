@@ -5,7 +5,14 @@
     {"TZID":{"value":"Etc/GMT"},
      "STANDARD":
       {"DTSTART":
-        {"value":{"time":"1971-01-01 00:00:00 UTC", "zone":"Etc/GMT"}},
+        {"value":
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"00",
+           "min":"00",
+           "sec":"00",
+           "zone":"Etc/GMT"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"00", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"00", "min":"00"}},
        "TZNAME":{"value":"GMT"}},
@@ -14,7 +21,14 @@
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZNAME":{"value":"PDT"},
        "DTSTART":
-        {"value":{"time":"1970-03-08 02:00:00 UTC", "zone":"Etc/GMT"}},
+        {"value":
+          {"year":"1970",
+           "month":"03",
+           "day":"08",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"Etc/GMT"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
@@ -27,15 +41,36 @@
       {"value":"mailto:calmozilla1@yahoo.com",
        "params":{"CN":"Sahaja Lal"}},
      "DTSTART":
-      {"value":{"time":"2012-08-21 21:00:00 UTC", "zone":"Etc/GMT"},
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"21",
+         "hour":"21",
+         "min":"00",
+         "sec":"00",
+         "zone":"Etc/GMT"},
        "params":{"TZID":"Etc/GMT"}},
      "DTEND":
-      {"value":{"time":"2012-08-21 21:30:00 UTC", "zone":"Etc/GMT"},
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"21",
+         "hour":"21",
+         "min":"30",
+         "sec":"00",
+         "zone":"Etc/GMT"},
        "params":{"TZID":"Etc/GMT"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "X_MICROSOFT_CDO_INTENDEDSTATUS":{"value":"BUSY"},
      "TRANSP":{"value":"OPAQUE"},
      "X_MICROSOFT_DISALLOW_COUNTER":{"value":"TRUE"},
-     "DTSTAMP":{"value":{"time":"2012-08-17 03:25:09 UTC", "zone":"Z"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"17",
+         "hour":"03",
+         "min":"25",
+         "sec":"09"}},
      "SEQUENCE":{"value":0}}}}

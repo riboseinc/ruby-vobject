@@ -6,7 +6,13 @@
      "STANDARD":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "RRULE":
@@ -18,7 +24,13 @@
      "DAYLIGHT":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "RRULE":
@@ -49,23 +61,47 @@
      "GEO":
       {"value":{"lat":40.446816, "long":-80.00566},
        "params":
-        {"X_ADDRESS":
-          "Pittsburgh Pirates\n115 Federal St\nPitt   sburgh, PA 15212"}},
+        {"X_ADDRESS": "Pittsburgh Pirates\n115 Federal St\nPitt   sburgh, PA 15212"}},
      "ORGANIZER":{"value":"mailto:x@bar.com", "params":{"CN":"foobar"}},
      "DTSTART":
       {"value":
-        {"time":"2012-09-11 17:30:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"09",
+         "day":"11",
+         "hour":"10",
+         "min":"30",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "DTEND":
       {"value":
-        {"time":"2012-09-11 18:00:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"09",
+         "day":"11",
+         "hour":"11",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "TRANSP":{"value":"OPAQUE"},
      "LAST_MODIFIED":
-      {"value":{"time":"2012-09-11 18:48:51 UTC", "zone":"Z"}},
-     "DTSTAMP":{"value":{"time":"2012-09-11 18:48:51 UTC", "zone":"Z"}},
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"11",
+         "hour":"18",
+         "min":"48",
+         "sec":"51"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"11",
+         "hour":"18",
+         "min":"48",
+         "sec":"51"}},
      "SEQUENCE":{"value":1},
      "VALARM":
       {"ACTION":{"value":"DISPLAY"},

@@ -2,15 +2,36 @@
   {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"1996",
+         "month":"07",
+         "day":"04",
+         "hour":"12",
+         "min":"00",
+         "sec":"00"}},
      "UID":{"value":"uid1@example.com"},
      "DTSTART":
       {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
      "DTEND":
       {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
-     "RDATE":{"value":[{"time":"2013-12-10 13:00:00 UTC", "zone":"Z"}]},
+     "RDATE":
+      {"value":
+        [{"year":"2013",
+          "month":"12",
+          "day":"10",
+          "hour":"13",
+          "min":"00",
+          "sec":"00"}]},
      "X_MYDATE":
       {"value":"2012-09-01 00:00:00 UTC", "params":{"VALUE":"DATE"}},
      "X_MYDATETIME":
-      {"value":{"time":"2012-09-01 13:00:00 +1000", "zone":""},
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"01",
+         "hour":"13",
+         "min":"00",
+         "sec":"00",
+         "zone":""},
        "params":{"VALUE":"DATE-TIME"}}}}}

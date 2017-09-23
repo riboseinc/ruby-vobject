@@ -1,6 +1,6 @@
 module Vobject
   class Parameter
-    attr_accessor :param_name, :value, :multiple
+    attr_accessor :param_name, :value, :multiple, :norm
 
     def <=>(another)
       self.to_norm <=> another.to_norm
@@ -17,7 +17,7 @@ module Vobject
       else
         self.value = options
       end
-
+      norm = nil
       raise_invalid_initialization(key, name) if key != name
     end
 
@@ -45,16 +45,19 @@ module Vobject
     end
 
     def to_norm
-      line = param_name.to_s.tr("_", "-").upcase
-      line << "="
-      if multiple
-        arr = []
-        multiple.sort.each { |v| arr << to_norm_line(v.value) }
-        line << arr.join(",")
-      else
-        line << to_norm_line(value)
-      end
-      line
+      if norm.nil?
+        line = param_name.to_s.tr("_", "-").upcase
+        line << "="
+        if multiple
+          arr = []
+          multiple.sort.each { |v| arr << to_norm_line(v.value) }
+          line << arr.join(",")
+        else
+          line << to_norm_line(value)
+        end
+        norm = line
+      end 
+      norm
     end
 
     def to_norm_line(val)

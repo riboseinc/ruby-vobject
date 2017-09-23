@@ -2,7 +2,14 @@
   {"VERSION":{"value":"2.0"},
    "PRODID":{"value":"-//ABC Corporation//NONSGML My Product//EN"},
    "VTODO":
-    {"DTSTAMP":{"value":{"time":"1998-01-30 13:45:00 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"1998",
+         "month":"01",
+         "day":"30",
+         "hour":"13",
+         "min":"45",
+         "sec":"00"}},
      "SEQUENCE":{"value":2},
      "UID":{"value":"uid4@example.com"},
      "ORGANIZER":{"value":"mailto:unclesam@example.com"},
@@ -13,12 +20,27 @@
         "params":
          {"DELEGATED_TO":
            ["mailto:jdoe@example.com", "mailto:jqpublic@example.com"]}}],
-     "DUE":{"value":{"time":"1998-04-15 00:00:00 +1000", "zone":""}},
+     "DUE":
+      {"value":
+        {"year":"1998",
+         "month":"04",
+         "day":"15",
+         "hour":"00",
+         "min":"00",
+         "sec":"00",
+         "zone":""}},
      "STATUS":{"value":"NEEDS-ACTION"},
      "SUMMARY":{"value":"Submit Income Taxes"},
      "VALARM":
       {"ACTION":{"value":"AUDIO"},
-       "TRIGGER":{"value":{"time":"1998-04-03 12:00:00 UTC", "zone":"Z"}},
+       "TRIGGER":
+        {"value":
+          {"year":"1998",
+           "month":"04",
+           "day":"03",
+           "hour":"12",
+           "min":"00",
+           "sec":"00"}},
        "ATTACH":
         {"value":"http://example.com/pub/audio-files/ssbanner.aud",
          "params":{"FMTTYPE":"audio/basic"}},

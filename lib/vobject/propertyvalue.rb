@@ -1,6 +1,6 @@
 module Vobject
   class PropertyValue
-    attr_accessor :value, :type, :errors
+    attr_accessor :value, :type, :errors, :norm
 
     def <=>(another)
       self.value <=> another.value
@@ -9,6 +9,7 @@ module Vobject
     def initialize(val)
       self.value = val
       self.type = "property"
+      self.norm = nil
     end
 
     # raise_invalid_initialization if key != name
@@ -18,7 +19,10 @@ module Vobject
     end
 
     def to_norm
-      to_s
+      if norm.nil?
+        norm = to_s
+      end
+      norm
     end
 
     def to_hash

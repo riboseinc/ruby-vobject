@@ -458,7 +458,8 @@ module Vobject::Vcalendar
               tz = TZInfo::Timezone.get(params[:TZID])
               ret = date_time_t._parse ctx1
               # note that we use the registered tz information to map to UTC, rather than look up the values witin the VTIMEZONE component
-              ret.value = { time: tz.local_to_utc(ret.value[:time]), zone: params[:TZID] }
+              ret.value[:time] = tz.local_to_utc(ret.value[:time])
+              ret.value[:zone] = params[:TZID]
             rescue
               # undefined timezone: default to floating local
               ret = date_time_t._parse ctx1
@@ -476,7 +477,8 @@ module Vobject::Vcalendar
             tz = TZInfo::Timezone.get(params[:TZID])
             ret = date_timelist._parse ctx1
             ret.value.each do |x|
-              x.value = { time: tz.local_to_utc(x.value[:time]), zone: params[:TZID] }
+              x.value[:time] = tz.local_to_utc(x.value[:time])
+              x.value[:zone] = params[:TZID]
             end
           else
             ret = date_timelist._parse ctx1
@@ -493,7 +495,8 @@ module Vobject::Vcalendar
             tz = TZInfo::Timezone.get(params[:TZID])
             ret = date_timelist._parse ctx1
             ret.value.each do |x|
-              x.value = { time: tz.local_to_utc(x.value[:time]), zone: params[:TZID] }
+              x.value[:time] = tz.local_to_utc(x.value[:time])
+              x.value[:zone] = params[:TZID]
             end
           else
             ret = date_timelist._parse ctx1

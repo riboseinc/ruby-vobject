@@ -2,7 +2,14 @@
   {"VERSION":{"value":"2.0"},
    "PRODID":{"value":"-//ABC Corporation//NONSGML My Product//EN"},
    "VJOURNAL":
-    {"DTSTAMP":{"value":{"time":"1997-03-24 12:00:00 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"1997",
+         "month":"03",
+         "day":"24",
+         "hour":"12",
+         "min":"00",
+         "sec":"00"}},
      "UID":{"value":"uid5@example.com"},
      "ORGANIZER":{"value":"mailto:jsmith@example.com"},
      "STATUS":{"value":"DRAFT"},

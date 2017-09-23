@@ -22,14 +22,17 @@ module C
   DATE_TIME = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
                   /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, z|
     if z.empty?
-      Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(time: Time.local(yy, mm, dd, h, m, s), zone: "")
+      #Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(time: Time.local(yy, mm, dd, h, m, s), zone: "")
+      Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(year: yy, month: mm, day: dd, hour: h, min: m, sec: s, zone: "")
     else
-      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+      #Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(year: yy, month: mm, day: dd, hour: h, min: m, sec: s, zone: "Z")
     end
   end
   DATE_TIME_UTC = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
                       /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, _z|
-    Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+    #Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
+      Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(year: yy, month: mm, day: dd, hour: h, min: m, sec: s, zone: "Z")
   end
   TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |h, m, s, z|
     hash = { hour: h, min: m, sec: s }

@@ -2,7 +2,14 @@
   {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"1996",
+         "month":"07",
+         "day":"04",
+         "hour":"12",
+         "min":"00",
+         "sec":"00"}},
      "UID":{"value":"uid1@example.com"},
      "ORGANIZER":{"value":"mailto:jsmith@example.com"},
      "STATUS":{"value":"CONFIRMED"},
@@ -10,6 +17,20 @@
      "SUMMARY":{"value":"Networld+Interop Conference"},
      "DESCRIPTION":{"value":"Networld+Interop Conference"},
      "DTSTART":
-      {"value":{"time":"2011-10-28 16:00:00 +1100", "zone":""},
+      {"value":
+        {"year":"2011",
+         "month":"10",
+         "day":"28",
+         "hour":"16",
+         "min":"00",
+         "sec":"00",
+         "zone":""},
        "params":{"TZID":"GMT +0100"}},
-     "DTEND":{"value":{"time":"2012-09-20 22:00:00 UTC", "zone":"Z"}}}}}
+     "DTEND":
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"20",
+         "hour":"22",
+         "min":"00",
+         "sec":"00"}}}}}

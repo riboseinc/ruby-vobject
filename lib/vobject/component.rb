@@ -4,7 +4,7 @@ require "vobject/vcalendar/grammar"
 require "json"
 
 class Vobject::Component
-  attr_accessor :comp_name, :children, :multiple_components, :errors
+  attr_accessor :comp_name, :children, :multiple_components, :errors, :norm
 
   def <=>(another)
     me = self.to_norm
@@ -38,6 +38,7 @@ class Vobject::Component
       end
     end
     self.errors = err
+    self.norm = nil
   end
 
   def get_errors
@@ -67,13 +68,16 @@ class Vobject::Component
   end
 
   def to_norm
-    s = "BEGIN:#{name.upcase}\n"
-    properties = children.select { |c| c.is_a? Vobject::Property }
-    components = children.select { |c| not c.is_a? Vobject::Property }
-    properties.sort.each { |p| s << p.to_norm }
-    components.sort.each { |p| s << p.to_norm }
-    s << "END:#{name.upcase}\n"
-    s
+    if norm.nil?
+      s = "BEGIN:#{name.upcase}\n"
+      properties = children.select { |c| c.is_a? Vobject::Property }
+      components = children.select { |c| not c.is_a? Vobject::Property }
+      properties.sort.each { |p| s << p.to_norm }
+      components.sort.each { |p| s << p.to_norm }
+      s << "END:#{name.upcase}\n"
+      norm = s
+    end
+    norm
   end
 
   def to_hash
@@ -87,8 +91,7 @@ class Vobject::Component
         a[c.name] = c.to_hash
       end
     end
-    ret = { comp_name => a }
-    ret
+    { comp_name => a }
   end
 
   def to_json

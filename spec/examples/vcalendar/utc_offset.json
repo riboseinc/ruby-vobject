@@ -2,11 +2,32 @@
   {"PRODID":{"value":"-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"1996-07-04 12:00:00 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"1996",
+         "month":"07",
+         "day":"04",
+         "hour":"12",
+         "min":"00",
+         "sec":"00"}},
      "UID":{"value":"uid1@example.com"},
      "ORGANIZER":{"value":"mailto:jsmith@example.com"},
-     "DTSTART":{"value":{"time":"1996-09-18 14:30:00 UTC", "zone":"Z"}},
-     "DTEND":{"value":{"time":"1996-09-20 22:00:00 UTC", "zone":"Z"}},
+     "DTSTART":
+      {"value":
+        {"year":"1996",
+         "month":"09",
+         "day":"18",
+         "hour":"14",
+         "min":"30",
+         "sec":"00"}},
+     "DTEND":
+      {"value":
+        {"year":"1996",
+         "month":"09",
+         "day":"20",
+         "hour":"22",
+         "min":"00",
+         "sec":"00"}},
      "STATUS":{"value":"CONFIRMED"},
      "CATEGORIES":{"value":["CONFERENCE"]},
      "SUMMARY":{"value":"Networld+Interop Conference"},

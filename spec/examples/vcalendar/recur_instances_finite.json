@@ -6,7 +6,13 @@
      "STANDARD":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "RRULE":
@@ -20,7 +26,13 @@
      "DAYLIGHT":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "RRULE":
@@ -39,7 +51,14 @@
         {"freq":"MONTHLY",
          "interval":"1",
          "byday":[{"weekday":"TU", "ordwk":"1"}],
-         "until":{"time":"2012-12-31 10:00:00 +1100", "zone":""}}},
+         "until":
+          {"year":"2012",
+           "month":"12",
+           "day":"31",
+           "hour":"10",
+           "min":"00",
+           "sec":"00",
+           "zone":""}}},
      "SUMMARY":{"value":"Crazy Event Thingy!"},
      "ATTENDEE":
       [{"value":"mailto:calmozilla1@gmail.com",
@@ -68,25 +87,62 @@
       {"value":"mailto:jlal@mozilla.com", "params":{"CN":"James Lal"}},
      "DTSTART":
       {"value":
-        {"time":"2012-10-02 17:00:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"10",
+         "day":"02",
+         "hour":"10",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "DTEND":
       {"value":
-        {"time":"2012-10-02 17:30:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"10",
+         "day":"02",
+         "hour":"10",
+         "min":"30",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "TRANSP":{"value":"OPAQUE"},
      "LAST_MODIFIED":
-      {"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
-     "DTSTAMP":{"value":{"time":"2012-09-12 17:15:06 UTC", "zone":"Z"}},
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"12",
+         "hour":"17",
+         "min":"15",
+         "sec":"06"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2012",
+         "month":"09",
+         "day":"12",
+         "hour":"17",
+         "min":"15",
+         "sec":"06"}},
      "SEQUENCE":{"value":0},
      "RDATE":
       [{"value":
-         [{"time":"2012-11-10 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         [{"year":"2012",
+           "month":"11",
+           "day":"10",
+           "hour":"10",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}],
         "params":{"TZID":"America/Los_Angeles"}},
        {"value":
-         [{"time":"2012-11-05 18:00:00 UTC", "zone":"America/Los_Angeles"}],
+         [{"year":"2012",
+           "month":"11",
+           "day":"05",
+           "hour":"10",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}],
         "params":{"TZID":"America/Los_Angeles"}}],
      "VALARM":
       {"ACTION":{"value":"DISPLAY"},

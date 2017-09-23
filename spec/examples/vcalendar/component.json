@@ -2,15 +2,52 @@
   {"VERSION":{"value":"2.0"},
    "PRODID":{"value":"-//ABC Corporation//NONSGML My Product//EN"},
    "VEVENT":
-    [{"DTSTART":{"value":{"time":"1970-03-08 02:00:00 +1000", "zone":""}},
+    [{"DTSTART":
+       {"value":
+         {"year":"1970",
+          "month":"03",
+          "day":"08",
+          "hour":"02",
+          "min":"00",
+          "sec":"00",
+          "zone":""}},
       "UID":{"value":"uid1@example.com"},
-      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"09",
+          "day":"12",
+          "hour":"17",
+          "min":"15",
+          "sec":"40"}},
       "SUMMARY":{"value":"foo \\nbar"},
       "VALARM":
        {"ACTION":{"value":"AUDIO"},
-        "TRIGGER":{"value":{"time":"1998-04-03 12:00:00 UTC", "zone":"Z"}},
+        "TRIGGER":
+         {"value":
+           {"year":"1998",
+            "month":"04",
+            "day":"03",
+            "hour":"12",
+            "min":"00",
+            "sec":"00"}},
         "SUMMARY":{"value":"escaped, comma and; semicolon\nnewline"}}},
      {"UID":{"value":"uid1@example.com"},
-      "DTSTAMP":{"value":{"time":"2012-09-12 17:15:40 UTC", "zone":"Z"}},
-      "DTSTART":{"value":{"time":"1970-03-08 02:00:00 +1000", "zone":""}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"09",
+          "day":"12",
+          "hour":"17",
+          "min":"15",
+          "sec":"40"}},
+      "DTSTART":
+       {"value":
+         {"year":"1970",
+          "month":"03",
+          "day":"08",
+          "hour":"02",
+          "min":"00",
+          "sec":"00",
+          "zone":""}},
       "SUMMARY":{"value":"another"}}]}}

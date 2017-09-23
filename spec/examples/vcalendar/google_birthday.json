@@ -14,7 +14,14 @@
       "RDATE":
        [{"value":["2013-12-10 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
         {"value":["2012-12-10 00:00:00 UTC"], "params":{"VALUE":"DATE"}}],
-      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "UID":{"value":"2014_BIRTHDAY_79d389868f96182e@google.com"},
       "ATTENDEE":
        {"value":
@@ -26,9 +33,22 @@
           "CN":"Contacts",
           "X_NUM_GUESTS":"0"}},
       "CLASS":{"value":"PUBLIC"},
-      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "CREATED":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "LAST_MODIFIED":
-       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "SEQUENCE":{"value":1},
       "STATUS":{"value":"CONFIRMED"},
       "SUMMARY":{"value":"PErson #2's birthday"},
@@ -37,7 +57,14 @@
        {"value":"2012-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "DTEND":
        {"value":"2012-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
-      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
       "ATTENDEE":
        {"value":
@@ -54,10 +81,23 @@
       "RECURRENCE_ID":
        {"value":"2012-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "CLASS":{"value":"PUBLIC"},
-      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "CREATED":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
       "LAST_MODIFIED":
-       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "SEQUENCE":{"value":1},
       "STATUS":{"value":"CONFIRMED"},
       "SUMMARY":{"value":"PErson #2's birthday"},
@@ -66,7 +106,14 @@
        {"value":"2013-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "DTEND":
        {"value":"2013-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
-      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
       "ATTENDEE":
        {"value":
@@ -83,10 +130,23 @@
       "RECURRENCE_ID":
        {"value":"2013-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "CLASS":{"value":"PUBLIC"},
-      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "CREATED":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
       "LAST_MODIFIED":
-       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "SEQUENCE":{"value":1},
       "STATUS":{"value":"CONFIRMED"},
       "SUMMARY":{"value":"PErson #2's birthday"},
@@ -95,7 +155,14 @@
        {"value":"2014-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "DTEND":
        {"value":"2014-12-11 00:00:00 UTC", "params":{"VALUE":"DATE"}},
-      "DTSTAMP":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "UID":{"value":"BIRTHDAY_79d389868f96182e@google.com"},
       "ATTENDEE":
        {"value":
@@ -112,10 +179,23 @@
       "RECURRENCE_ID":
        {"value":"2014-12-10 00:00:00 UTC", "params":{"VALUE":"DATE"}},
       "CLASS":{"value":"PUBLIC"},
-      "CREATED":{"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+      "CREATED":
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "DESCRIPTION":{"value":"Today is PErson #2's birthday!"},
       "LAST_MODIFIED":
-       {"value":{"time":"2012-12-07 18:30:41 UTC", "zone":"Z"}},
+       {"value":
+         {"year":"2012",
+          "month":"12",
+          "day":"07",
+          "hour":"18",
+          "min":"30",
+          "sec":"41"}},
       "SEQUENCE":{"value":1},
       "STATUS":{"value":"CONFIRMED"},
       "SUMMARY":{"value":"PErson #2's birthday"},

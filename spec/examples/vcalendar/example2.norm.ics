@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ABC Corporation//NONSGML My Product//EN
+BEGIN:VTODO
+ATTENDEE;DELEGATED-TO="mailto:jdoe@example.com","mailto:jqpublic@example.co
+ m":mailto:jsmith@example.com
+ATTENDEE;PARTSTAT="ACCEPTED":mailto:jqpublic@example.com
+DTSTAMP:19980130T134500Z
+DUE:19980415T000000
+ORGANIZER:mailto:unclesam@example.com
+SEQUENCE:2
+STATUS:NEEDS-ACTION
+SUMMARY:Submit Income Taxes
+UID:uid4@example.com
+BEGIN:VALARM
+ACTION:AUDIO
+ATTACH;FMTTYPE="audio/basic":http://example.com/pub/audio-files/ssbanner.au
+ d
+DURATION:PT1H
+REPEAT:4
+TRIGGER:19980403T120000Z
+END:VALARM
+END:VTODO
+END:VCALENDAR

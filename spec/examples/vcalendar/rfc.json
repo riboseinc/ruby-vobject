@@ -3,7 +3,14 @@
    "PRODID":{"value":"-//Example Inc.//Example Calendar//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"2008-02-05 19:12:24 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"2008",
+         "month":"02",
+         "day":"05",
+         "hour":"19",
+         "min":"12",
+         "sec":"24"}},
      "DTSTART":
       {"value":"2008-10-06 00:00:00 UTC", "params":{"VALUE":"DATE"}},
      "SUMMARY":{"value":"Planning meeting"},

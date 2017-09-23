@@ -13,7 +13,13 @@
        "TZNAME":{"value":"PDT"},
        "DTSTART":
         {"value":
-          {"time":"1970-03-08 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1970",
+           "month":"03",
+           "day":"08",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
@@ -25,7 +31,13 @@
        "TZNAME":{"value":"PST"},
        "DTSTART":
         {"value":
-          {"time":"1970-11-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1970",
+           "month":"11",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
@@ -45,12 +57,32 @@
            {"weekday":"WE"},
            {"weekday":"TH"},
            {"weekday":"FR"}]}},
-     "DTSTAMP":{"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"03",
+         "hour":"22",
+         "min":"13",
+         "sec":"06"}},
      "UID":{"value":"4pfh824gvims850j0gar361t04@google.com"},
-     "CREATED":{"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+     "CREATED":
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"03",
+         "hour":"22",
+         "min":"13",
+         "sec":"06"}},
      "DESCRIPTION":{"value":""},
      "LAST_MODIFIED":
-      {"value":{"time":"2012-08-03 22:13:06 UTC", "zone":"Z"}},
+      {"value":
+        {"year":"2012",
+         "month":"08",
+         "day":"03",
+         "hour":"22",
+         "min":"13",
+         "sec":"06"}},
      "LOCATION":{"value":""},
      "SEQUENCE":{"value":0},
      "STATUS":{"value":"CONFIRMED"},
@@ -62,10 +94,22 @@
         "SUMMARY":{"value":"Alarm notification"},
         "ATTENDEE":{"value":"mailto:calmozilla1@gmail.com"},
         "TRIGGER":
-         {"value":{"time":"2012-08-02 23:30:00 UTC", "zone":"Z"},
+         {"value":
+           {"year":"2012",
+            "month":"08",
+            "day":"02",
+            "hour":"23",
+            "min":"30",
+            "sec":"00"},
           "params":{"VALUE":"DATE-TIME"}}},
        {"ACTION":{"value":"DISPLAY"},
         "DESCRIPTION":{"value":"This is an event reminder"},
         "TRIGGER":
-         {"value":{"time":"2012-08-02 23:30:00 UTC", "zone":"Z"},
+         {"value":
+           {"year":"2012",
+            "month":"08",
+            "day":"02",
+            "hour":"23",
+            "min":"30",
+            "sec":"00"},
           "params":{"VALUE":"DATE-TIME"}}}]}}}

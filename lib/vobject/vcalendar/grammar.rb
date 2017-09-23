@@ -500,29 +500,59 @@ module Vobject::Vcalendar
             # subtracting a minute to avoid PeriodNotFound exceptions on the boundary between daylight saving && standard time
             # if that doesn't work either, we'll rescue to floating localtime
             # TODO lookup offsets applicable by parsing dates && offsets in the ical. I'd rather not.
-            y[:DTSTART][:value].value = { time: tz.local_to_utc(y[:DTSTART][:value].value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue y[:DTSTART][:value].value
+            begin
+              y[:DTSTART][:value].value[:time] = tz.local_to_utc(y[:DTSTART][:value].value[:time] - 60, true) + 60
+              y[:DTSTART][:value].value[:zone] = x[:TZID][:value].value 
+            rescue
+              # nop
+            end
             next unless y.has_key?(:RDATE)
             if y[:RDATE].is_a?(Array)
               y[:RDATE].each do |z|
                 z[:value].value.each do |w|
-                  w.value = { time: tz.local_to_utc(w.value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue w.value
+                  begin
+                    w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
+                    w.value[:zone] = x[:TZID][:value].value 
+                  rescue
+                    # nop
+                  end
                 end
               end
             else
-              y[:RDATE][:value].value = { time: tz.local_to_utc(y[:RDATE].value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue y[:RDATE][:value].value
+              begin
+                y[:RDATE][:value].value[:time] = tz.local_to_utc(y[:RDATE].value[:time] - 60, true) + 60
+                y[:RDATE][:value].value[:zone] = x[:TZID][:value].value
+              rescue
+                # nop
+              end
             end
           end
         else
-          x[k][:component][:DTSTART][:value].value = { time: tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue x[k][:component][:DTSTART][:value].value
+          begin
+            x[k][:component][:DTSTART][:value].value[:time] = tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time] - 60, true) + 60
+            x[k][:component][:DTSTART][:value].value[:zone] = x[:TZID][:value].value
+          rescue
+            # nop
+          end
           next unless x[k][:component].has_key?(:RDATE)
           if x[k][:component][:RDATE].is_a?(Array)
             x[k][:component][:RDATE].each do |z|
               z[:value].value.each do |w|
-                w.value = { time: tz.local_to_utc(w.value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue w.value
+                begin
+                  w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
+                  w.value[:zone] = x[:TZID][:value].value
+                rescue
+                  # nop
+                end
               end
             end
           else
-            x[k][:component][:RDATE][:value].value = { time: tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time] - 60, true) + 60, zone: x[:TZID][:value].value } rescue x[k][:component][:RDATE][:value].value
+            begin
+              x[k][:component][:RDATE][:value].value[:time] = tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time] - 60, true) + 60
+              x[k][:component][:RDATE][:value].value[:zone] = x[:TZID][:value].value
+            rescue
+              # nop
+            end
           end
         end
       end

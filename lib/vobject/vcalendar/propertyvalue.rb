@@ -263,24 +263,38 @@ module Vobject
         end
 
         def initialize(val)
-          self.value = val
+          self.value = val.clone
           # val consists of :time && :zone values. If :zone is empty, floating local time (i.e. system local time) is assumed
           self.type = "datetimeLocal"
+          value[:time] = if val[:zone].nil? || val[:zone].empty?
+                           ::Time.local(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
+                         else
+                           ::Time.utc(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
+                         end
+          value[:origtime] = value[:time]
         end
 
         def to_s
-          if !value[:zone].empty?
-            tz = TZInfo::Timezone.get(value[:zone])
-            localtime = tz.utc_to_local(value[:time])
-          else
-            localtime = value[:time]
-          end
-          sprintf("%04d%02d%02dT%02d%02d%02d", localtime.year, localtime.month, localtime.day,
-                  localtime.hour, localtime.min, localtime.sec)
+          localtime = value[:origtime]
+          ret = sprintf("%04d%02d%02dT%02d%02d%02d", localtime.year, localtime.month, localtime.day,
+                        localtime.hour, localtime.min, localtime.sec)
+          zone = "Z" if value[:zone] && value[:zone] == "Z"
+          ret = ret + zone if !zone.nil?
+          ret
         end
 
+
         def to_hash
-          value
+          ret = {
+            year: value[:year],
+            month: value[:month],
+            day: value[:day],
+            hour: value[:hour],
+            min: value[:min],
+            sec: value[:sec],
+          }
+          ret[:zone] = value[:zone] if value[:zone]
+          ret
         end
       end
 
@@ -291,18 +305,28 @@ module Vobject
         end
 
         def initialize(val)
-          self.value = val
-          self.type = "datetimeUTC"
+          self.value = val.clone
+          value[:time] =  ::Time.utc(val[:year], val[:month], val[:day], val[:hour], val[:min], val[:sec])
+          value[:origtime] = value[:time]
         end
 
         def to_s
-          utc = value[:time]
-          sprintf("%04d%02d%02dT%02d%02d%02dZ", utc.year, utc.month, utc.day,
-                  utc.hour, utc.min, utc.sec)
+          localtime = value[:origtime]
+          ret = sprintf("%04d%02d%02dT%02d%02d%02dZ", localtime.year, localtime.month, localtime.day,
+                        localtime.hour, localtime.min, localtime.sec)
+          ret
         end
 
         def to_hash
-          value
+          ret = {
+            year: value[:year],
+            month: value[:month],
+            day: value[:day],
+            hour: value[:hour],
+            min: value[:min],
+            sec: value[:sec],
+          }
+          ret
         end
       end
 

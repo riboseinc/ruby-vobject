@@ -6,7 +6,13 @@
      "STANDARD":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "RRULE":
@@ -20,7 +26,13 @@
      "DAYLIGHT":
       {"DTSTART":
         {"value":
-          {"time":"1971-01-01 10:00:00 UTC", "zone":"America/Los_Angeles"}},
+          {"year":"1971",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Los_Angeles"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
        "TZOFFSETFROM":{"value":{"sign":"-", "hr":"08", "min":"00"}},
        "RRULE":
@@ -36,11 +48,23 @@
      "RRULE":
       [{"value":
          {"freq":"WEEKLY",
-          "until":{"time":"2012-07-30 06:59:59 UTC", "zone":"Z"}}},
+          "until":
+           {"year":"2012",
+            "month":"07",
+            "day":"30",
+            "hour":"06",
+            "min":"59",
+            "sec":"59"}}},
        {"value":
          {"freq":"MONTHLY",
           "byday":[{"weekday":"SU"}],
-          "until":{"time":"2012-07-30 06:59:59 UTC", "zone":"Z"}}}],
+          "until":
+           {"year":"2012",
+            "month":"07",
+            "day":"30",
+            "hour":"06",
+            "min":"59",
+            "sec":"59"}}}],
      "SUMMARY":{"value":"sahaja <> frashed"},
      "DESCRIPTION":{"value":"weekly 1on1"},
      "ATTENDEE":
@@ -56,18 +80,43 @@
        "params":{"CN":"Faramarz Rashed"}},
      "DTSTART":
       {"value":
-        {"time":"2012-03-26 18:00:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"03",
+         "day":"26",
+         "hour":"11",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "DTEND":
       {"value":
-        {"time":"2012-03-26 18:30:00 UTC", "zone":"America/Los_Angeles"},
+        {"year":"2012",
+         "month":"03",
+         "day":"26",
+         "hour":"11",
+         "min":"30",
+         "sec":"00",
+         "zone":"America/Los_Angeles"},
        "params":{"TZID":"America/Los_Angeles"}},
      "STATUS":{"value":"CONFIRMED"},
      "CLASS":{"value":"PUBLIC"},
      "TRANSP":{"value":"OPAQUE"},
      "LAST_MODIFIED":
-      {"value":{"time":"2012-03-26 16:15:22 UTC", "zone":"Z"}},
-     "DTSTAMP":{"value":{"time":"2012-07-30 16:56:37 UTC", "zone":"Z"}},
+      {"value":
+        {"year":"2012",
+         "month":"03",
+         "day":"26",
+         "hour":"16",
+         "min":"15",
+         "sec":"22"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2012",
+         "month":"07",
+         "day":"30",
+         "hour":"16",
+         "min":"56",
+         "sec":"37"}},
      "SEQUENCE":{"value":9},
      "VALARM":
       {"ACTION":{"value":"DISPLAY"},

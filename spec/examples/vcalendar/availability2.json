@@ -3,9 +3,23 @@
    "PRODID":{"value":"-//example.com//iCalendar 2.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"2011-11-13 04:41:11 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"2011",
+         "month":"11",
+         "day":"13",
+         "hour":"04",
+         "min":"41",
+         "sec":"11"}},
      "DTSTART":
-      {"value":{"time":"2011-11-06 19:00:00 UTC", "zone":"America/Denver"},
+      {"value":
+        {"year":"2011",
+         "month":"11",
+         "day":"06",
+         "hour":"12",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Denver"},
        "params":{"TZID":"America/Denver"}},
      "DURATION":{"value":"PT2H"},
      "SUMMARY":{"value":"Lunch meeting in Denver"},
@@ -13,21 +27,46 @@
    "VAVAILABILITY":
     [{"ORGANIZER":{"value":"mailto:bernard@example.com"},
       "UID":{"value":"627A87FA-E5F1-43C0-B3B1-567DA10F2A83"},
-      "DTSTAMP":{"value":{"time":"2011-10-05 13:32:25 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2011",
+          "month":"10",
+          "day":"05",
+          "hour":"13",
+          "min":"32",
+          "sec":"25"}},
       "DTSTART":
        {"value":
-         {"time":"2011-10-02 04:00:00 UTC", "zone":"America/Montreal"},
+         {"year":"2011",
+          "month":"10",
+          "day":"02",
+          "hour":"00",
+          "min":"00",
+          "sec":"00",
+          "zone":"America/Montreal"},
         "params":{"TZID":"America/Montreal"}},
       "AVAILABLE":
        {"UID":{"value":"A833E850-892B-43F6-98B6-C15A6BFC5D27"},
         "SUMMARY":{"value":"Monday to Friday from 9:00 to 17:00"},
         "DTSTART":
          {"value":
-           {"time":"2011-10-02 12:00:00 UTC", "zone":"America/Montreal"},
+           {"year":"2011",
+            "month":"10",
+            "day":"02",
+            "hour":"08",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Montreal"},
           "params":{"TZID":"America/Montreal"}},
         "DTEND":
          {"value":
-           {"time":"2011-10-02 22:00:00 UTC", "zone":"America/Montreal"},
+           {"year":"2011",
+            "month":"10",
+            "day":"02",
+            "hour":"18",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Montreal"},
           "params":{"TZID":"America/Montreal"}},
         "RRULE":
          {"value":
@@ -41,12 +80,33 @@
         "LOCATION":{"value":"Montreal"}}},
      {"ORGANIZER":{"value":"mailto:bernard@example.com"},
       "UID":{"value":"F01411E3-38B8-4490-8A1F-0CCEC57A0943"},
-      "DTSTAMP":{"value":{"time":"2011-10-05 13:32:25 UTC", "zone":"Z"}},
+      "DTSTAMP":
+       {"value":
+         {"year":"2011",
+          "month":"10",
+          "day":"05",
+          "hour":"13",
+          "min":"32",
+          "sec":"25"}},
       "DTSTART":
-       {"value":{"time":"2011-10-23 06:00:00 UTC", "zone":"America/Denver"},
+       {"value":
+         {"year":"2011",
+          "month":"10",
+          "day":"23",
+          "hour":"00",
+          "min":"00",
+          "sec":"00",
+          "zone":"America/Denver"},
         "params":{"TZID":"America/Denver"}},
       "DTEND":
-       {"value":{"time":"2011-10-30 06:00:00 UTC", "zone":"America/Denver"},
+       {"value":
+         {"year":"2011",
+          "month":"10",
+          "day":"30",
+          "hour":"00",
+          "min":"00",
+          "sec":"00",
+          "zone":"America/Denver"},
         "params":{"TZID":"America/Denver"}},
       "PRIORITY":{"value":1},
       "AVAILABLE":
@@ -54,11 +114,23 @@
         "SUMMARY":{"value":"Monday to Friday from 9:00 to 17:00"},
         "DTSTART":
          {"value":
-           {"time":"2011-10-23 14:00:00 UTC", "zone":"America/Denver"},
+           {"year":"2011",
+            "month":"10",
+            "day":"23",
+            "hour":"08",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"},
           "params":{"TZID":"America/Denver"}},
         "DTEND":
          {"value":
-           {"time":"2011-10-24 00:00:00 UTC", "zone":"America/Denver"},
+           {"year":"2011",
+            "month":"10",
+            "day":"23",
+            "hour":"18",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"},
           "params":{"TZID":"America/Denver"}},
         "RRULE":
          {"value":

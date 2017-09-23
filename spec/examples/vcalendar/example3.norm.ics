@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//xyz Corp//NONSGML PDA Calendar Version 1.0//EN
+BEGIN:VEVENT
+CATEGORIES:CONFERENCE
+DESCRIPTION:Networld+Interop Conference and Exhibit\nAtlanta World Congress
+  Center\nAtlanta\, Georgia
+DTEND:19960920T220000Z
+DTSTAMP:19960704T120000Z
+DTSTART:19960918T143000Z
+ORGANIZER:mailto:jsmith@example.com
+STATUS:CONFIRMED
+SUMMARY:Networld+Interop Conference
+UID:uid1@example.com
+END:VEVENT
+END:VCALENDAR

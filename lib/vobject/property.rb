@@ -2,7 +2,7 @@ require "vobject"
 require "vobject/parameter"
 
 class Vobject::Property
-  attr_accessor :group, :prop_name, :params, :value, :multiple
+  attr_accessor :group, :prop_name, :params, :value, :multiple, :norm
 
   def <=>(another)
     if self.prop_name =~ /^VERSION$/i
@@ -40,7 +40,7 @@ class Vobject::Property
         self.value = options[:value]
       end
     end
-
+    self.norm = nil
     raise_invalid_initialization if key != name
   end
 
@@ -73,16 +73,19 @@ class Vobject::Property
   end
 
   def to_norm
-    if multiple.nil? || multiple.empty?
-      ret = to_norm_line
-    else
-      arr = []
-      multiple.sort.each do |x|
-        arr << x.to_norm_line
+    if norm.nil?
+      if multiple.nil? || multiple.empty?
+        ret = to_norm_line
+      else
+        arr = []
+        multiple.sort.each do |x|
+          arr << x.to_norm_line
+        end
+        ret = arr.join("")
       end
-      ret = arr.join("")
+      norm = ret
     end
-    ret
+    norm
   end
 
   def to_norm_line

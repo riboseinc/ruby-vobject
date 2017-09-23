@@ -3,31 +3,69 @@
    "PRODID":{"value":"-//example.com//iCalendar 2.0//EN"},
    "VERSION":{"value":"2.0"},
    "VEVENT":
-    {"DTSTAMP":{"value":{"time":"2011-11-13 04:41:11 UTC", "zone":"Z"}},
+    {"DTSTAMP":
+      {"value":
+        {"year":"2011",
+         "month":"11",
+         "day":"13",
+         "hour":"04",
+         "min":"41",
+         "sec":"11"}},
      "DTSTART":
       {"value":
-        {"time":"2011-11-06 17:00:00 UTC", "zone":"America/Montreal"},
+        {"year":"2011",
+         "month":"11",
+         "day":"06",
+         "hour":"12",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Montreal"},
        "params":{"TZID":"America/Montreal"}},
      "DURATION":{"value":"PT2H"},
      "SUMMARY":{"value":"Meeting"},
      "UID":{"value":"768CB0C2-8642-43F7-A6C4-F8BB04B829B4"}},
    "VAVAILABILITY":
     {"UID":{"value":"452DFCA7-3203-4A3D-9A9A-99753A383B41"},
-     "DTSTAMP":{"value":{"time":"2011-10-05 13:32:25 UTC", "zone":"Z"}},
+     "DTSTAMP":
+      {"value":
+        {"year":"2011",
+         "month":"10",
+         "day":"05",
+         "hour":"13",
+         "min":"32",
+         "sec":"25"}},
      "DTSTART":
       {"value":
-        {"time":"2011-10-02 04:00:00 UTC", "zone":"America/Montreal"},
+        {"year":"2011",
+         "month":"10",
+         "day":"02",
+         "hour":"00",
+         "min":"00",
+         "sec":"00",
+         "zone":"America/Montreal"},
        "params":{"TZID":"America/Montreal"}},
      "AVAILABLE":
       {"UID":{"value":"466D5C68-5C4A-4078-AF5D-9C55EA9145D7"},
        "SUMMARY":{"value":"Monday to Friday from 8:00 to 18:00"},
        "DTSTART":
         {"value":
-          {"time":"2011-10-02 12:00:00 UTC", "zone":"America/Montreal"},
+          {"year":"2011",
+           "month":"10",
+           "day":"02",
+           "hour":"08",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Montreal"},
          "params":{"TZID":"America/Montreal"}},
        "DTEND":
         {"value":
-          {"time":"2011-10-02 22:00:00 UTC", "zone":"America/Montreal"},
+          {"year":"2011",
+           "month":"10",
+           "day":"02",
+           "hour":"18",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/Montreal"},
          "params":{"TZID":"America/Montreal"}},
        "RRULE":
         {"value":

@@ -9,7 +9,13 @@
         "TZNAME":{"value":"MDT"},
         "DTSTART":
          {"value":
-           {"time":"2007-03-11 09:00:00 UTC", "zone":"America/Denver"}},
+           {"year":"2007",
+            "month":"03",
+            "day":"11",
+            "hour":"02",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"}},
         "RRULE":
          {"value":
            {"freq":"YEARLY",
@@ -20,22 +26,59 @@
         "TZNAME":{"value":"MDT"},
         "DTSTART":
          {"value":
-           {"time":"1918-03-31 09:00:00 UTC", "zone":"America/Denver"}},
+           {"year":"1918",
+            "month":"03",
+            "day":"31",
+            "hour":"02",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"}},
         "RDATE":
          [{"value":
-            [{"time":"2003-04-06 09:00:00 UTC", "zone":"America/Denver"}]},
+            [{"year":"2003",
+              "month":"04",
+              "day":"06",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
           {"value":
-            [{"time":"2004-04-04 09:00:00 UTC", "zone":"America/Denver"}]},
+            [{"year":"2004",
+              "month":"04",
+              "day":"04",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
           {"value":
-            [{"time":"2005-04-03 09:00:00 UTC", "zone":"America/Denver"}]},
-          {"value":[{"time":"2006-04-02 02:00:00 +1000", "zone":""}]}]}],
+            [{"year":"2005",
+              "month":"04",
+              "day":"03",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
+          {"value":
+            [{"year":"2006",
+              "month":"04",
+              "day":"02",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":""}]}]}],
      "STANDARD":
       [{"TZOFFSETFROM":{"value":{"sign":"-", "hr":"06", "min":"00"}},
         "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
         "TZNAME":{"value":"MST"},
         "DTSTART":
          {"value":
-           {"time":"2007-11-04 08:00:00 UTC", "zone":"America/Denver"}},
+           {"year":"2007",
+            "month":"11",
+            "day":"04",
+            "hour":"02",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"}},
         "RRULE":
          {"value":
            {"freq":"YEARLY",
@@ -46,14 +89,43 @@
         "TZNAME":{"value":"MST"},
         "DTSTART":
          {"value":
-           {"time":"1918-10-27 08:00:00 UTC", "zone":"America/Denver"}},
+           {"year":"1918",
+            "month":"10",
+            "day":"27",
+            "hour":"02",
+            "min":"00",
+            "sec":"00",
+            "zone":"America/Denver"}},
         "RDATE":
          [{"value":
-            [{"time":"2003-10-26 08:00:00 UTC", "zone":"America/Denver"}]},
+            [{"year":"2003",
+              "month":"10",
+              "day":"26",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
           {"value":
-            [{"time":"2004-10-31 08:00:00 UTC", "zone":"America/Denver"}]},
+            [{"year":"2004",
+              "month":"10",
+              "day":"31",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
           {"value":
-            [{"time":"2005-10-30 08:00:00 UTC", "zone":"America/Denver"}]},
+            [{"year":"2005",
+              "month":"10",
+              "day":"30",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
+              "zone":"America/Denver"}]},
           {"value":
-            [{"time":"2006-10-29 08:00:00 UTC",
+            [{"year":"2006",
+              "month":"10",
+              "day":"29",
+              "hour":"02",
+              "min":"00",
+              "sec":"00",
               "zone":"America/Denver"}]}]}]}}}

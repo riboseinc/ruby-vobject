@@ -8,17 +8,57 @@
       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"04", "min":"00"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"05", "min":"00"}},
        "TZNAME":{"value":"RDATE_as_date_utc_standard"},
-       "DTSTART":{"value":{"time":"1970-01-01 02:00:00 UTC", "zone":"Z"}},
+       "DTSTART":
+        {"value":
+          {"year":"1970",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00"}},
        "RDATE":
-        [{"value":[{"time":"1970-01-01 02:00:00 +1000", "zone":""}]},
+        [{"value":
+           [{"year":"1970",
+             "month":"01",
+             "day":"01",
+             "hour":"02",
+             "min":"00",
+             "sec":"00",
+             "zone":""}]},
          {"value":["1980-01-01 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
-         {"value":[{"time":"1990-01-01 07:00:00 UTC", "zone":"Z"}]}]},
+         {"value":
+           [{"year":"1990",
+             "month":"01",
+             "day":"01",
+             "hour":"07",
+             "min":"00",
+             "sec":"00"}]}]},
      "DAYLIGHT":
       {"TZOFFSETFROM":{"value":{"sign":"-", "hr":"05", "min":"00"}},
        "TZOFFSETTO":{"value":{"sign":"-", "hr":"04", "min":"00"}},
        "TZNAME":{"value":"RDATE_as_date_utc_daylight"},
-       "DTSTART":{"value":{"time":"1975-01-01 02:00:00 UTC", "zone":"Z"}},
+       "DTSTART":
+        {"value":
+          {"year":"1975",
+           "month":"01",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00"}},
        "RDATE":
-        [{"value":[{"time":"1975-01-01 02:00:00 +1100", "zone":""}]},
+        [{"value":
+           [{"year":"1975",
+             "month":"01",
+             "day":"01",
+             "hour":"02",
+             "min":"00",
+             "sec":"00",
+             "zone":""}]},
          {"value":["1985-01-01 00:00:00 UTC"], "params":{"VALUE":"DATE"}},
-         {"value":[{"time":"1995-01-01 07:00:00 UTC", "zone":"Z"}]}]}}}}
+         {"value":
+           [{"year":"1995",
+             "month":"01",
+             "day":"01",
+             "hour":"07",
+             "min":"00",
+             "sec":"00"}]}]}}}}

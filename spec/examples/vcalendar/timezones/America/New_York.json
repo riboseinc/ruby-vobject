@@ -10,7 +10,13 @@
        "TZNAME":{"value":"EDT"},
        "DTSTART":
         {"value":
-          {"time":"1970-03-08 07:00:00 UTC", "zone":"America/New_York"}},
+          {"year":"1970",
+           "month":"03",
+           "day":"08",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/New_York"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
@@ -22,7 +28,13 @@
        "TZNAME":{"value":"EST"},
        "DTSTART":
         {"value":
-          {"time":"1970-11-01 07:00:00 UTC", "zone":"America/New_York"}},
+          {"year":"1970",
+           "month":"11",
+           "day":"01",
+           "hour":"02",
+           "min":"00",
+           "sec":"00",
+           "zone":"America/New_York"}},
        "RRULE":
         {"value":
           {"freq":"YEARLY",
