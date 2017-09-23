@@ -342,6 +342,10 @@ module Vobject
         def to_hash
           value
         end
+
+        def to_norm
+          value.to_s.upcase
+        end
       end
 
       class Duration < Vobject::PropertyValue
