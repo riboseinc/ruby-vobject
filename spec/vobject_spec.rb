@@ -27,7 +27,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/caretparams.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should normalise VCARD for RFC6868 caret parameters" do
+  it "should normalise iCalendar for RFC6868 caret parameters" do
     ics = File.read "spec/examples/vcalendar/caretparams.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/caretparams.norm.ics"
@@ -39,12 +39,12 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/recur_RFC7529.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD for RFC7529 calendar recurrences" do
+  it "should roundtrip iCalendar for RFC7529 calendar recurrences" do
     ics = File.read "spec/examples/vcalendar/recur_RFC7529.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
-  it "should normalise VCARD for RFC7529 calendar recurrences" do
+  it "should normalise iCalendar for RFC7529 calendar recurrences" do
     ics = File.read "spec/examples/vcalendar/recur_RFC7529.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/recur_RFC7529.norm.ics"
@@ -56,12 +56,12 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/availability1.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD for VAVAILABILITY component" do
+  it "should roundtrip iCalendar for VAVAILABILITY component" do
     ics = File.read "spec/examples/vcalendar/availability1.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
-  it "should normalise VCARD for RFC7529 calendar recurrences" do
+  it "should normalise iCalendar for RFC7529 calendar recurrences" do
     ics = File.read "spec/examples/vcalendar/availability1.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/availability1.norm.ics"
@@ -73,12 +73,12 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/availability2.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD for VAVAILABILITY component" do
+  it "should roundtrip iCalendar for VAVAILABILITY component" do
     ics = File.read "spec/examples/vcalendar/availability2.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
-  it "should normalise VCARD for VAVAILABILITY component" do
+  it "should normalise iCalendar for VAVAILABILITY component" do
     ics = File.read "spec/examples/vcalendar/availability2.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/availability2.norm.ics"
@@ -90,12 +90,12 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/availability3.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD for multiple VEVENT components" do
+  it "should roundtrip iCalendar for multiple VEVENT components" do
     ics = File.read "spec/examples/vcalendar/availability3.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
-  it "should normalise VCARD for VAVAILABILITY component" do
+  it "should normalise iCalendar for VAVAILABILITY component" do
     ics = File.read "spec/examples/vcalendar/availability3.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/availability3.norm.ics"
@@ -198,7 +198,7 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
-  it "should normalise iCalendar 6" do
+  it "should normalise iCalendar 7" do
     ics = File.read "spec/examples/vcalendar/example7.ics"
     vobj_json = Vcalendar.parse(ics, true).to_norm
     ics2 = File.read "spec/examples/vcalendar/example7.norm.ics"
@@ -216,10 +216,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/blank_description.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with blank description" do
+  it "should roundtrip iCalendar with blank description" do
     ics = File.read "spec/examples/vcalendar/blank_description.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with blank description" do
+    ics = File.read "spec/examples/vcalendar/blank_description.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/blank_description.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should require at least one component" do
@@ -243,10 +249,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/boolean1.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with VALUE:BOOLEAN" do
+  it "should roundtrip iCalendar with VALUE:BOOLEAN" do
     ics = File.read "spec/examples/vcalendar/boolean1.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with VALUE:BOOLEAN" do
+    ics = File.read "spec/examples/vcalendar/boolean1.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/boolean1.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should allow repeated components" do
@@ -255,10 +267,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/component.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with repeated components" do
+  it "should roundtrip iCalendar with repeated components" do
     ics = File.read "spec/examples/vcalendar/component.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with repeated components" do
+    ics = File.read "spec/examples/vcalendar/component.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/component.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Daily Recur" do
@@ -267,10 +285,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/daily_recur.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Daily Recur" do
+  it "should roundtrip iCalendar with Daily Recur" do
     ics = File.read "spec/examples/vcalendar/daily_recur.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Daily Recur" do
+    ics = File.read "spec/examples/vcalendar/daily_recur.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/daily_recur.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Dates" do
@@ -279,10 +303,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/dates.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Dates" do
+  it "should roundtrip iCalendar with Dates" do
     ics = File.read "spec/examples/vcalendar/dates.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Dates" do
+    ics = File.read "spec/examples/vcalendar/dates.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/dates.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Day Long Recur Yearly" do
@@ -291,10 +321,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/day_long_recur_yearly.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Day Long Recur Yearly" do
+  it "should roundtrip iCalendar with Day Long Recur Yearly" do
     ics = File.read "spec/examples/vcalendar/day_long_recur_yearly.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Day Long Recur Yearly" do
+    ics = File.read "spec/examples/vcalendar/day_long_recur_yearly.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/day_long_recur_yearly.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Duration instead of DTEND" do
@@ -303,10 +339,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/duration_instead_of_dtend.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Duration instead of DTEND" do
+  it "should roundtrip iCalendar with Duration instead of DTEND" do
     ics = File.read "spec/examples/vcalendar/duration_instead_of_dtend.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Duration instead of DTEND" do
+    ics = File.read "spec/examples/vcalendar/duration_instead_of_dtend.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/duration_instead_of_dtend.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should process VALUE:FLOAT" do
@@ -315,10 +357,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/float.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with VALUE:FLOAT" do
+  it "should roundtrip iCalendar with VALUE:FLOAT" do
     ics = File.read "spec/examples/vcalendar/float.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with VALUE:FLOAT" do
+    ics = File.read "spec/examples/vcalendar/float.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/float.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject spurious float value" do
@@ -332,10 +380,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/forced_types.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with forced types" do
+  it "should roundtrip iCalendar with forced types" do
     ics = File.read "spec/examples/vcalendar/forced_types.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with forced types" do
+    ics = File.read "spec/examples/vcalendar/forced_types.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/forced_types.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Google Birthdays" do
@@ -344,10 +398,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/google_birthday.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Google Birthdays" do
+  it "should roundtrip iCalendar with Google Birthdays" do
     ics = File.read "spec/examples/vcalendar/google_birthday.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Google Birthdays" do
+    ics = File.read "spec/examples/vcalendar/google_birthday.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/google_birthday.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with Integers" do
@@ -356,10 +416,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/integer.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Integers" do
+  it "should roundtrip iCalendar with Integers" do
     ics = File.read "spec/examples/vcalendar/integer.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Integers" do
+    ics = File.read "spec/examples/vcalendar/integer.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/integer.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject iCalendar Type mismatch for property X_INVALID" do
@@ -373,13 +439,19 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/minimal.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Minimal iCalendar" do
+  it "should roundtrip iCalendar with Minimal iCalendar" do
     ics = File.read "spec/examples/vcalendar/minimal.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with Minimal iCalendar" do
+    ics = File.read "spec/examples/vcalendar/minimal.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/minimal.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
-  it "should not accept concatenated iCal objects [likely to change]" do
+  it "should not accept concatenated iCal objects" do
     ics = File.read "spec/examples/vcalendar/multiple_root_components.ics"
     expect { Vcalendar.parse(ics, true) }.to raise_error(Rsec::SyntaxError)
   end
@@ -390,10 +462,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/multiple_rrules.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with Multiple RRULE" do
+  it "should roundtrip iCalendar with Multiple RRULE" do
     ics = File.read "spec/examples/vcalendar/multiple_rrules.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with Multiple RRULE" do
+    ics = File.read "spec/examples/vcalendar/multiple_rrules.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/multiple_rrules.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with multiple values" do
@@ -402,6 +480,12 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/multivalue.json"))
     expect(vobj_json).to include_json(exp_json)
   end
+  it "should normalise iCalendar with multiple values" do
+    ics = File.read "spec/examples/vcalendar/multivalue.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/multivalue.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly with only DTSTART date" do
     ics = File.read "spec/examples/vcalendar/only_dtstart_date.ics"
@@ -409,10 +493,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/only_dtstart_date.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with only DTSTART date" do
+  it "should roundtrip iCalendar with only DTSTART date" do
     ics = File.read "spec/examples/vcalendar/only_dtstart_date.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with only DTSTART date" do
+    ics = File.read "spec/examples/vcalendar/only_dtstart_date.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/only_dtstart_date.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with only DTSTART time" do
@@ -421,10 +511,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/only_dtstart_time.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with only DTSTART time" do
+  it "should roundtrip iCalendar with only DTSTART time" do
     ics = File.read "spec/examples/vcalendar/only_dtstart_time.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with only DTSTART time" do
+    ics = File.read "spec/examples/vcalendar/only_dtstart_time.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/only_dtstart_time.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly" do
@@ -433,10 +529,16 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/parserv2.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD" do
+  it "should roundtrip iCalendar" do
     ics = File.read "spec/examples/vcalendar/parserv2.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with only DTSTART time" do
+    ics = File.read "spec/examples/vcalendar/only_dtstart_time.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/only_dtstart_time.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with periods" do
@@ -445,7 +547,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/period.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with periods" do
+  it "should roundtrip iCalendar with periods" do
     ics = File.read "spec/examples/vcalendar/period.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -473,7 +575,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/quoted_params.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with quoted params" do
+  it "should roundtrip iCalendar with quoted params" do
     ics = File.read "spec/examples/vcalendar/quoted_params.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -485,7 +587,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/recur.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with RECUR" do
+  it "should roundtrip iCalendar with RECUR" do
     ics = File.read "spec/examples/vcalendar/recur.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -497,7 +599,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/recur_instances.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with RECUR instances" do
+  it "should roundtrip iCalendar with RECUR instances" do
     ics = File.read "spec/examples/vcalendar/recur_instances.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -509,7 +611,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/recur_instances_finite.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with finite RECUR instances" do
+  it "should roundtrip iCalendar with finite RECUR instances" do
     ics = File.read "spec/examples/vcalendar/recur_instances_finite.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -521,7 +623,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/rfc.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD" do
+  it "should roundtrip iCalendar" do
     ics = File.read "spec/examples/vcalendar/rfc.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -538,7 +640,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/time.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with TIME" do
+  it "should roundtrip iCalendar with TIME" do
     ics = File.read "spec/examples/vcalendar/time.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -555,7 +657,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/tzid_with_gmt.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with GMT TZID" do
+  it "should roundtrip iCalendar with GMT TZID" do
     ics = File.read "spec/examples/vcalendar/tzid_with_gmt.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -572,7 +674,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/unfold_properties.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with unfolding properties" do
+  it "should roundtrip iCalendar with unfolding properties" do
     ics = File.read "spec/examples/vcalendar/unfold_properties.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -584,7 +686,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/utc_negative_zero.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with negative zero UTC" do
+  it "should roundtrip iCalendar with negative zero UTC" do
     ics = File.read "spec/examples/vcalendar/utc_negative_zero.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -596,7 +698,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/utc_offset.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD with UTC offset" do
+  it "should roundtrip iCalendar with UTC offset" do
     ics = File.read "spec/examples/vcalendar/utc_offset.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -608,7 +710,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/values.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD" do
+  it "should roundtrip iCalendar" do
     ics = File.read "spec/examples/vcalendar/values.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -630,7 +732,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/America/Atikokan.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD Atikokan.ics" do
+  it "should roundtrip iCalendar Atikokan.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/America/Atikokan.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -649,7 +751,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/America/Los_Angeles.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD LA" do
+  it "should roundtrip iCalendar LA" do
     ics = File.read "spec/examples/vcalendar/timezones/America/Los_Angeles.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -661,7 +763,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/America/New_York.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD NYC" do
+  it "should roundtrip iCalendar NYC" do
     ics = File.read "spec/examples/vcalendar/timezones/America/New_York.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -673,7 +775,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/Makebelieve/RDATE_test.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD RDATE_test.ics" do
+  it "should roundtrip iCalendar RDATE_test.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_test.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -685,7 +787,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/Makebelieve/RDATE_utc_test.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD RDATE_utc_test.ics" do
+  it "should roundtrip iCalendar RDATE_utc_test.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_utc_test.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
@@ -697,7 +799,7 @@ describe Vobject do
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.json"))
     expect(vobj_json).to include_json(exp_json)
   end
-  it "should roundtrip VCARD RRULE_UNTIL_test.ics" do
+  it "should roundtrip iCalendar RRULE_UNTIL_test.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
