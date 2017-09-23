@@ -213,7 +213,9 @@ module Vcard::V4_0
           h
         end
         timestamp = seq(date_complete << "T".r, time_complete) do |d, t|
-          PropertyValue::DateTimeLocal.new(d.merge(t))
+          ret = PropertyValue::DateTimeLocal.new(d.merge(t))
+          ret.type = 'timestamp'
+          ret
         end
         timestamp.eof
       end
@@ -279,9 +281,19 @@ module Vcard::V4_0
         end | seq("-", "-", second) do |_, _, s|
           { sec: s }
         end
-        date_and_or_time = date_time.map { |d| PropertyValue::DateTimeLocal.new d } |
-          date.map { |d| PropertyValue::Date.new d } |
-          seq("T".r >> time).map { |t| PropertyValue::Time.new t }
+        date_and_or_time = date_time.map do |d| 
+          ret = PropertyValue::DateTimeLocal.new d 
+          ret.type = "date-and-or-time"
+          ret
+        end | date.map do |d| 
+          ret = PropertyValue::Date.new d 
+          ret.type = "date-and-or-time"
+          ret
+        end | seq("T".r >> time).map do |t| 
+          ret = PropertyValue::Time.new t 
+          ret.type = "date-and-or-time"
+          ret
+        end
         date_and_or_time.eof
       end
 

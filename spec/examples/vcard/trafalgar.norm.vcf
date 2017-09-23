@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+ADR;PREF="1";TYPE="HOME";VALUE="text":;;1 Trafalgar Square;London;;WC2N;Uni
+ ted Kingdom
+EMAIL;PREF="1";TYPE="HOME";VALUE="text":me@joebloggs.com
+FN;VALUE="text":Joe Bloggs
+IMPP;PREF="1";TYPE="HOME";VALUE="uri":skype:joe.bloggs
+N;VALUE="text":Bloggs;Joe;;;
+TEL;PREF="1";TYPE="CELL","HOME";VALUE="text":tel:+44 20 1234 5678
+URL;PREF="1";TYPE="HOME";VALUE="uri":http://joebloggs.com
+X-SOCIALPROFILE;PREF="1";TYPE="HOME";VALUE="text":twitter:https://twitter.c
+ om/joebloggs
+END:VCARD

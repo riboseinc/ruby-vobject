@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+CLIENTPIDMAP;VALUE="text":1;urn:uuid:53e374d9-337e-4727-8803-a1e9c14e0556
+CLIENTPIDMAP;VALUE="text":2;urn:uuid:1f762d2b-03c4-4a83-9a03-75ff658a6eee
+EMAIL;PID="1.1";VALUE="text":jdoe@example.com
+EMAIL;PID="2.1";VALUE="text":boss@example.com
+EMAIL;PID="2.2";VALUE="text":ceo@example.com
+FN;VALUE="text":J. Doe
+N;VALUE="text":Doe;J.;;;
+TEL;PID="1.1";VALUE="uri":tel:+1-555-555-5555
+TEL;PID="2.1","2.2";VALUE="uri":tel:+1-666-666-6666
+UID;VALUE="uri":urn:uuid:4fbe8971-0bc3-424c-9c26-36c3e1eff6b1
+END:VCARD

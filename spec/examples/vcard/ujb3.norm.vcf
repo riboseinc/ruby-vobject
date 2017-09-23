@@ -1,0 +1,15 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+ADR;TYPE="PREF","WORK";VALUE="text":;;aweg223;323;;;223
+EMAIL;TYPE="INTERNET","PREF","WORK";VALUE="text":hahahahahaahhajaneqblogg@a
+ sdf.example.com
+FN;VALUE="text":Jane Q Blogg
+N;VALUE="text":Q Blogg;Jane;;;
+OFFICE;VALUE="text":aowi
+ORG;VALUE="text":oi;oiwgo
+PRODID;VALUE="text":Microsoft-MacOutlook/14.10.0.110310
+TEL;TYPE="CELL";VALUE="text":aweg
+TEL;TYPE="WORK";VALUE="text":23g23
+TITLE;VALUE="text":messiah
+X-MS-IMADDRESS;TYPE="PREF";VALUE="text":mehemehehe@asdf.example.com
+END:VCARD

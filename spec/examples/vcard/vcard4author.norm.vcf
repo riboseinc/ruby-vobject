@@ -1,0 +1,22 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+ADR;TYPE="WORK";VALUE="text":;Suite D2-630;2875 Laurier;Quebec;QC;G1V 2M2;C
+ anada
+ANNIVERSARY;VALUE="date-and-or-time":20090808T1430-0500
+BDAY;VALUE="date-and-or-time":--0203
+EMAIL;TYPE="WORK";VALUE="text":simon.perreault@viagenie.ca
+FN;VALUE="text":Simon Perreault
+GENDER;VALUE="text":M
+GEO;TYPE="WORK";VALUE="uri":geo:46.772673\,-71.282945
+KEY;TYPE="WORK";VALUE="uri":http://www.viagenie.ca/simon.perreault/simon.as
+ c
+LANG;PREF="1";VALUE="language-tag":fr
+LANG;PREF="2";VALUE="language-tag":en
+N;VALUE="text":Perreault;Simon;;;ing. jr,M.Sc.
+ORG;TYPE="WORK";VALUE="text":Viagenie
+TEL;PREF="1";TYPE="VOICE","WORK";VALUE="uri":tel:+1-418-656-9254;ext=102
+TEL;TYPE="CELL","TEXT","VIDEO","VOICE","WORK";VALUE="uri":tel:+1-418-262-65
+ 01
+TZ;VALUE="text":-0500
+URL;TYPE="HOME";VALUE="uri":http://nomis80.org
+END:VCARD

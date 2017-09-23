@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+BIRTHPLACE;VALUE="uri":geo:46.769307\,-71.283079
+DEATHDATE;VALUE="text":circa 1800
+DEATHPLACE;VALUE="uri":geo:41.731944\,-49.945833
+FN;VALUE="text":Simon Perreault
+N;VALUE="text":Perreault;Simon;;;ing. jr,M.Sc.
+END:VCARD

@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+EMAIL;VALUE="text":xmpp@jabber.org
+FN;VALUE="text":jabber.org IM service
+GEO;VALUE="uri":geo:42.25\,-91.05
+IMPP;VALUE="uri":xmpp:jabber.org
+KIND;VALUE="text":application
+LANG;PREF="1";VALUE="language-tag":en
+LOGO;VALUE="uri":http://www.jabber.org/images/logo.png
+REV;VALUE="timestamp":19990104T122100Z
+SOURCE;VALUE="uri":xmpp:jabber.org?vcard
+TZ;VALUE="text":America/Chicago
+URL;VALUE="uri":http://www.jabber.org/
+END:VCARD

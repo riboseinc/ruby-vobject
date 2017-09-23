@@ -8,7 +8,7 @@ module Vobject
 
     def initialize(val)
       self.value = val
-      self.type = "property"
+      self.type = "text" # safe default
       self.norm = nil
     end
 

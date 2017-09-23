@@ -37,7 +37,7 @@ class Vobject::Component
         end
       end
     end
-    self.errors = err
+    self.errors = err.select { |e| !e.nil? }
     self.norm = nil
   end
 

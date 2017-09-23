@@ -1,0 +1,4 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+FN;VALUE="text":Testing Vcard
+END:VCARD

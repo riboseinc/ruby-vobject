@@ -938,6 +938,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics, "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics))
   end
+  it "should normalise VCF" do
+    ics = File.read "spec/examples/vcard/example1.vcf"
+    vobj_json = Vcard.parse(ics, "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/example1.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse VCF properly" do
     ics = File.read "spec/examples/vcard/example2.vcf"
@@ -949,6 +955,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/example2.vcf"
     roundtrip = Vcard.parse(ics, "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics))
+  end
+  it "should normalise VCF" do
+    ics = File.read "spec/examples/vcard/example2.vcf"
+    vobj_json = Vcard.parse(ics, "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/example2.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse VCF with binary photo properly" do
@@ -1018,6 +1030,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
   end
+  it "should normalise VCF that does not reject X-parameters on IMPP in v4" do
+    ics = File.read "spec/examples/vcard/apple5.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/apple5.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process VCF from Apple" do
     ics = File.read "spec/examples/vcard/ujb.vcf"
@@ -1051,6 +1069,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/ujb3.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF that does not reject TYPE parameter on X-property in v4" do
+    ics = File.read "spec/examples/vcard/ujb3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/ujb3.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject VCF with FN but no N in v3" do
@@ -1098,6 +1122,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
   end
+  it "should normalise VCF v4" do
+    ics = File.read "spec/examples/vcard/vcard4.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/vcard4.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process VCF v4" do
     ics = File.read "spec/examples/vcard/vcard4author.vcf"
@@ -1109,6 +1139,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/vcard4author.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF v4" do
+    ics = File.read "spec/examples/vcard/vcard4author.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/vcard4author.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should process VCF v3" do
@@ -1145,6 +1181,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/bubba4.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF v4" do
+    ics = File.read "spec/examples/vcard/bubba4.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/bubba4.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject VCF4 with LABEL property" do
@@ -1244,6 +1286,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
   end
+  it "should normalise VCF v4" do
+    ics = File.read "spec/examples/vcard/fullcontact.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/fullcontact.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process GMAIL VCF v3" do
     ics = File.read "spec/examples/vcard/gmail-single.vcf"
@@ -1309,6 +1357,12 @@ describe Vcard do
     exp_json = JSON.parse(File.read("spec/examples/vcard/trafalgar.json"))
     expect(vobj_json).to include_json(exp_json)
   end
+  it "should normalise VCF v4" do
+    ics = File.read "spec/examples/vcard/trafalgar.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/trafalgar.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process VCF v4 additions from RFC 6474" do
     ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
@@ -1320,6 +1374,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF v4 additions from RFC 6474" do
+    ics = File.read "spec/examples/vcard/rfc6474.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/rfc6474.1.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should process VCF v4 additions from RFC 6474" do
@@ -1333,6 +1393,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
   end
+  it "should normalise VCF v4 additions from RFC 6474" do
+    ics = File.read "spec/examples/vcard/rfc6474.2.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/rfc6474.2.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process VCF v4 additions from RFC 6474" do
     ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
@@ -1344,6 +1410,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF v4 additions from RFC 6474" do
+    ics = File.read "spec/examples/vcard/rfc6474.3.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/rfc6474.3.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should process VCF v4 additions from RFC 6715" do
@@ -1357,6 +1429,12 @@ describe Vcard do
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
   end
+  it "should normalise VCF v4 additions from RFC 6715" do
+    ics = File.read "spec/examples/vcard/rfc6715.1.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/rfc6715.1.norm.vcf"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should process VCF v4 additions from RFC 6473" do
     ics = File.read "spec/examples/vcard/rfc6473.vcf"
@@ -1368,6 +1446,12 @@ describe Vcard do
     ics = File.read "spec/examples/vcard/rfc6473.vcf"
     roundtrip = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_s
     expect(norm_vcard(roundtrip)).to eql(norm_vcard(ics.gsub(/\r\n?/, "\n")))
+  end
+  it "should normalise VCF v4 additions from RFC 6715" do
+    ics = File.read "spec/examples/vcard/rfc6473.vcf"
+    vobj_json = Vcard.parse(ics.gsub(/\r\n?/, "\n"), "4.0", true).to_norm
+    ics2 = File.read "spec/examples/vcard/rfc6473.norm.vcf"
+    expect(vobj_json).to eql(ics2)
   end
 end
 # rubocop:enable LineLength

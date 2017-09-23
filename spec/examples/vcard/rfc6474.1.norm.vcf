@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+BIRTHPLACE;VALUE="text":Babies'R'Us Hospital
+DEATHDATE;VALUE="date-and-or-time":--0415
+DEATHPLACE;VALUE="text":Aboard the Titanic\, near Newfoundland
+FN;VALUE="text":Simon Perreault
+N;VALUE="text":Perreault;Simon;;;ing. jr,M.Sc.
+END:VCARD

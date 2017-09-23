@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+EXPERTISE;INDEX="1";LEVEL="EXPERT";VALUE="text":chemistry
+EXPERTISE;INDEX="2";LEVEL="BEGINNER";VALUE="text":chinese literature
+FN;VALUE="text":Simon Perreault
+HOBBY;INDEX="1";LEVEL="HIGH";VALUE="text":reading
+HOBBY;INDEX="2";LEVEL="HIGH";VALUE="text":sewing
+INTEREST;INDEX="1";LEVEL="MEDIUM";VALUE="text":r&b music
+INTEREST;INDEX="2";LEVEL="HIGH";VALUE="text":rock 'n' roll music
+N;VALUE="text":Perreault;Simon;;;ing. jr,M.Sc.
+ORG-DIRECTORY;INDEX="1";VALUE="uri":http://directory.mycompany.example.com
+ORG-DIRECTORY;PREF="1";VALUE="uri":ldap://ldap.tech.example/o=Example%20Tec
+ h,ou=Engineering
+END:VCARD

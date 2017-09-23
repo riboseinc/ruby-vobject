@@ -92,6 +92,7 @@ module Vcard::V4_0
     class Clientpidmap < Text
       def initialize(val)
         self.value = val
+        # not explicitly specified in spec
         self.type = "text"
       end
 
@@ -381,7 +382,7 @@ module Vcard::V4_0
     class Address < Vobject::PropertyValue
       def initialize(val)
         self.value = val
-        self.type = "address"
+        self.type = "text"
       end
 
       def to_s

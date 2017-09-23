@@ -1,0 +1,18 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+ADR;TYPE="HOME";VALUE="text":;;42 Plantation St.;Baytown;LA;30314;United St
+ ates of America
+ADR;TYPE="PREF","WORK";VALUE="text":;;100 Waters Edge;Baytown;LA;30314;Unit
+ ed States of America
+EMAIL;VALUE="text":forrestgump@example.com
+FN;VALUE="text":Forrest Gump
+N;VALUE="text":Forrest;Gump;;Mr.;
+ORG;VALUE="text":Bubba Gump Shrimp Co.
+PHOTO;MEDIATYPE="image/gif";VALUE="uri":http://www.example.com/dir_photos/m
+ y_photo.gif
+REV;VALUE="timestamp":20080424T195243Z
+TEL;TYPE="HOME","VOICE";VALUE="uri":tel:+1-404-555-1212
+TEL;TYPE="VOICE","WORK";VALUE="uri":tel:+1-111-555-1212
+TITLE;VALUE="text":Shrimp Man
+X-QQ;VALUE="text":21588891
+END:VCARD

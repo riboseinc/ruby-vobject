@@ -1,0 +1,25 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+FN;VALUE="text":Apple Inc.
+IMPP;TYPE="HOME","PREF";VALUE="uri";X-SERVICE-TYPE="AIM":aim:aimuser
+IMPP;TYPE="WORK";VALUE="uri";X-SERVICE-TYPE="AIM":aim:workaimuser
+item10.IMPP;VALUE="uri";X-SERVICE-TYPE="ICQ":aim:i%20seek%20you
+item11.IMPP;VALUE="uri";X-SERVICE-TYPE="QQ":x-apple:QQmoar
+item12.IMPP;VALUE="uri";X-SERVICE-TYPE="SKYPE":skype:skypie
+item13.IMPP;VALUE="uri";X-SERVICE-TYPE="MSN":msnim:msnisnomore
+item7.IMPP;VALUE="uri";X-SERVICE-TYPE="FACEBOOK":xmpp:facebookuser
+item8.IMPP;VALUE="uri";X-SERVICE-TYPE="GADUGADU":x-apple:gadugaduser
+item9.IMPP;VALUE="uri";X-SERVICE-TYPE="GOOGLETALK":xmpp:googleuser
+N;VALUE="text":Surnom;Nom;;;
+ORG;VALUE="text":Apple Inc.;
+PRODID;VALUE="text":-//Apple Inc.//Mac OS X 10.8.4//EN
+X-ABSHOWAS;VALUE="text":COMPANY
+X-ABUID;VALUE="text":904132B1-9C20-4D38-A1B9-32DE9A621DB8:ABPerson
+item10.X-ABLABEL;VALUE="text":other tag
+item11.X-ABLABEL;VALUE="text":other tag
+item12.X-ABLABEL;VALUE="text":other tag
+item13.X-ABLABEL;VALUE="text":other tag
+item7.X-ABLABEL;VALUE="text":other tag
+item8.X-ABLABEL;VALUE="text":_$!<Other>!$_
+item9.X-ABLABEL;VALUE="text":other tag
+END:VCARD

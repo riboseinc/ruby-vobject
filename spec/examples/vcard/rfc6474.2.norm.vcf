@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION;VALUE="text":4.0
+BIRTHPLACE;VALUE="uri":http://example.com/hospitals/babiesrus.vcf
+DEATHDATE;VALUE="date-and-or-time":19531015T231000Z
+DEATHPLACE;VALUE="uri":http://example.com/ships/titanic.vcf
+FN;VALUE="text":Simon Perreault
+N;VALUE="text":Perreault;Simon;;;ing. jr,M.Sc.
+END:VCARD
