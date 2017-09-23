@@ -552,6 +552,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with periods" do
+    ics = File.read "spec/examples/vcalendar/period.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/period.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should not allow non-Text characters in xname property with default value of text" do
     ics = File.read "spec/examples/vcalendar/property_params.1.ics"
@@ -562,6 +568,12 @@ describe Vobject do
     vobj_json = Vcalendar.parse(ics, true).to_json
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/property_params.json"))
     expect(vobj_json).to include_json(exp_json)
+  end
+  it "should normalise iCalendar with property params" do
+    ics = File.read "spec/examples/vcalendar/property_params.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/property_params.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject quoted value as ROLE paramter value" do
@@ -580,6 +592,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with quoted params" do
+    ics = File.read "spec/examples/vcalendar/quoted_params.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/quoted_params.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly with RECUR" do
     ics = File.read "spec/examples/vcalendar/recur.ics"
@@ -591,6 +609,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/recur.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with RECUR" do
+    ics = File.read "spec/examples/vcalendar/recur.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/recur.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with RECUR instances" do
@@ -604,6 +628,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with RECUR instances" do
+    ics = File.read "spec/examples/vcalendar/recur_instances.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/recur_instances.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly with finite RECUR instances" do
     ics = File.read "spec/examples/vcalendar/recur_instances_finite.ics"
@@ -616,6 +646,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with finite RECUR instances" do
+    ics = File.read "spec/examples/vcalendar/recur_instances_finite.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/recur_instances_finite.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly" do
     ics = File.read "spec/examples/vcalendar/rfc.ics"
@@ -627,6 +663,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/rfc.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar" do
+    ics = File.read "spec/examples/vcalendar/rfc.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/rfc.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject an empty iCalendar" do
@@ -645,6 +687,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with TIME" do
+    ics = File.read "spec/examples/vcalendar/time.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/time.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should reject quotation marks in TZID parameter" do
     ics = File.read "spec/examples/vcalendar/tzid_with_quoted_gmt.ics"
@@ -661,6 +709,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/tzid_with_gmt.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with GMT TZID" do
+    ics = File.read "spec/examples/vcalendar/tzid_with_gmt.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/tzid_with_gmt.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should reject DTEND property with date that precedes DTBEGIN property" do
@@ -679,6 +733,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with unfolding properties" do
+    ics = File.read "spec/examples/vcalendar/unfold_properties.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/unfold_properties.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly with negative zero UTC" do
     ics = File.read "spec/examples/vcalendar/utc_negative_zero.ics"
@@ -690,6 +750,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/utc_negative_zero.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar with negative zero UTC" do
+    ics = File.read "spec/examples/vcalendar/utc_negative_zero.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/utc_negative_zero.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly with UTC offset" do
@@ -703,6 +769,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar with UTC offset" do
+    ics = File.read "spec/examples/vcalendar/utc_offset.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/utc_offset.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly" do
     ics = File.read "spec/examples/vcalendar/values.ics"
@@ -714,6 +786,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/values.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar" do
+    ics = File.read "spec/examples/vcalendar/values.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/values.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should disallow UID in an ALARM component" do
@@ -737,12 +815,24 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar Atikokan.ics" do
+    ics = File.read "spec/examples/vcalendar/timezones/America/Atikokan.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/America/Atikokan.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly Denver" do
     ics = File.read "spec/examples/vcalendar/timezones/America/Denver.ics"
     vobj_json = Vcalendar.parse(ics, true).to_json
     exp_json = JSON.parse(File.read("spec/examples/vcalendar/timezones/America/Denver.json"))
     expect(vobj_json).to include_json(exp_json)
+  end
+  it "should normalise iCalendar Denver" do
+    ics = File.read "spec/examples/vcalendar/timezones/America/Denver.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/America/Denver.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly LA" do
@@ -756,6 +846,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar LA" do
+    ics = File.read "spec/examples/vcalendar/timezones/America/Los_Angeles.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/America/Los_Angeles.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly NYC" do
     ics = File.read "spec/examples/vcalendar/timezones/America/New_York.ics"
@@ -767,6 +863,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/timezones/America/New_York.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar NYC" do
+    ics = File.read "spec/examples/vcalendar/timezones/America/New_York.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/America/New_York.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 
   it "should parse iCalendar properly RDATE_test.ics" do
@@ -780,6 +882,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar RDATE_test.ics" do
+    ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_test.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_test.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly RDATE_utc_test.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_utc_test.ics"
@@ -792,6 +900,12 @@ describe Vobject do
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
   end
+  it "should normalise iCalendar RDATE_utc_test.ics" do
+    ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_utc_test.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/Makebelieve/RDATE_utc_test.norm.ics"
+    expect(vobj_json).to eql(ics2)
+  end
 
   it "should parse iCalendar properly RRULE_UNTIL_test.ics" do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.ics"
@@ -803,6 +917,12 @@ describe Vobject do
     ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.ics"
     roundtrip = Vcalendar.parse(ics, true).to_s
     expect(norm_vcal(roundtrip)).to eql(norm_vcal(ics))
+  end
+  it "should normalise iCalendar RRULE_UNTIL_test.ics" do
+    ics = File.read "spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.ics"
+    vobj_json = Vcalendar.parse(ics, true).to_norm
+    ics2 = File.read "spec/examples/vcalendar/timezones/Makebelieve/RRULE_UNTIL_test.norm.ics"
+    expect(vobj_json).to eql(ics2)
   end
 end
 
