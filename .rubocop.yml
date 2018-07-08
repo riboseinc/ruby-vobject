@@ -343,7 +343,7 @@ Style/WordArray:
 Metrics/AbcSize:
   Description: A calculated magnitude based on number of assignments, branches, and
     conditions.
-  Enabled: true
+  Enabled: false
   Max: 15
 Metrics/BlockLength:
   Exclude:
@@ -361,12 +361,12 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Description: A complexity metric that is strongly correlated to the number of test
     cases needed to validate a method.
-  Enabled: true
+  Enabled: false
   Max: 6
 Metrics/LineLength:
   Description: Limit lines to 80 characters.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#80-character-limits
-  Enabled: true
+  Enabled: false
   Max: 80
   AllowURI: true
   URISchemes:
@@ -375,7 +375,7 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Description: Avoid methods longer than 10 lines of code.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#short-methods
-  Enabled: true
+  Enabled: false
   CountComments: true
   Max: 10
   Exclude:
@@ -389,7 +389,7 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Description: A complexity metric geared towards measuring complexity for a human
     reader.
-  Enabled: true
+  Enabled: false
   Max: 7
 Lint/AssignmentInCondition:
   Description: Don't use assignment in conditions.
@@ -613,7 +613,7 @@ Style/OneLineConditional:
   Description: Favor the ternary operator(?:) over if/then/else/end constructs.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#ternary-operator
   Enabled: false
-Naming/BinaryOperatorParameter:
+Naming/BinaryOperatorParameterName:
   Description: When defining binary operators, name the argument other.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#other-arg
   Enabled: false

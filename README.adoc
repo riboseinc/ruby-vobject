@@ -1,11 +1,8 @@
 == Vobject
 
-[![Build
-Status](https://travis-ci.org/riboseinc/ribose-ruby.svg?branch=master)](https://travis-ci.org/riboseinc/ribose-ruby)
-[![Code
-Climate](https://codeclimate.com/github/riboseinc/ribose-ruby/badges/gpa.svg)](https://codeclimate.com/github/riboseinc/ribose-ruby)
-[![Gem Version](https://badge.fury.io/rb/ribose.svg)](https://badge.fury.io/rb/ribose)
-
+image:https://img.shields.io/gem/v/ruby-object.svg["Gem Version", link="https://rubygems.org/gems/ruby-object"]
+image:https://img.shields.io/travis/riboseinc/ruby-object/master.svg["Build Status", link="https://travis-ci.org/riboseinc/ruby-object"]
+image:https://codeclimate.com/github/riboseinc/ruby-object/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/ruby-object"]
 
 The main purpose of the gem is to parse vobject formatted text into a ruby
 hash format. Currently there are two possiblities of vobjects, namely
