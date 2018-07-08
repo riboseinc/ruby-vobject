@@ -1,4 +1,4 @@
-# Vobject
+== Vobject
 
 [![Build
 Status](https://travis-ci.org/riboseinc/ribose-ruby.svg?branch=master)](https://travis-ci.org/riboseinc/ribose-ruby)
@@ -18,25 +18,33 @@ A secondary purpose is to create a normalised form of Vobjects (iCalendars
 and vCards version 4.0), which can be used to compare two Vobjects with minor
 formatting differences
 
-## Installation
+== Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
+[source,ruby]
+----
 gem 'ruby-vobject'
-```
+----
 
 And then execute:
 
-    $ bundle
+[source,console]
+----
+$ bundle
+----
 
 Or install it yourself as:
 
-    $ gem install ruby-vobject
+[source,console]
+----
+$ gem install ruby-vobject
+----
 
-## Usage
+== Usage
 
-```ruby
+[source,ruby]
+----
 require 'vcalendar'
 require 'JSON'
 require 'pp'
@@ -58,9 +66,10 @@ pp JSON.parse(Vcalendar.parse(ics).to_json)
 print Vcalendar.parse(ics).to_s
 # convert VCalendar into normalised VCalendar text
 print Vcalendar.parse(ics).to_norm
-```
+----
 
-```ruby
+[source,ruby]
+----
 require 'vcard'
 require 'JSON'
 require 'pp'
@@ -79,11 +88,11 @@ vcf = File.read "spec/examples/vcard/example61.vcf"
 pp Vcard.parse(vcf, '4.0', false)
 # list any errors
 pp Vcard.parse(vcf, '4.0', false).get_errors
-```
+----
 
 * Recognises all of VCard v3.0, Vcard v4.0, and Vcalendar v2.0
 * Components, properties, and parameters are all objects.
-  * Each type of component is a distinct object.
+** Each type of component is a distinct object.
 * The parameters of a property are represented as an array of parameter objects.
 * If a property has multiple values, given on separate lines, they are represented
 as an array of value properties. Each value hash may have its own parameters.
@@ -91,21 +100,25 @@ as an array of value properties. Each value hash may have its own parameters.
 * Objects can be parsed from text files.
 * Objects can be populated from hashes of property value objects.
 * Objects can be converted to Ruby hashes with native property value types (`.to_hash`), JSON objects with the same value types (`.to_json`), and round-tripped back to ICAL/VCARD string representations (`.to_s`). 
-* The normalised form of Vobjects (`.to_norm) applies normalising conventions to the string representation; most notably presenting elements of a vCard in sorted order.
-  * Normalisation follows the draft RFC `draft-calconnect-vobject-and-normalization`.
+* The normalised form of Vobjects (`.to_norm`) applies normalising conventions to the string representation; most notably presenting elements of a vCard in sorted order.
+** Normalisation follows the draft RFC `draft-calconnect-vobject-and-normalization`.
 * Validation can be strict or lax. 
-  * If strict, an exception is raised on any syntax error, type mismatch, or other mismatch to the specification, such as mandatory elements.
-  * If lax, an exception is still raised on syntax errors, but other issues are listed in an error field of the resulting object.
+** If strict, an exception is raised on any syntax error, type mismatch, or other mismatch to the specification, such as mandatory elements.
+** If lax, an exception is still raised on syntax errors, but other issues are listed in an error field of the resulting object.
 * Normalisation follows the draft RFC `draft-calconnect-vobject-and-normalization`.
 
 Running spec:
+
+[source,console]
+----
 bundle exec rspec
+----
 
-## Implementation
+== Implementation
 
-This gem is implemented using [Rsec](https://github.com/luikore/rsec), a very fast PEG grammar based on StringScanner.
+This gem is implemented using ttps://github.com/luikore/rsec[Rsec], a very fast PEG grammar based on StringScanner.
 
-## Coverage
+== Coverage
 
 This tool is intended as a reference implementation, and it is very strict in its conformance: it requires all rules for parameter coocurrence, 
 property typing, parameter typing, permitted properties within components, etc to be met by objects. 
@@ -121,12 +134,12 @@ This tool supports v3.0 vCard as specified in RFC 2425 and RFC 2426, and as upda
 This tool supports v4.0 vCard as specified in RFC 6350, and as updated in RFC 6868 (parameter encoding), RFC 6474 (place of birth, place and date of death), RFC 6715 (OMA CAB extensions), and RF 6473 (KIND:application).
 
 
-## Contributing
+== Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/riboseinc/ruby-vobject. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/riboseinc/ruby-vobject. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the http://contributor-covenant.org[Contributor Covenant] code of conduct.
 
 
-## License
+== License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
