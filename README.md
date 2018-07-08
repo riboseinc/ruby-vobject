@@ -1,5 +1,12 @@
 # Vobject
 
+[![Build
+Status](https://travis-ci.org/riboseinc/ribose-ruby.svg?branch=master)](https://travis-ci.org/riboseinc/ribose-ruby)
+[![Code
+Climate](https://codeclimate.com/github/riboseinc/ribose-ruby/badges/gpa.svg)](https://codeclimate.com/github/riboseinc/ribose-ruby)
+[![Gem Version](https://badge.fury.io/rb/ribose.svg)](https://badge.fury.io/rb/ribose)
+
+
 The main purpose of the gem is to parse vobject formatted text into a ruby
 hash format. Currently there are two possiblities of vobjects, namely
 iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
