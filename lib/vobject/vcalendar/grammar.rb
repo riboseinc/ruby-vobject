@@ -502,9 +502,10 @@ module Vobject::Vcalendar
             # TODO lookup offsets applicable by parsing dates && offsets in the ical. I'd rather not.
             begin
               y[:DTSTART][:value].value[:time] = tz.local_to_utc(y[:DTSTART][:value].value[:time] - 60, true) + 60
-              y[:DTSTART][:value].value[:zone] = x[:TZID][:value].value 
             rescue
               # nop
+             else
+              y[:DTSTART][:value].value[:zone] = x[:TZID][:value].value 
             end
             next unless y.has_key?(:RDATE)
             if y[:RDATE].is_a?(Array)
@@ -512,27 +513,30 @@ module Vobject::Vcalendar
                 z[:value].value.each do |w|
                   begin
                     w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
-                    w.value[:zone] = x[:TZID][:value].value 
                   rescue
                     # nop
+                    else
+                    w.value[:zone] = x[:TZID][:value].value 
                   end
                 end
               end
             else
               begin
                 y[:RDATE][:value].value[:time] = tz.local_to_utc(y[:RDATE].value[:time] - 60, true) + 60
-                y[:RDATE][:value].value[:zone] = x[:TZID][:value].value
               rescue
                 # nop
+               else
+                y[:RDATE][:value].value[:zone] = x[:TZID][:value].value
               end
             end
           end
         else
           begin
             x[k][:component][:DTSTART][:value].value[:time] = tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time] - 60, true) + 60
-            x[k][:component][:DTSTART][:value].value[:zone] = x[:TZID][:value].value
           rescue
             # nop
+            else
+            x[k][:component][:DTSTART][:value].value[:zone] = x[:TZID][:value].value
           end
           next unless x[k][:component].has_key?(:RDATE)
           if x[k][:component][:RDATE].is_a?(Array)
@@ -540,18 +544,20 @@ module Vobject::Vcalendar
               z[:value].value.each do |w|
                 begin
                   w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
-                  w.value[:zone] = x[:TZID][:value].value
                 rescue
                   # nop
+                else
+                  w.value[:zone] = x[:TZID][:value].value
                 end
               end
             end
           else
             begin
               x[k][:component][:RDATE][:value].value[:time] = tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time] - 60, true) + 60
-              x[k][:component][:RDATE][:value].value[:zone] = x[:TZID][:value].value
             rescue
               # nop
+            else
+              x[k][:component][:RDATE][:value].value[:zone] = x[:TZID][:value].value
             end
           end
         end
