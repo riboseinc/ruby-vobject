@@ -10,7 +10,7 @@ EMAIL;TYPE="WORK";VALUE="text":jqpublic@xyz.example.com
 FBURL;MEDIATYPE="text/calendar";VALUE="uri":ftp://example.com/busy/project-
  a.ifb
 FN;VALUE="text":J. Doe
-GENDER;VALUE="text":M;Fellow;Fellow;Fellow;Fellow
+GENDER;VALUE="text":M;Fellow
 GEO;VALUE="uri":geo:37.386013\,-122.082932
 IMPP;PREF="1";VALUE="uri":xmpp:alice@example.com
 KEY;VALUE="uri":http://www.example.com/keys/jdoe.cer

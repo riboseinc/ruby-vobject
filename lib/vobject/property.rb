@@ -73,7 +73,7 @@ class Vobject::Property
   end
 
   def to_norm
-    if norm.nil?
+    if @norm.nil?
       if multiple.nil? || multiple.empty?
         ret = to_norm_line
       else
@@ -83,9 +83,9 @@ class Vobject::Property
         end
         ret = arr.join("")
       end
-      norm = ret
+      @norm = ret
     end
-    norm
+    @norm
   end
 
   def to_norm_line

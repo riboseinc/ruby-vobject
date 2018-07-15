@@ -72,7 +72,11 @@ class Vobject::Component
       s = "BEGIN:#{name.upcase}\n"
       properties = children.select { |c| c.is_a? Vobject::Property }
       components = children.select { |c| not c.is_a? Vobject::Property }
-      properties.sort.each { |p| s << p.to_norm }
+      # create to_norm in advance
+      properties.each { |p| p.to_norm }
+      properties.sort.each do |p|
+        s << p.to_norm 
+      end
       components.sort.each { |p| s << p.to_norm }
       s << "END:#{name.upcase}\n"
       norm = s

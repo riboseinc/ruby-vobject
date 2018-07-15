@@ -29,6 +29,8 @@ iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-json_expectations"
+  spec.add_development_dependency "byebug"
+
   spec.add_runtime_dependency "rsec"
   spec.add_runtime_dependency "tzinfo"
 end
