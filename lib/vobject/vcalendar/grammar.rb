@@ -497,11 +497,12 @@ module Vobject::Vcalendar
         next unless x.has_key?(k)
         if x[k][:component].is_a?(Array)
           x[k][:component].each do |y|
-            # subtracting a minute to avoid PeriodNotFound exceptions on the boundary between daylight saving && standard time
+            # subtracting an hour and a  minute to avoid PeriodNotFound exceptions on the boundary between daylight saving && standard time
             # if that doesn't work either, we'll rescue to floating localtime
+            # ... no, I will treat STANDARD times as standard, and DAYLIGHT times as daylight savings
             # TODO lookup offsets applicable by parsing dates && offsets in the ical. I'd rather not.
             begin
-              y[:DTSTART][:value].value[:time] = tz.local_to_utc(y[:DTSTART][:value].value[:time] - 60, true) + 60
+              y[:DTSTART][:value].value[:time] = tz.local_to_utc(y[:DTSTART][:value].value[:time] - 3660, true) + 3660
             rescue
               # nop
              else
@@ -512,7 +513,7 @@ module Vobject::Vcalendar
               y[:RDATE].each do |z|
                 z[:value].value.each do |w|
                   begin
-                    w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
+                    w.value[:time] = tz.local_to_utc(w.value[:time] - 3660, true) + 3660
                   rescue
                     # nop
                     else
@@ -522,7 +523,7 @@ module Vobject::Vcalendar
               end
             else
               begin
-                y[:RDATE][:value].value[:time] = tz.local_to_utc(y[:RDATE].value[:time] - 60, true) + 60
+                y[:RDATE][:value].value[:time] = tz.local_to_utc(y[:RDATE].value[:time] - 3660, true) + 3660
               rescue
                 # nop
                else
@@ -532,7 +533,7 @@ module Vobject::Vcalendar
           end
         else
           begin
-            x[k][:component][:DTSTART][:value].value[:time] = tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time] - 60, true) + 60
+            x[k][:component][:DTSTART][:value].value[:time] = tz.local_to_utc(x[k][:component][:DTSTART][:value].value[:time] - 3660, true) + 3660
           rescue
             # nop
             else
@@ -543,7 +544,7 @@ module Vobject::Vcalendar
             x[k][:component][:RDATE].each do |z|
               z[:value].value.each do |w|
                 begin
-                  w.value[:time] = tz.local_to_utc(w.value[:time] - 60, true) + 60
+                  w.value[:time] = tz.local_to_utc(w.value[:time] - 3660, true) + 3660
                 rescue
                   # nop
                 else
@@ -553,7 +554,7 @@ module Vobject::Vcalendar
             end
           else
             begin
-              x[k][:component][:RDATE][:value].value[:time] = tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time] - 60, true) + 60
+              x[k][:component][:RDATE][:value].value[:time] = tz.local_to_utc(x[k][:component][:RDATE][:value].value[:time] - 3660, true) + 3660
             rescue
               # nop
             else

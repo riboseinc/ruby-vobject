@@ -65,7 +65,7 @@
               "hour":"02",
               "min":"00",
               "sec":"00",
-              "zone":""}]}]}],
+              "zone":"America/Denver"}]}]}],
      "STANDARD":
       [{"TZOFFSETFROM":{"value":{"sign":"-", "hr":"06", "min":"00"}},
         "TZOFFSETTO":{"value":{"sign":"-", "hr":"07", "min":"00"}},
