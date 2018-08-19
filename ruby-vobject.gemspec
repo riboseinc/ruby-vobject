@@ -18,7 +18,7 @@ hash format. Currently there are two possiblities of vobjects, namely
 iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
 (https://tools.ietf.org/html/rfc6350)."
   spec.homepage      = "https://github.com/riboseinc/ruby-vobject"
-  spec.license       = "MIT"
+  spec.license       = "BSD-2-Clause"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
