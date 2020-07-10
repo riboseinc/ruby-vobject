@@ -217,9 +217,9 @@ module Vcard::V4_0
     def parse_err(msg)
       if strict
         raise @ctx.report_error msg, "source"
-      else
-        errors << @ctx.report_error(msg, "source")
       end
+
+      errors << @ctx.report_error(msg, "source")
     end
   end
 end
