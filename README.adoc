@@ -1,7 +1,7 @@
 == Vobject
 
 image:https://img.shields.io/gem/v/ruby-object.svg["Gem Version", link="https://rubygems.org/gems/ruby-object"]
-image:https://img.shields.io/travis/riboseinc/ruby-object/master.svg["Build Status", link="https://travis-ci.com/riboseinc/ruby-object"]
+image:https://img.shields.io/travis/riboseinc/ruby-object/master.svg["Build Status", link="https://travis-ci.org/riboseinc/ruby-object"]
 image:https://codeclimate.com/github/riboseinc/ruby-object/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/ruby-object"]
 
 The main purpose of the gem is to parse vobject formatted text into a ruby

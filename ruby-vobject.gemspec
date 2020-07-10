@@ -25,12 +25,12 @@ iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0.1"
+  spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-json_expectations"
   spec.add_development_dependency "byebug"
 
-  spec.add_runtime_dependency "rsec"
+  spec.add_runtime_dependency "rsec", "~> 0.4"
   spec.add_runtime_dependency "tzinfo"
 end
