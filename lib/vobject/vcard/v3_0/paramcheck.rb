@@ -3,7 +3,6 @@ require "set"
 require "uri"
 require "date"
 include Rsec::Helpers
-require "vobject/vcard/version"
 require "vobject"
 
 module Vcard::V3_0
