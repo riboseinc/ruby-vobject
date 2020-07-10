@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version       = Vobject::VERSION
   spec.authors       = ["Peter Tam", "Nick Nicholas"]
   spec.email         = ["peter.tam@ribose.com", "opoudjis@gmail.com"]
-  spec.platform      = Gem::Platform.local
+  #spec.platform      = Gem::Platform.local
   spec.require_paths = ["lib"]
 
   spec.summary       = "Parse iCalendar or vCard into a ruby hash."
@@ -21,8 +21,8 @@ iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
   spec.license       = "BSD-2-Clause"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir        = "bin"
+  #spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 2.1"
