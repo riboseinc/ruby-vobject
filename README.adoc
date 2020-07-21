@@ -1,6 +1,6 @@
 == Ruby vObject parser
 
-image:https://img.shields.io/gem/v/ruby-vobject.svg["Gem Version", link="https://rubygems.org/gems/vobject"]
+image:https://img.shields.io/gem/v/vobject.svg["Gem Version", link="https://rubygems.org/gems/vobject"]
 image:https://github.com/riboseinc/ruby-vobject/workflows/macos/badge.svg["Build Status (macOS)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=macos"]
 image:https://github.com/riboseinc/ruby-vobject/workflows/ubuntu/badge.svg["Build Status (ubuntu)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=ubuntu"]
 image:https://github.com/riboseinc/ruby-vobject/workflows/windows/badge.svg["Build Status (Windows)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=windows"]
