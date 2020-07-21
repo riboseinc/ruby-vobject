@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "vobject/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "ruby-vobject"
+  spec.name          = "vobject"
   spec.version       = Vobject::VERSION
   spec.authors       = ['Ribose Inc.']
   spec.email         = ['open.source@ribose.com']

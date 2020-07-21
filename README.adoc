@@ -1,8 +1,13 @@
-== Vobject
+== Ruby vObject parser
 
-image:https://img.shields.io/gem/v/ruby-object.svg["Gem Version", link="https://rubygems.org/gems/ruby-object"]
-image:https://img.shields.io/travis/riboseinc/ruby-object/master.svg["Build Status", link="https://travis-ci.org/riboseinc/ruby-object"]
-image:https://codeclimate.com/github/riboseinc/ruby-object/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/ruby-object"]
+image:https://img.shields.io/gem/v/ruby-vobject.svg["Gem Version", link="https://rubygems.org/gems/vobject"]
+image:https://github.com/riboseinc/ruby-vobject/workflows/macos/badge.svg["Build Status (macOS)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=macos"]
+image:https://github.com/riboseinc/ruby-vobject/workflows/ubuntu/badge.svg["Build Status (ubuntu)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=ubuntu"]
+image:https://github.com/riboseinc/ruby-vobject/workflows/windows/badge.svg["Build Status (Windows)", link="https://github.com/riboseinc/ruby-vobject/actions?workflow=windows"]
+image:https://codeclimate.com/github/riboseinc/ruby-vobject/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/ruby-vobject"]
+image:https://img.shields.io/github/issues-pr-raw/riboseinc/ruby-vobject.svg["Pull Requests", link="https://github.com/riboseinc/ruby-vobject/pulls"]
+image:https://img.shields.io/github/commits-since/riboseinc/ruby-vobject/latest.svg["Commits since latest",link="https://github.com/riboseinc/ruby-vobject/releases"]
+
 
 The main purpose of the gem is to parse vobject formatted text into a ruby
 hash format. Currently there are two possiblities of vobjects, namely
@@ -15,13 +20,17 @@ A secondary purpose is to create a normalised form of Vobjects (iCalendars
 and vCards version 4.0), which can be used to compare two Vobjects with minor
 formatting differences
 
+NOTE: This gem used to be named `ruby-vobject` (from versions 0.1.0 to 1.0.1),
+but for clarity purposes it is now simply called `vobject` (from version 1.0.2
+onwards).
+
 == Installation
 
 Add this line to your application's Gemfile:
 
 [source,ruby]
 ----
-gem 'ruby-vobject'
+gem 'vobject'
 ----
 
 And then execute:
@@ -35,7 +44,7 @@ Or install it yourself as:
 
 [source,console]
 ----
-$ gem install ruby-vobject
+$ gem install vobject
 ----
 
 == Usage
@@ -133,7 +142,7 @@ This tool supports v4.0 vCard as specified in RFC 6350, and as updated in RFC 68
 
 == Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/riboseinc/ruby-vobject. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the http://contributor-covenant.org[Contributor Covenant] code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/riboseinc/vobject. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the http://contributor-covenant.org[Contributor Covenant] code of conduct.
 
 
 == License
