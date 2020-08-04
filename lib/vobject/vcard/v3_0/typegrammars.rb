@@ -12,7 +12,7 @@ module Vcard::V3_0
       # property value types, each defining their own parser
 
       def binary
-        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) do |b, q|
+        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) do |(b, q)|
           if (b.length + q.length) % 4 == 0
             PropertyValue::Binary.new(b + q)
           else
@@ -31,7 +31,7 @@ module Vcard::V3_0
 
       def geovalue
         float = prim(:double)
-        geovalue = seq(float << ";".r, float) do |a, b|
+        geovalue = seq(float << ";".r, float) do |(a, b)|
           if a <= 180.0 && a >= -180.0 && b <= 180 && b > -180
             PropertyValue::Geovalue.new(lat: a, long: b)
           else
@@ -43,7 +43,7 @@ module Vcard::V3_0
 
       def classvalue
         iana_token = /[a-zA-Z\d\-]+/.r
-        xname = seq(/[xX]-/, /[a-zA-Z0-9-]+/.r).map(&:join)
+        xname = seq(/[xX]-/, /[a-zA-Z0-9-]+/.r).map {|x, _| x.join }
         classvalue = (/PUBLIC/i.r | /PRIVATE/i.r | /CONFIDENTIAL/i.r | iana_token | xname).map do |m|
           PropertyValue::ClassValue.new m
         end
@@ -94,7 +94,7 @@ module Vcard::V3_0
       def textlist
         text = C::TEXT3
         textlist1 =
-          seq(text << ",".r, lazy { textlist1 }) { |a, b| [unescape(a), b].flatten } |
+          seq(text << ",".r, lazy { textlist1 }) { |(a, b)| [unescape(a), b].flatten } |
           text.map { |t| [unescape(t)] }
         textlist = textlist1.map { |m| PropertyValue::Textlist.new m }
         textlist.eof
@@ -103,21 +103,21 @@ module Vcard::V3_0
       def org
         text = C::TEXT3
         org1 =
-          seq(text << ";".r, lazy { org1 }) { |a, b| [unescape(a), b].flatten } |
+          seq(text << ";".r, lazy { org1 }) { |(a, b)| [unescape(a), b].flatten } |
           text.map { |t| [unescape(t)] }
         org	 = org1.map { |o| PropertyValue::Org.new o }
         org.eof
       end
 
       def date_t
-        date_t = seq(/[0-9]{4}/.r, /-/.r._? >> /[0-9]{2}/.r, /-/.r._? >> /[0-9]{2}/.r) do |yy, mm, dd|
+        date_t = seq(/[0-9]{4}/.r, /-/.r._? >> /[0-9]{2}/.r, /-/.r._? >> /[0-9]{2}/.r) do |(yy, mm, dd)|
           PropertyValue::Date.new(year: yy, month: mm, day: dd)
         end
         date_t.eof
       end
 
       def time_t
-        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |s, h, m|
+        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |(s, h, m)|
           { sign: s, hour: h, min: m }
         end
         zone = utc_offset.map { |u| u } |
@@ -126,7 +126,7 @@ module Vcard::V3_0
         minute = /[0-9]{2}/.r
         second = /[0-9]{2}/.r
         secfrac = seq(",".r >> /[0-9]+/)
-        time_t = seq(hour << /:/._?, minute << /:/._?, second, secfrac._?, zone._?) do |h, m, s, f, z|
+        time_t = seq(hour << /:/._?, minute << /:/._?, second, secfrac._?, zone._?) do |(h, m, s, f, z)|
           h = { hour: h, min: m, sec: s }
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
@@ -136,7 +136,7 @@ module Vcard::V3_0
       end
 
       def date_time
-        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |s, h, m|
+        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |(s, h, m)|
           { sign: s, hour: h, min: m }
         end
         zone = utc_offset.map { |u| u } |
@@ -145,10 +145,10 @@ module Vcard::V3_0
         minute = /[0-9]{2}/.r
         second = /[0-9]{2}/.r
         secfrac = seq(",".r >> /[0-9]+/)
-        date = seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) do |yy, _, mm, _, dd|
+        date = seq(/[0-9]{4}/.r, /-/.r._?, /[0-9]{2}/.r, /-/.r._?, /[0-9]{2}/.r) do |(yy, _, mm, _, dd)|
           { year: yy, month: mm, day: dd }
         end
-        time = seq(hour << /:/.r._?, minute << /:/.r._?, second, secfrac._?, zone._?) do |h, m, s, f, z|
+        time = seq(hour << /:/.r._?, minute << /:/.r._?, second, secfrac._?, zone._?) do |(h, m, s, f, z)|
           h = { hour: h, min: m, sec: s }
           h[:zone] = if z.empty?
                        ""
@@ -158,14 +158,14 @@ module Vcard::V3_0
           h[:secfrac] = f[0] unless f.empty?
           h
         end
-        date_time = seq(date << "T".r, time) do |d, t|
+        date_time = seq(date << "T".r, time) do |(d, t)|
           PropertyValue::DateTimeLocal.new(d.merge(t))
         end
         date_time.eof
       end
 
       def date_or_date_time
-        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |s, h, m|
+        utc_offset = seq(C::SIGN, /[0-9]{2}/.r << /:/.r._?, /[0-9]{2}/.r) do |(s, h, m)|
           { sign: s, hour: h, min: m }
         end
         zone = utc_offset.map { |u| u } |
@@ -174,23 +174,23 @@ module Vcard::V3_0
         minute = /[0-9]{2}/.r
         second = /[0-9]{2}/.r
         secfrac = seq(",".r >> /[0-9]+/)
-        date = seq(/[0-9]{4}/.r << /-/.r._?, /[0-9]{2}/.r << /-/.r._?, /[0-9]{2}/.r) do |yy, mm, dd|
+        date = seq(/[0-9]{4}/.r << /-/.r._?, /[0-9]{2}/.r << /-/.r._?, /[0-9]{2}/.r) do |(yy, mm, dd)|
           { year: yy, month: mm, day: dd }
         end
-        time = seq(hour << /:/.r._?, minute << /:/.r._?, second, secfrac._?, zone._?) do |h, m, s, f, z|
+        time = seq(hour << /:/.r._?, minute << /:/.r._?, second, secfrac._?, zone._?) do |(h, m, s, f, z)|
           h = { hour: h, min: m, sec: s }
           h[:zone] = z[0] unless z.empty?
           h[:secfrac] = f[0] unless f.empty?
           h
         end
-        date_or_date_time = seq(date << "T".r, time) do |d, t|
+        date_or_date_time = seq(date << "T".r, time) do |(d, t)|
           PropertyValue::DateTimeLocal.new(d.merge(t))
         end | date.map { |d| PropertyValue::Date.new(d) }
         date_or_date_time.eof
       end
 
       def utc_offset
-        utc_offset = seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) do |s, h, _, m|
+        utc_offset = seq(C::SIGN, /[0-9]{2}/.r, /:/.r._?, /[0-9]{2}/.r) do |(s, h, _, m)|
           PropertyValue::Utcoffset.new(sign: s, hour: h, min: m)
         end
         utc_offset.eof
@@ -198,7 +198,7 @@ module Vcard::V3_0
 
       def kindvalue
         iana_token = /[a-zA-Z\d\-]+/.r
-        xname = seq(/[xX]-/, /[a-zA-Z0-9-]+/.r).map(&:join)
+        xname = seq(/[xX]-/, /[a-zA-Z0-9-]+/.r).map {|x, _| x.join }
         kindvalue = (/individual/i.r | /group/i.r | /org/i.r | /location/i.r |
                      iana_token | xname).map do |k|
           PropertyValue::Kindvalue.new(k)
@@ -208,29 +208,29 @@ module Vcard::V3_0
 
       def fivepartname
         text = C::TEXT3
-        component = seq(text << ",".r, lazy { component }) do |a, b|
+        component = seq(text << ",".r, lazy { component }) do |(a, b)|
           [unescape(a), b].flatten
         end | text.map { |t| [unescape(t)] }
         fivepartname1 = seq(component << ";".r, component << ";".r, component << ";".r,
-                            component << ";".r, component) do |a, b, c, d, e|
+                            component << ";".r, component) do |(a, b, c, d, e)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
           d = d[0] if d.length == 1
           e = e[0] if e.length == 1
           { surname: a, givenname: b, middlename: c, honprefix: d, honsuffix: e }
-        end | seq(component << ";".r, component << ";".r, component << ";".r, component) do |a, b, c, d|
+        end | seq(component << ";".r, component << ";".r, component << ";".r, component) do |(a, b, c, d)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
           d = d[0] if d.length == 1
           { surname: a, givenname: b, middlename: c, honprefix: d, honsuffix: "" }
-        end | seq(component << ";".r, component << ";".r, component) do |a, b, c|
+        end | seq(component << ";".r, component << ";".r, component) do |(a, b, c)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
           { surname: a, givenname: b, middlename: c, honprefix: "", honsuffix: "" }
-        end | seq(component << ";".r, component) do |a, b|
+        end | seq(component << ";".r, component) do |(a, b)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           { surname: a, givenname: b, middlename: "", honprefix: "", honsuffix: "" }
@@ -244,11 +244,11 @@ module Vcard::V3_0
 
       def address
         text = C::TEXT3
-        component = seq(text << ",".r, lazy { component }) do |a, b|
+        component = seq(text << ",".r, lazy { component }) do |(a, b)|
           [unescape(a), b].flatten
         end | text.map { |t| [unescape(t)] }
         address1 = seq(component << ";".r, component << ";".r, component << ";".r, component << ";".r,
-                       component << ";".r, component << ";".r, component) do |a, b, c, d, e, f, g|
+                       component << ";".r, component << ";".r, component) do |(a, b, c, d, e, f, g)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
@@ -259,7 +259,7 @@ module Vcard::V3_0
           { pobox: a, ext: b, street: c,
             locality: d, region: e, code: f, country: g }
         end | seq(component << ";".r, component << ";".r, component << ";".r, component << ";".r,
-                  component << ";".r, component) do |a, b, c, d, e, f|
+                  component << ";".r, component) do |(a, b, c, d, e, f)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
@@ -269,7 +269,7 @@ module Vcard::V3_0
           { pobox: a, ext: b, street: c,
             locality: d, region: e, code: f, country: "" }
         end | seq(component << ";".r, component << ";".r, component << ";".r,
-                  component << ";".r, component) do |a, b, c, d, e|
+                  component << ";".r, component) do |(a, b, c, d, e)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
@@ -277,20 +277,20 @@ module Vcard::V3_0
           e = e[0] if e.length == 1
           { pobox: a, ext: b, street: c,
             locality: d, region: e, code: "", country: "" }
-        end | seq(component << ";".r, component << ";".r, component << ";".r, component) do |a, b, c, d|
+        end | seq(component << ";".r, component << ";".r, component << ";".r, component) do |(a, b, c, d)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
           d = d[0] if d.length == 1
           { pobox: a, ext: b, street: c,
             locality: d, region: "", code: "", country: "" }
-        end | seq(component << ";".r, component << ";".r, component) do |a, b, c|
+        end | seq(component << ";".r, component << ";".r, component) do |(a, b, c)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           c = c[0] if c.length == 1
           { pobox: a, ext: b, street: c,
             locality: "", region: "", code: "", country: "" }
-        end | seq(component << ";".r, component) do |a, b|
+        end | seq(component << ";".r, component) do |(a, b)|
           a = a[0] if a.length == 1
           b = b[0] if b.length == 1
           { pobox: a, ext: b, street: "",

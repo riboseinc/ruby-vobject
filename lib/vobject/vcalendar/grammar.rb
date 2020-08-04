@@ -76,18 +76,18 @@ module Vobject::Vcalendar
       rangevalue = /THISANDFUTURE/i.r
       relatedvalue = /START/i.r | /END/i.r
       reltypevalue = /PARENT/i.r | /CHILD/i.r | /SIBLING/i.r | C::XNAME_VCAL | C::IANATOKEN
-      tzidvalue = seq("/".r._?, C::PTEXT_VCAL).map { |_, val| val }
+      tzidvalue = seq("/".r._?, C::PTEXT_VCAL).map { |(_, val)| val }
       valuetype = /BINARY/i.r | /BOOLEAN/i.r | /CAL-ADDRESS/i.r | /DATE-TIME/i.r | /DATE/i.r |
         /DURATION/i.r | /FLOAT/i.r | /INTEGER/i.r | /PERIOD/i.r | /RECUR/i.r | /TEXT/i.r |
         /TIME/i.r | /URI/i.r | /UTC-OFFSET/i.r | C::XNAME_VCAL | C::IANATOKEN
       rolevalue = /CHAIR/i.r | /REQ-PARTICIPANT/i.r | /OPT-PARTICIPANT/i.r | /NON-PARTICIPANT/i.r |
         C::XNAME_VCAL | C::IANATOKEN
-      pvalue_list = (seq(paramvalue << ",".r, lazy { pvalue_list }) & /[;:]/.r).map do |e, list|
+      pvalue_list = (seq(paramvalue << ",".r, lazy { pvalue_list }) & /[;:]/.r).map do |(e, list)|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n"), list].flatten
       end | (paramvalue & /[;:]/.r).map do |e|
         [e.sub(Regexp.new("^\"(.+)\"$"), '\1').gsub(/\\n/, "\n")]
       end
-      quoted_string_list = (seq(C::QUOTEDSTRING_VCAL << ",".r, lazy { quoted_string_list }) & /[;:]/.r).map do |e, list|
+      quoted_string_list = (seq(C::QUOTEDSTRING_VCAL << ",".r, lazy { quoted_string_list }) & /[;:]/.r).map do |(e, list)|
         [self.class.rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), "\1").gsub(/\\n/, "\n")), list].flatten
       end | (C::QUOTEDSTRING_VCAL & /[;:]/.r).map do |e|
         [self.class.rfc6868decode(e.sub(Regexp.new("^\"(.+)\"$"), "\1").gsub(/\\n/, "\n"))]
@@ -96,79 +96,79 @@ module Vobject::Vcalendar
       rfc4288regname = /[A-Za-z0-9!#$&.+^+-]{1,127}/.r
       rfc4288typename = rfc4288regname
       rfc4288subtypename = rfc4288regname
-      fmttypevalue = seq(rfc4288typename, "/", rfc4288subtypename).map(&:join)
+      fmttypevalue = seq(rfc4288typename, "/", rfc4288subtypename).map {|x, _| x.join }
 
       # RFC 7986
       displayval = /BADGE/i.r | /GRAPHIC/i.r | /FULLSIZE/i.r | /THUMBNAIL/i.r | C::XNAME_VCAL | C::IANATOKEN
-      displayvallist = seq(displayval << ",".r, lazy { displayvallist }) do |d, l|
+      displayvallist = seq(displayval << ",".r, lazy { displayvallist }) do |(d, l)|
         [d, l].flatten
       end | displayval.map { |d| [d] }
       featureval = /AUDIO/i.r | /CHAT/i.r | /FEED/i.r | /MODERATOR/i.r | /PHONE/i.r | /SCREEN/i.r |
         /VIDEO/i.r | C::XNAME_VCAL | C::IANATOKEN
-      featurevallist = seq(featureval << ",".r, lazy { featurevallist }) do |d, l|
+      featurevallist = seq(featureval << ",".r, lazy { featurevallist }) do |(d, l)|
         [d, l].flatten
       end | featureval.map { |d| [d] }
 
-      param = seq(/ALTREP/i.r, "=", quotedparamvalue) do |name, _, val|
+      param = seq(/ALTREP/i.r, "=", quotedparamvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/CN/i.r, "=", paramvalue) do |name, _, val|
+      end | seq(/CN/i.r, "=", paramvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/CUTYPE/i.r, "=", cutypevalue) do |name, _, val|
+      end | seq(/CUTYPE/i.r, "=", cutypevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/DELEGATED-FROM/i.r, "=", quoted_string_list) do |name, _, val|
+      end | seq(/DELEGATED-FROM/i.r, "=", quoted_string_list) do |(name, _, val)|
         val = val[0] if val.length == 1
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/DELEGATED-TO/i.r, "=", quoted_string_list) do |name, _, val|
+      end | seq(/DELEGATED-TO/i.r, "=", quoted_string_list) do |(name, _, val)|
         val = val[0] if val.length == 1
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/DIR/i.r, "=", quotedparamvalue) do |name, _, val|
+      end | seq(/DIR/i.r, "=", quotedparamvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/ENCODING/i.r, "=", encodingvalue) do |name, _, val|
+      end | seq(/ENCODING/i.r, "=", encodingvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/FMTTYPE/i.r, "=", fmttypevalue) do |name, _, val|
+      end | seq(/FMTTYPE/i.r, "=", fmttypevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.downcase }
-      end | seq(/FBTYPE/i.r, "=", fbtypevalue) do |name, _, val|
+      end | seq(/FBTYPE/i.r, "=", fbtypevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/LANGUAGE/i.r, "=", C::RFC5646LANGVALUE) do |name, _, val|
+      end | seq(/LANGUAGE/i.r, "=", C::RFC5646LANGVALUE) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/MEMBER/i.r, "=", quoted_string_list) do |name, _, val|
+      end | seq(/MEMBER/i.r, "=", quoted_string_list) do |(name, _, val)|
         val = val[0] if val.length == 1
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/PARTSTAT/i.r, "=", partstatvalue) do |name, _, val|
+      end | seq(/PARTSTAT/i.r, "=", partstatvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/RANGE/i.r, "=", rangevalue) do |name, _, val|
+      end | seq(/RANGE/i.r, "=", rangevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/RELATED/i.r, "=", relatedvalue) do |name, _, val|
+      end | seq(/RELATED/i.r, "=", relatedvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/RELTYPE/i.r, "=", reltypevalue) do |name, _, val|
+      end | seq(/RELTYPE/i.r, "=", reltypevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/ROLE/i.r, "=", rolevalue) do |name, _, val|
+      end | seq(/ROLE/i.r, "=", rolevalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val.upcase }
-      end | seq(/RSVP/i.r, "=", C::BOOLEAN) do |name, _, val|
+      end | seq(/RSVP/i.r, "=", C::BOOLEAN) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/SENT-BY/i.r, "=", quotedparamvalue) do |name, _, val|
+      end | seq(/SENT-BY/i.r, "=", quotedparamvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/TZID/i.r, "=", tzidvalue) do |name, _, val|
+      end | seq(/TZID/i.r, "=", tzidvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/VALUE/i.r, "=", valuetype) do |name, _, val|
+      end | seq(/VALUE/i.r, "=", valuetype) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
         # RFC 7986
-      end | seq(/DISPLAY/i.r, "=", displayvallist) do |name, _, val|
+      end | seq(/DISPLAY/i.r, "=", displayvallist) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/FEATURE/i.r, "=", featurevallist) do |name, _, val|
+      end | seq(/FEATURE/i.r, "=", featurevallist) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/EMAIL/i.r, "=", paramvalue) do |name, _, val|
+      end | seq(/EMAIL/i.r, "=", paramvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(/LABEL/i.r, "=", paramvalue) do |name, _, val|
+      end | seq(/LABEL/i.r, "=", paramvalue) do |(name, _, val)|
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(otherparamname, "=", pvalue_list) do |name, _, val|
+      end | seq(otherparamname, "=", pvalue_list) do |(name, _, val)|
         val = val[0] if val.length == 1
         { name.upcase.tr("-", "_").to_sym => val }
-      end | seq(paramname, "=", pvalue_list) do |name, _, val|
+      end | seq(paramname, "=", pvalue_list) do |(name, _, val)|
         parse_err("Violated format of parameter value #{name} = #{val}")
       end
 
-      params = seq(";".r >> param & ";", lazy { params }) do |p, ps|
+      params = seq(";".r >> param & ";", lazy { params }) do |(p, ps)|
         p.merge(ps) do |key, old, new|
           if @cardinality1[:PARAM].include?(key)
             parse_err("Violated cardinality of parameter #{key}")
@@ -179,7 +179,7 @@ module Vobject::Vcalendar
       end | seq(";".r >> param).map { |e| e[0] }
 
       contentline = seq(linegroup._?, C::NAME_VCAL, params._? << ":".r,
-                        C::VALUE, /(\r|\n|\r\n)/) do |g, name, p, value, _|
+                        C::VALUE, /(\r|\n|\r\n)/) do |(g, name, p, value, _)|
         key =  name.upcase.tr("-", "_").to_sym
         hash = { key => { value: value } }
         hash[key][:group] = g[0] unless g.empty?
@@ -189,7 +189,7 @@ module Vobject::Vcalendar
       end
 
       props = ("".r & beginend).map { {} } |
-        seq(contentline, lazy { props }) do |c, rest|
+        seq(contentline, lazy { props }) do |(c, rest)|
         k = c.keys[0]
         c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :GENERIC, c[k][:value], @ctx)
         errors << errors1
@@ -199,7 +199,7 @@ module Vobject::Vcalendar
         end
       end
       alarmprops = ("".r & beginend).map { {} } |
-        seq(contentline, lazy { alarmprops }) do |c, rest|
+        seq(contentline, lazy { alarmprops }) do |(c, rest)|
         k = c.keys[0]
         c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :ALARM, c[k][:value], @ctx)
         errors << errors1
@@ -211,7 +211,7 @@ module Vobject::Vcalendar
         end
       end
       fbprops = ("".r & beginend).map { {} } |
-        seq(contentline, lazy { fbprops }) do |c, rest|
+        seq(contentline, lazy { fbprops }) do |(c, rest)|
         k = c.keys[0]
         c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :FREEBUSY, c[k][:value], @ctx)
         errors << errors1
@@ -223,7 +223,7 @@ module Vobject::Vcalendar
         end
       end
       journalprops = ("".r & beginend).map { {} } |
-        seq(contentline, lazy { journalprops }) do |c, rest|
+        seq(contentline, lazy { journalprops }) do |(c, rest)|
         k = c.keys[0]
         c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :JOURNAL, c[k][:value], @ctx)
         errors << errors1
@@ -235,7 +235,7 @@ module Vobject::Vcalendar
         end
       end
       tzprops = ("".r & beginend).map { {} } |
-        seq(contentline, lazy { tzprops }) do |c, rest|
+        seq(contentline, lazy { tzprops }) do |(c, rest)|
         k = c.keys[0]
         c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :TZ, c[k][:value], @ctx)
         errors << errors1
@@ -246,24 +246,24 @@ module Vobject::Vcalendar
           [old, new].flatten
         end
       end
-      standardc = seq(/BEGIN:STANDARD(\r|\n|\r\n)/i.r, tzprops, /END:STANDARD(\r|\n|\r\n)/i.r) do |_, e, _|
+      standardc = seq(/BEGIN:STANDARD(\r|\n|\r\n)/i.r, tzprops, /END:STANDARD(\r|\n|\r\n)/i.r) do |(_, e, _)|
         parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
         parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
         parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
         { STANDARD: { component: [e] } }
       end
-      daylightc = seq(/BEGIN:DAYLIGHT(\r|\n|\r\n)/i.r, tzprops, /END:DAYLIGHT(\r|\n|\r\n)/i.r) do |_, e, _|
+      daylightc = seq(/BEGIN:DAYLIGHT(\r|\n|\r\n)/i.r, tzprops, /END:DAYLIGHT(\r|\n|\r\n)/i.r) do |(_, e, _)|
         parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
         parse_err("Missing TZOFFSETTO property") unless e.has_key?(:TZOFFSETTO)
         parse_err("Missing TZOFFSETFROM property") unless e.has_key?(:TZOFFSETFROM)
         { DAYLIGHT: { component: [e] } }
       end
       timezoneprops =
-        seq(standardc, lazy { timezoneprops }) do |e, rest|
+        seq(standardc, lazy { timezoneprops }) do |(e, rest)|
         e.merge(rest) { |_, old, new| { component: [old[:component], new[:component]].flatten } }
-        end | seq(daylightc, lazy { timezoneprops }) do |e, rest|
+        end | seq(daylightc, lazy { timezoneprops }) do |(e, rest)|
           e.merge(rest) { |_, old, new| { component: [old[:component], new[:component]].flatten } }
-        end | seq(contentline, lazy { timezoneprops }) do |e, rest|
+        end | seq(contentline, lazy { timezoneprops }) do |(e, rest)|
           k = e.keys[0]
           e[k][:value], errors1 = Typegrammars.typematch(strict, k, e[k][:params], :TIMEZONE, e[k][:value], @ctx)
           errors << errors1
@@ -276,7 +276,7 @@ module Vobject::Vcalendar
         end |
         ("".r & beginend).map { {} }
         todoprops = ("".r & beginend).map { {} } |
-          seq(contentline, lazy { todoprops }) do |c, rest|
+          seq(contentline, lazy { todoprops }) do |(c, rest)|
           k = c.keys[0]
           c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :TODO, c[k][:value], @ctx)
           errors << errors1
@@ -287,7 +287,7 @@ module Vobject::Vcalendar
             [old, new].flatten
           end
         end
-        eventprops = seq(contentline, lazy { eventprops }) do |c, rest|
+        eventprops = seq(contentline, lazy { eventprops }) do |(c, rest)|
           k = c.keys[0]
           c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :EVENT, c[k][:value], @ctx)
           errors << errors1
@@ -299,7 +299,7 @@ module Vobject::Vcalendar
           end
         end |
         ("".r & beginend).map { {} }
-        alarmc = seq(/BEGIN:VALARM(\r|\n|\r\n)/i.r, alarmprops, /END:VALARM(\r|\n|\r\n)/i.r) do |_, e, _|
+        alarmc = seq(/BEGIN:VALARM(\r|\n|\r\n)/i.r, alarmprops, /END:VALARM(\r|\n|\r\n)/i.r) do |(_, e, _)|
           parse_err("Missing ACTION property") unless e.has_key?(:ACTION)
           parse_err("Missing TRIGGER property") unless e.has_key?(:TRIGGER)
           if e.has_key?(:DURATION) && !e.has_key?(:REPEAT) || !e.has_key?(:DURATION) && e.has_key?(:REPEAT)
@@ -320,24 +320,24 @@ module Vobject::Vcalendar
           end
           { VALARM: { component: [e] } }
         end
-        freebusyc = seq(/BEGIN:VFREEBUSY(\r|\n|\r\n)/i.r, fbprops, /END:VFREEBUSY(\r|\n|\r\n)/i.r) do |_, e, _|
+        freebusyc = seq(/BEGIN:VFREEBUSY(\r|\n|\r\n)/i.r, fbprops, /END:VFREEBUSY(\r|\n|\r\n)/i.r) do |(_, e, _)|
           parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("DTEND before DTSTART") if e.has_key?(:DTEND) && e.has_key?(:DTSTART) &&
             e[:DTEND][:value] < e[:DTSTART][:value]
           { VFREEBUSY: { component: [e] } }
         end
-        journalc = seq(/BEGIN:VJOURNAL(\r|\n|\r\n)/i.r, journalprops, /END:VJOURNAL(\r|\n|\r\n)/i.r) do |_, e, _|
+        journalc = seq(/BEGIN:VJOURNAL(\r|\n|\r\n)/i.r, journalprops, /END:VJOURNAL(\r|\n|\r\n)/i.r) do |(_, e, _)|
           parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("Missing DTSTART property with RRULE property") if e.has_key?(:RRULE) && !e.has_key?(:DTSTART)
           { VJOURNAL: { component: [e] } }
         end
-        timezonec = seq(/BEGIN:VTIMEZONE(\r|\n|\r\n)/i.r, timezoneprops, /END:VTIMEZONE(\r|\n|\r\n)/i.r) do |_, e, _|
+        timezonec = seq(/BEGIN:VTIMEZONE(\r|\n|\r\n)/i.r, timezoneprops, /END:VTIMEZONE(\r|\n|\r\n)/i.r) do |(_, e, _)|
           parse_err("Missing STANDARD || DAYLIGHT property") unless e.has_key?(:STANDARD) || e.has_key?(:DAYLIGHT)
           { VTIMEZONE: { component: [e] } }
         end
-        todoc = seq(/BEGIN:VTODO(\r|\n|\r\n)/i.r, todoprops, alarmc.star, /END:VTODO(\r|\n|\r\n)/i.r) do |_, e, a, _|
+        todoc = seq(/BEGIN:VTODO(\r|\n|\r\n)/i.r, todoprops, alarmc.star, /END:VTODO(\r|\n|\r\n)/i.r) do |(_, e, a, _)|
           parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("Coocurring DUE && DURATION properties") if e.has_key?(:DUE) && e.has_key?(:DURATION)
@@ -354,7 +354,7 @@ module Vobject::Vcalendar
           end
           { VTODO: { component: [e] } }
         end
-        eventc = seq(/BEGIN:VEVENT(\r|\n|\r\n)/i.r, eventprops, alarmc.star, /END:VEVENT(\r|\n|\r\n)/i.r) do |_, e, a, _|
+        eventc = seq(/BEGIN:VEVENT(\r|\n|\r\n)/i.r, eventprops, alarmc.star, /END:VEVENT(\r|\n|\r\n)/i.r) do |(_, e, a, _)|
           parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("Coocurring DTEND && DURATION properties") if e.has_key?(:DTEND) && e.has_key?(:DURATION)
@@ -368,20 +368,20 @@ module Vobject::Vcalendar
           end
           { VEVENT: { component: [e] } }
         end
-        xcomp	= seq(/BEGIN:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r) do |_, n, _, p, _, n1, _|
+        xcomp	= seq(/BEGIN:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r, props, /END:/i.r, C::XNAME_VCAL, /(\r|\n|\r\n)/i.r) do |(_, n, _, p, _, n1, _)|
           n = n.upcase
           n1 = n1.upcase
           parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
           { n1.to_sym => { component: [p] } }
         end
-        ianacomp = seq(/BEGIN:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r) do |_, n, _, p, _, n1, _|
+        ianacomp = seq(/BEGIN:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r, props, /END:/i.r ^ C::ICALPROPNAMES, C::IANATOKEN, /(\r|\n|\r\n)/i.r) do |(_, n, _, p, _, n1, _)|
           n = n.upcase
           n1 = n1.upcase
           parse_err("Mismatch BEGIN:#{n}, END:#{n1}") if n != n1
           { n1.to_sym => { component: [p] } }
         end
         # RFC 7953
-        availableprops = seq(contentline, lazy { availableprops }) do |c, rest|
+        availableprops = seq(contentline, lazy { availableprops }) do |(c, rest)|
           k = c.keys[0]
           c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :AVAILABLE, c[k][:value], @ctx)
           errors << errors1
@@ -392,14 +392,14 @@ module Vobject::Vcalendar
             [old, new].flatten
           end
         end | ("".r & beginend).map { {} }
-        availablec = seq(/BEGIN:AVAILABLE(\r|\n|\r\n)/i.r, availableprops, /END:AVAILABLE(\r|\n|\r\n)/i.r) do |_, e, _|
+        availablec = seq(/BEGIN:AVAILABLE(\r|\n|\r\n)/i.r, availableprops, /END:AVAILABLE(\r|\n|\r\n)/i.r) do |(_, e, _)|
           # parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP) # required in spec, but not in examples
           parse_err("Missing DTSTART property") unless e.has_key?(:DTSTART)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("Coocurring DTEND && DURATION properties") if e.has_key?(:DTEND) && e.has_key?(:DURATION)
           { AVAILABLE: { component: [e] } }
         end
-        availabilityprops = seq(contentline, lazy { availabilityprops }) do |c, rest|
+        availabilityprops = seq(contentline, lazy { availabilityprops }) do |(c, rest)|
           k = c.keys[0]
           c[k][:value], errors1 = Typegrammars.typematch(strict, k, c[k][:params], :VAVAILABILITY, c[k][:value], @ctx)
           errors << errors1
@@ -410,7 +410,7 @@ module Vobject::Vcalendar
             [old, new].flatten
           end
         end | ("".r & beginend).map { {} }
-        vavailabilityc = seq(/BEGIN:VAVAILABILITY(\r|\n|\r\n)/i.r, availabilityprops, availablec.star, /END:VAVAILABILITY(\r|\n|\r\n)/i.r) do |_, e, a, _|
+        vavailabilityc = seq(/BEGIN:VAVAILABILITY(\r|\n|\r\n)/i.r, availabilityprops, availablec.star, /END:VAVAILABILITY(\r|\n|\r\n)/i.r) do |(_, e, a, _)|
           parse_err("Missing DTSTAMP property") unless e.has_key?(:DTSTAMP)
           parse_err("Missing UID property") unless e.has_key?(:UID)
           parse_err("Coocurring DTEND && DURATION properties") if e.has_key?(:DTEND) && e.has_key?(:DURATION)
@@ -425,7 +425,7 @@ module Vobject::Vcalendar
         end
 
         component = eventc | todoc | journalc | freebusyc | timezonec | ianacomp | xcomp | vavailabilityc
-        components = seq(component, lazy { components }) do |c, r|
+        components = seq(component, lazy { components }) do |(c, r)|
           c.merge(r) do |_key, old, new|
             { component: [old[:component], new[:component]].flatten }
           end
@@ -435,7 +435,7 @@ module Vobject::Vcalendar
           /UID/i.r | /LAST-MOD/i.r | /URL/i.r | /REFRESH/i.r | /SOURCE/i.r | /COLOR/i.r | # RFC 7986
           /NAME/i.r | /DESCRIPTION/i.r | /CATEGORIES/i.r | /IMAGE/i.r | # RFC 7986
           C::XNAME_VCAL | C::IANATOKEN
-        calprop = seq(calpropname, params._? << ":".r, C::VALUE, /(\r|\n|\r\n)/) do |key, p, value, _|
+        calprop = seq(calpropname, params._? << ":".r, C::VALUE, /(\r|\n|\r\n)/) do |(key, p, value, _)|
           key = key.upcase.tr("-", "_").to_sym
           val, errors1 = Typegrammars.typematch(strict, key, p[0], :CALENDAR, value, @ctx)
           errors << errors1
@@ -446,7 +446,7 @@ module Vobject::Vcalendar
           # TODO not doing constraint that each description must be in a different language
         end
         calprops = ("".r & beginend).map { {} } |
-          seq(calprop, lazy { calprops }) do |c, rest|
+          seq(calprop, lazy { calprops }) do |(c, rest)|
           c.merge(rest) do |key, old, new|
             if @cardinality1[:ICAL].include?(key.upcase)
               parse_err("Violated cardinality of property #{key}")
@@ -454,7 +454,7 @@ module Vobject::Vcalendar
             [old, new].flatten
           end
         end
-        vobject = seq(/BEGIN:VCALENDAR(\r|\n|\r\n)/i.r, calprops, components, /END:VCALENDAR(\r|\n|\r\n)/i.r) do |_b, v, rest, _e|
+        vobject = seq(/BEGIN:VCALENDAR(\r|\n|\r\n)/i.r, calprops, components, /END:VCALENDAR(\r|\n|\r\n)/i.r) do |(_b, v, rest, _e)|
           parse_err("Missing PRODID attribute") unless v.has_key?(:PRODID)
           parse_err("Missing VERSION attribute") unless v.has_key?(:VERSION)
           rest.delete(:END)

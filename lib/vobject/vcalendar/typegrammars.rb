@@ -19,66 +19,66 @@ module Vobject::Vcalendar
           /WEEKLY/i.r | /MONTHLY/i.r | /YEARLY/i.r
         enddate = C::DATE_TIME | C::DATE
         seconds = /[0-9]{1,2}/.r
-        byseclist = seq(seconds << ",".r, lazy { byseclist }) do |s, l|
+        byseclist = seq(seconds << ",".r, lazy { byseclist }) do |(s, l)|
           [s, l].flatten
         end | seconds.map { |s| [s] }
         minutes = /[0-9]{1,2}/.r
-        byminlist = seq(minutes << ",".r, lazy { byminlist }) do |m, l|
+        byminlist = seq(minutes << ",".r, lazy { byminlist }) do |(m, l)|
           [m, l].flatten
         end | minutes.map { |m| [m] }
         hours = /[0-9]{1,2}/.r
-        byhrlist = seq(hours << ",".r, lazy { byhrlist }) do |h, l|
+        byhrlist = seq(hours << ",".r, lazy { byhrlist }) do |(h, l)|
           [h, l].flatten
         end | hours.map { |h| [h] }
         ordwk = /[0-9]{1,2}/.r
         weekday = /SU/i.r | /MO/i.r | /TU/i.r | /WE/i.r | /TH/i.r | /FR/i.r | /SA/i.r
-        weekdaynum1 = seq(C::SIGN._?, ordwk) do |s, o|
+        weekdaynum1 = seq(C::SIGN._?, ordwk) do |(s, o)|
           h = { ordwk: o }
           h[:sign] = s[0] unless s.empty?
           h
         end
-        weekdaynum = seq(weekdaynum1._?, weekday) do |a, b|
+        weekdaynum = seq(weekdaynum1._?, weekday) do |(a, b)|
           h = { weekday: b }
           h = h.merge a[0] unless a.empty?
           h
         end
-        bywdaylist = seq(weekdaynum << ",".r, lazy { bywdaylist }) do |w, l|
+        bywdaylist = seq(weekdaynum << ",".r, lazy { bywdaylist }) do |(w, l)|
           [w, l].flatten
         end | weekdaynum.map { |w| [w] }
         ordmoday = /[0-9]{1,2}/.r
-        monthdaynum = seq(C::SIGN._?, ordmoday) do |s, o|
+        monthdaynum = seq(C::SIGN._?, ordmoday) do |(s, o)|
           h = { ordmoday: o }
           h[:sign] = s[0] unless s.empty?
           h
         end
-        bymodaylist = seq(monthdaynum << ",".r, lazy { bymodaylist }) do |m, l|
+        bymodaylist = seq(monthdaynum << ",".r, lazy { bymodaylist }) do |(m, l)|
           [m, l].flatten
         end | monthdaynum.map { |m| [m] }
         ordyrday = /[0-9]{1,3}/.r
-        yeardaynum = seq(C::SIGN._?, ordyrday) do |s, o|
+        yeardaynum = seq(C::SIGN._?, ordyrday) do |(s, o)|
           h = { ordyrday: o }
           h[:sign] = s[0] unless s.empty?
           h
         end
-        byyrdaylist = seq(yeardaynum << ",".r, lazy { byyrdaylist }) do |y, l|
+        byyrdaylist = seq(yeardaynum << ",".r, lazy { byyrdaylist }) do |(y, l)|
           [y, l].flatten
         end | yeardaynum.map { |y| [y] }
-        weeknum = seq(C::SIGN._?, ordwk) do |s, o|
+        weeknum = seq(C::SIGN._?, ordwk) do |(s, o)|
           h = { ordwk: o }
           h[:sign] = s[0] unless s.empty?
           h
         end
-        bywknolist = seq(weeknum << ",".r, lazy { bywknolist }) do |w, l|
+        bywknolist = seq(weeknum << ",".r, lazy { bywknolist }) do |(w, l)|
           [w, l].flatten
         end | weeknum.map { |w| [w] }
         # monthnum = /[0-9]{1,2}/.r
         # RFC 7529 add leap month indicator
         monthnum = /[0-9]{1,2}L?/i.r
-        bymolist = seq(monthnum << ",".r, lazy { bymolist }) do |m, l|
+        bymolist = seq(monthnum << ",".r, lazy { bymolist }) do |(m, l)|
           [m, l].flatten
         end | monthnum.map { |m| [m] }
         setposday = yeardaynum
-        bysplist = seq(setposday << ",".r, lazy { bysplist }) do |s, l|
+        bysplist = seq(setposday << ",".r, lazy { bysplist }) do |(s, l)|
           [s, l].flatten
         end | setposday.map { |s| [s] }
         # http://www.unicode.org/repos/cldr/tags/latest/common/bcp47/calendar.xml
@@ -89,24 +89,24 @@ module Vobject::Vcalendar
           /islamic-rgsa/i.r | /iso8601/i.r | /japanese/i.r | /persian/i.r |
           /roc/i.r | /islamicc/i.r | /gregorian/i.r
         skip = /OMIT/i.r | /BACKWARD/i.r | /FORWARD/i.r
-        recur_rule_part = 	seq(/FREQ/i.r << "=".r, freq) { |_k, v| { freq: v } } |
-          seq(/UNTIL/i.r << "=".r, enddate) { |_k, v| { until: v } } |
-          seq(/COUNT/i.r << "=".r, /[0-9]+/i.r) { |_k, v| { count: v } } |
-          seq(/INTERVAL/i.r << "=".r, /[0-9]+/i.r) { |_k, v| { interval: v } } |
-          seq(/BYSECOND/i.r << "=".r, byseclist) { |_k, v| { bysecond: v } } |
-          seq(/BYMINUTE/i.r << "=".r, byminlist) { |_k, v| { byminute: v } } |
-          seq(/BYHOUR/i.r << "=".r, byhrlist) { |_k, v| { byhour: v } } |
-          seq(/BYDAY/i.r << "=".r, bywdaylist) { |_k, v| { byday: v } } |
-          seq(/BYMONTHDAY/i.r << "=".r, bymodaylist) { |_k, v| { bymonthday: v } } |
-          seq(/BYYEARDAY/i.r << "=".r, byyrdaylist) { |_k, v| { byyearday: v } } |
-          seq(/BYWEEKNO/i.r << "=".r, bywknolist) { |_k, v| { byweekno: v } } |
-          seq(/BYMONTH/i.r << "=".r, bymolist) { |_k, v| { bymonth: v } } |
-          seq(/BYSETPOS/i.r << "=".r, bysplist) { |_k, v| { bysetpos: v } } |
-          seq(/WKST/i.r << "=".r, weekday) { |_k, v| { wkst: v } } |
+        recur_rule_part = 	seq(/FREQ/i.r << "=".r, freq) { |(_k, v)| { freq: v } } |
+          seq(/UNTIL/i.r << "=".r, enddate) { |(_k, v)| { until: v } } |
+          seq(/COUNT/i.r << "=".r, /[0-9]+/i.r) { |(_k, v)| { count: v } } |
+          seq(/INTERVAL/i.r << "=".r, /[0-9]+/i.r) { |(_k, v)| { interval: v } } |
+          seq(/BYSECOND/i.r << "=".r, byseclist) { |(_k, v)| { bysecond: v } } |
+          seq(/BYMINUTE/i.r << "=".r, byminlist) { |(_k, v)| { byminute: v } } |
+          seq(/BYHOUR/i.r << "=".r, byhrlist) { |(_k, v)| { byhour: v } } |
+          seq(/BYDAY/i.r << "=".r, bywdaylist) { |(_k, v)| { byday: v } } |
+          seq(/BYMONTHDAY/i.r << "=".r, bymodaylist) { |(_k, v)| { bymonthday: v } } |
+          seq(/BYYEARDAY/i.r << "=".r, byyrdaylist) { |(_k, v)| { byyearday: v } } |
+          seq(/BYWEEKNO/i.r << "=".r, bywknolist) { |(_k, v)| { byweekno: v } } |
+          seq(/BYMONTH/i.r << "=".r, bymolist) { |(_k, v)| { bymonth: v } } |
+          seq(/BYSETPOS/i.r << "=".r, bysplist) { |(_k, v)| { bysetpos: v } } |
+          seq(/WKST/i.r << "=".r, weekday) { |(_k, v)| { wkst: v } } |
           # RFC 7529
-          seq(/RSCALE/i.r << "=".r, rscale) { |_k, v| { rscale: v } } |
-          seq(/SKIP/i.r << "=".r, skip) { |_k, v| { skip: v } }
-        recur1 = seq(recur_rule_part, ";", lazy { recur1 }) { |h, _, r| h.merge r } |
+          seq(/RSCALE/i.r << "=".r, rscale) { |(_k, v)| { rscale: v } } |
+          seq(/SKIP/i.r << "=".r, skip) { |(_k, v)| { skip: v } }
+        recur1 = seq(recur_rule_part, ";", lazy { recur1 }) { |(h, _, r)| h.merge r } |
           recur_rule_part
         recur = recur1.map { |r| PropertyValue::Recur.new r }
         recur.eof
@@ -151,7 +151,7 @@ module Vobject::Vcalendar
 
       def geovalue
         float = prim(:double)
-        geovalue = seq(float << ";".r, float) do |a, b|
+        geovalue = seq(float << ";".r, float) do |(a, b)|
           if a <= 180.0 && a >= -180.0 && b <= 180 && b > -180
             PropertyValue::Geovalue.new(lat: a, long: b)
           else
@@ -173,7 +173,7 @@ module Vobject::Vcalendar
 
       def versionvalue
         versionvalue = seq(prim(:double) << ";".r,
-                           prim(:double)) do |x, y|
+                           prim(:double)) do |(x, y)|
           PropertyValue::Version.new [x, y]
         end | "2.0".r.map do
           PropertyValue::Version.new ["2.0"]
@@ -184,7 +184,7 @@ module Vobject::Vcalendar
       end
 
       def binary
-        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) do |b, q|
+        binary = seq(/[a-zA-Z0-9+\/]*/.r, /={0,2}/.r) do |(b, q)|
           if (b.length + q.length) % 4 == 0
             PropertyValue::Binary.new(b + q)
           else
@@ -212,7 +212,7 @@ module Vobject::Vcalendar
 
       def textlist
         textlist1 =
-          seq(C::TEXT << ",".r, lazy { textlist1 }) { |a, b| [unescape(a), b].flatten } |
+          seq(C::TEXT << ",".r, lazy { textlist1 }) { |(a, b)| [unescape(a), b].flatten } |
           C::TEXT.map { |t| [unescape(t)] }
         textlist = textlist1.map { |m| PropertyValue::Textlist.new m }
         textlist.eof
@@ -220,8 +220,8 @@ module Vobject::Vcalendar
 
       def request_statusvalue
         @req_status = Set.new %w{2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 2.11 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13 3.14 4.0 5.0 5.1 5.2 5.3}
-        extdata = seq(";".r, C::TEXT) { |_, t| t }
-        request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r << ";".r, C::TEXT, extdata._?) do |n, t1, t2|
+        extdata = seq(";".r, C::TEXT) { |(_, t)| t }
+        request_statusvalue = seq(/[0-9](\.[0-9]){1,2}/.r << ";".r, C::TEXT, extdata._?) do |(n, t1, t2)|
           return { error: "Invalid request status #{n}" } unless @req_status.include?(n) # RFC 5546
           hash = { statcode: n, statdesc: t1 }
           hash[:extdata] = t2[0] unless t2.empty?
@@ -264,7 +264,7 @@ module Vobject::Vcalendar
       end
 
       def datelist
-        datelist1 = seq(C::DATE << ",".r, lazy { datelist1 }) do |d, l|
+        datelist1 = seq(C::DATE << ",".r, lazy { datelist1 }) do |(d, l)|
           [d, l].flatten
         end | C::DATE.map { |d| [d] }
         datelist = datelist1.map { |m| PropertyValue::Datelist.new m }
@@ -277,7 +277,7 @@ module Vobject::Vcalendar
 
       def date_timelist
         date_timelist1 = seq(C::DATE_TIME << ",".r,
-                             lazy { date_timelist1 }) do |d, l|
+                             lazy { date_timelist1 }) do |(d, l)|
           [d, l].flatten
         end | C::DATE_TIME.map { |d| [d] }
         date_timelist = date_timelist1.map do |m|
@@ -292,7 +292,7 @@ module Vobject::Vcalendar
       end
 
       def date_time_utclist
-        date_time_utclist1 = seq(C::DATE_TIME_UTC << ",".r, lazy { date_time_utclist1 }) do |d, l|
+        date_time_utclist1 = seq(C::DATE_TIME_UTC << ",".r, lazy { date_time_utclist1 }) do |(d, l)|
           [d, l].flatten
         end | C::DATE_TIME_UTC.map { |d| [d] }
         date_time_utclist = date_time_utclist1.map do |m|
@@ -307,14 +307,14 @@ module Vobject::Vcalendar
       end
 
       def periodlist
-        period_explicit = seq(C::DATE_TIME << "/".r, C::DATE_TIME) do |s, e|
+        period_explicit = seq(C::DATE_TIME << "/".r, C::DATE_TIME) do |(s, e)|
           { start: s, end: e }
         end
-        period_start = seq(C::DATE_TIME << "/".r, C::DURATION) do |s, d|
+        period_start = seq(C::DATE_TIME << "/".r, C::DURATION) do |(s, d)|
           { start: s, duration: PropertyValue::Duration.new(d) }
         end
         period = period_explicit | period_start
-        periodlist1 = seq(period << ",".r, lazy { periodlist1 }) do |p, l|
+        periodlist1 = seq(period << ",".r, lazy { periodlist1 }) do |(p, l)|
           [p, l].flatten
         end | period.map { |p| [p] }
         periodlist = periodlist1.map { |m| PropertyValue::Periodlist.new m }
@@ -330,7 +330,7 @@ module Vobject::Vcalendar
 
       def utc_offset
         utc_offset = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r,
-                         /[0-9]{2}/.r._?) do |sign, h, m, sec|
+                         /[0-9]{2}/.r._?) do |(sign, h, m, sec)|
           hash = { sign: sign, hr: h, min: m }
           hash[:sec] = sec[0] unless sec.empty?
           PropertyValue::Utcoffset.new hash
