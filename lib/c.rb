@@ -9,18 +9,18 @@ module C
   BOOLEAN = /TRUE/i.r.map { true } | /FALSE/i.r.map { false }
   IANATOKEN = /[a-zA-Z\d\-]+/.r
   vendorid_vcal = /[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]/.r
-  XNAME_VCAL = seq(/[xX]-/, vendorid_vcal, "-", IANATOKEN).map(&:join)
+  XNAME_VCAL = seq(/[xX]-/, vendorid_vcal, "-", IANATOKEN).map {|x, _| x.join }
   vendorid_vcard = /[a-zA-Z0-9]+/.r # different from iCal
-  XNAME_VCARD = seq(/[xX]-/, vendorid_vcard, "-", IANATOKEN).map(&:join)
+  XNAME_VCARD = seq(/[xX]-/, vendorid_vcard, "-", IANATOKEN).map {|x, _| x.join }
   TEXT = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\])*/.r
   TEXT3 = /([ \t\u0021\u0023-\u002b\u002d-\u0039\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN;,\\]?)*/.r
   TEXT4 = /([ \t\u0021\u0023-\u002b\u002d-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,\\])*/.r
   COMPONENT4 = /([ \t\u0021\u0023-\u002b\u002d-\u003a\u003c-\u005b\u005d-\u007e\u0080-\u3ffff:"]|\\[nN,;\\])*/.r
-  DATE = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) do |yy, mm, dd|
+  DATE = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r) do |(yy, mm, dd)|
     Vobject::Vcalendar::PropertyValue::Date.new Time.utc(yy, mm, dd)
   end
   DATE_TIME = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
-                  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, z|
+                  /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |(yy, mm, dd, h, m, s, z)|
     if z.empty?
       #Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(time: Time.local(yy, mm, dd, h, m, s), zone: "")
       Vobject::Vcalendar::PropertyValue::DateTimeLocal.new(year: yy, month: mm, day: dd, hour: h, min: m, sec: s, zone: "")
@@ -30,11 +30,11 @@ module C
     end
   end
   DATE_TIME_UTC = seq(/[0-9]{4}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r << "T".r,
-                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |yy, mm, dd, h, m, s, _z|
+                      /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |(yy, mm, dd, h, m, s, _z)|
     #Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(time: Time.utc(yy, mm, dd, h, m, s), zone: "Z")
       Vobject::Vcalendar::PropertyValue::DateTimeUTC.new(year: yy, month: mm, day: dd, hour: h, min: m, sec: s, zone: "Z")
   end
-  TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |h, m, s, z|
+  TIME	= seq(/[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r, /Z/i.r._?) do |(h, m, s, z)|
     hash = { hour: h, min: m, sec: s }
     hash[:utc] = not(z.empty?)
     hash
@@ -69,27 +69,27 @@ module C
     beginend	= /BEGIN/i.r | /END/i.r
   NAME_VCAL = C::XNAME_VCAL | seq("".r ^ beginend, C::IANATOKEN)[1]
   NAME_VCARD = C::XNAME_VCARD | seq("".r ^ beginend, C::IANATOKEN)[1]
-  durday = seq(/[0-9]+/.r, "D") { |d, _| { days: d.to_i } }
-  dursecond = seq(/[0-9]+/.r, "S") { |d, _| { seconds: d.to_i } }
-  durminute = seq(/[0-9]+/.r, "M", dursecond._?) do |d, _, s|
+  durday = seq(/[0-9]+/.r, "D") { |(d, _)| { days: d.to_i } }
+  dursecond = seq(/[0-9]+/.r, "S") { |(d, _)| { seconds: d.to_i } }
+  durminute = seq(/[0-9]+/.r, "M", dursecond._?) do |(d, _, s)|
     hash =	{ minutes: d.to_i }
     hash = hash.merge s[0] unless s.empty?
     hash
   end
-  durhour = seq(/[0-9]+/.r, "H", durminute._?) do |d, _, m|
+  durhour = seq(/[0-9]+/.r, "H", durminute._?) do |(d, _, m)|
     hash =	{ hours: d.to_i }
     hash = hash.merge m[0] unless m.empty?
     hash
   end
-  durweek = seq(/[0-9]+/.r, "W") { |d, _| { weeks: d.to_i } }
+  durweek = seq(/[0-9]+/.r, "W") { |(d, _)| { weeks: d.to_i } }
   durtime1 = durhour | durminute | dursecond
-  durtime = seq("T", durtime1) { |_, d| d }
-  durdate = seq(durday, durtime._?) do |d, t|
+  durtime = seq("T", durtime1) { |(_, d)| d }
+  durdate = seq(durday, durtime._?) do |(d, t)|
     d = d.merge t[0] unless t.empty?
     d
   end
   duration1 = durdate | durtime | durweek
-  DURATION = seq(SIGN._?, "P", duration1) do |s, _, d|
+  DURATION = seq(SIGN._?, "P", duration1) do |(s, _, d)|
     d[:sign] = s[0] unless s.empty?
     d
   end
@@ -105,11 +105,11 @@ module C
 
   QUOTEDSTRING_VCAL = seq(/"/.r >> q_safe_char_vcal.star <<
                           /"/.r) { |q| q.join("") }
-  PTEXT_VCAL = safe_char_vcal.star.map(&:join)
+  PTEXT_VCAL = safe_char_vcal.star.map {|x, _| x.join }
   QUOTEDSTRING_VCARD = seq(/"/.r >> q_safe_char_vcard.star <<
                            /"/.r) { |q| q.join("") }
-  PTEXT_VCARD = safe_char_vcard.star.map(&:join)
-  VALUE = value_char.star.map(&:join)
+  PTEXT_VCARD = safe_char_vcard.star.map {|x, _| x.join }
+  VALUE = value_char.star.map {|x, _| x.join }
 
   rfc5646irregular = /en-GB-oed/i.r | /i-ami/i.r | /i-bnn/i.r | /i-default/i.r | /i-enochian/i.r |
     /i-hak/i.r | /i-klingon/i.r | /i-lux/i.r | /i-mingo/i.r |
@@ -129,7 +129,7 @@ module C
   rfc5646extlang = seq(/[A-Za-z]{3}/.r, /[A-Za-z]{3}/.r._?, /[A-Za-z]{3}/.r._?)
   rfc5646language = seq(/[A-Za-z]{2,3}/.r, rfc5646extlang._?) | /[A-Za-z]{4}/.r | /[A-Za-z]{5,8}/.r
   rfc5646langtag = seq(rfc5646language, rfc5646script._?, rfc5646region._?,
-                       rfc5646variant.star, rfc5646extension.star, rfc5646privateuse._?) do |a, b, c, d, e, f|
+                       rfc5646variant.star, rfc5646extension.star, rfc5646privateuse._?) do |(a, b, c, d, e, f)|
     [a, b, c, d, e, f].flatten.join("")
   end
   RFC5646LANGVALUE = rfc5646langtag | rfc5646privateuse | rfc5646grandfathered
@@ -163,7 +163,7 @@ module C
     /SpringGreen/i.r | /SteelBlue/i.r | /Tan/i.r | /Teal/i.r | /Thistle/i.r | /Tomato/i.r |
     /Turquoise/i.r | /Violet/i.r | /Wheat/i.r | /White/i.r | /WhiteSmoke/i.r | /Yellow/i.r | /YellowGreen/i.r
 
-  UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) do |s, h, m, z|
+  UTC_OFFSET = seq(C::SIGN, /[0-9]{2}/.r, /[0-9]{2}/.r, /[0-9]{2}/.r._?) do |(s, h, m, z)|
     h = { sign: s, hour: h, min: m }
     h[:sec] = z[0] unless z.empty?
     h
