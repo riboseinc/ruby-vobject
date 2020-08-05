@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "byebug"
   spec.add_runtime_dependency "rsec", "~> 1.0"
   spec.add_runtime_dependency "tzinfo"
+  spec.add_runtime_dependency "tzinfo-data"
 end
