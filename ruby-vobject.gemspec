@@ -33,4 +33,12 @@ iCalendar (https://tools.ietf.org/html/rfc5545) and vCard
 
   spec.add_runtime_dependency "rsec", "~> 0.4"
   spec.add_runtime_dependency "tzinfo"
+
+  spec.post_install_message = <<-MSG
+Attention please!
+This gem has been renamed to "vobject".  Please update your dependencies.
+Public API remains unchanged.
+Visit https://github.com/riboseinc/ruby-vobject for help.
+
+MSG
 end
