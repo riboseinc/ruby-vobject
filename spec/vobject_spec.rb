@@ -21,7 +21,7 @@ end
 
 RSpec::Matchers.define :contain_error do |expected|
   match do |actual|
-    actual.select { |a| a =~ expected }
+    actual.any? { |err| err.inspect =~ expected }
   end
 end
 
