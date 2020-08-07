@@ -26,6 +26,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-json_expectations"
   spec.add_development_dependency "byebug"
+  spec.add_development_dependency "pry", "~> 0.13.1"
+  spec.add_development_dependency "pry-doc", "~> 1.1"
+
   spec.add_runtime_dependency "rsec", "~> 1.0"
   spec.add_runtime_dependency "tzinfo"
   spec.add_runtime_dependency "tzinfo-data"
