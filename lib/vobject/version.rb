@@ -1,3 +1,3 @@
 module Vobject
-  VERSION = "1.0.1".freeze
+  VERSION = "1.0.99".freeze
 end
